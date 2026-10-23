@@ -2163,6 +2163,368 @@ h1, h2, h3 { letter-spacing: -.045em; }
     .hero-robot { transform: none !important; }
 }
 
+
+
+/* =========================================================
+   NEXUS 2.0 — ADVANCED BENTO / ORBITAL DESIGN SYSTEM
+   Visual-only styles; no analysis or navigation logic changed.
+   ========================================================= */
+.nexus-section-head {
+    position: relative;
+    margin: 42px 0 20px;
+    padding: 0 1px;
+}
+.nexus-section-kicker {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    color: #86CFFF;
+    font-family: Orbitron, sans-serif;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.35px;
+    line-height: 1.8;
+}
+.nexus-section-kicker > span {
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #82FFE1;
+    box-shadow: 0 0 12px rgba(130,255,225,.8);
+    animation: nexusKickerPulse 2.6s ease-in-out infinite;
+}
+.nexus-section-kicker > i {
+    display: inline-block;
+    width: 35px;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(93,216,255,.7), transparent);
+}
+@keyframes nexusKickerPulse { 0%,100% { opacity: .65; scale: .82; } 50% { opacity: 1; scale: 1.15; } }
+.nexus-section-title {
+    margin-top: 14px;
+    color: #F3F6FF;
+    font-size: clamp(30px, 4.2vw, 51px);
+    font-weight: 800;
+    line-height: 1.04;
+    letter-spacing: -.065em;
+}
+.nexus-section-title b, .nexus-process-head h2 b {
+    color: transparent;
+    background: linear-gradient(95deg, #9182FF, #76BFFF 50%, #7BF3E5);
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+.nexus-section-head > p, .nexus-process-head > p {
+    max-width: 650px;
+    margin-top: 12px;
+    color: #A4B6DC !important;
+    font-size: 12px;
+    line-height: 1.8;
+}
+.nexus-signal-strip {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 13px;
+    overflow: hidden;
+    margin: 18px 0 15px;
+    padding: 13px 16px;
+    border: 1px solid rgba(100,136,235,.23);
+    border-radius: 14px;
+    background: linear-gradient(105deg, rgba(13,24,52,.89), rgba(18,22,55,.72));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+}
+.nexus-signal-strip::after {
+    content: "";
+    position: absolute;
+    top: 0; bottom: 0; left: -30%;
+    width: 23%;
+    background: linear-gradient(90deg, transparent, rgba(98,221,255,.055), transparent);
+    transform: skewX(-22deg);
+    animation: signalSweep 7.5s ease-in-out infinite;
+    pointer-events: none;
+}
+@keyframes signalSweep { 0%,25% { left: -30%; } 70%,100% { left: 130%; } }
+.nexus-signal-brand {
+    color: #E7EFFF;
+    font-family: Orbitron, sans-serif;
+    font-size: 12px;
+    font-weight: 900;
+}
+.nexus-signal-brand b { color: #75EFFF; }
+.nexus-signal-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #A6B9E4;
+    font-size: 8px;
+    font-weight: 850;
+    letter-spacing: .9px;
+    white-space: nowrap;
+}
+.nexus-signal-item i {
+    display: inline-block;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: #7CFFD6;
+    box-shadow: 0 0 9px rgba(124,255,214,.7);
+}
+.nexus-signal-arrow { color: #576FAB; font-size: 13px; font-weight: 400; }
+.nexus-signal-tail {
+    margin-left: auto;
+    color: #5F76A9;
+    font-family: Orbitron, sans-serif;
+    font-size: 7px;
+    letter-spacing: .8px;
+}
+
+/* Bento canvas: intentionally varied card proportions. */
+.nexus-bento-grid {
+    display: grid;
+    grid-template-columns: 1.15fr .85fr;
+    grid-template-rows: minmax(340px, auto) minmax(300px, auto);
+    gap: 13px;
+    margin: 0 0 43px;
+}
+.nexus-bento-card {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    min-width: 0;
+    padding: 22px;
+    border-radius: 22px;
+    border: 1px solid rgba(115,142,235,.25);
+    background:
+        radial-gradient(ellipse at 92% 0%, rgba(101,86,255,.10), transparent 36%),
+        linear-gradient(145deg, rgba(19,31,66,.91), rgba(9,17,37,.97));
+    box-shadow: 0 18px 42px rgba(0,0,0,.13), inset 0 1px 0 rgba(255,255,255,.045);
+    transition: border-color .35s ease, transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease;
+}
+.nexus-bento-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    opacity: .72;
+    pointer-events: none;
+    background:
+        linear-gradient(110deg, rgba(97,136,255,.06), transparent 45%),
+        radial-gradient(ellipse at 100% 100%, rgba(39,190,255,.05), transparent 45%);
+}
+.nexus-bento-card::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 10%; right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(124,205,255,.6), rgba(160,124,255,.5), transparent);
+    opacity: .58;
+    pointer-events: none;
+}
+.nexus-bento-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(103,216,255,.46);
+    box-shadow: 0 24px 48px rgba(0,0,0,.23), 0 0 27px rgba(81,109,255,.10), inset 0 1px 0 rgba(255,255,255,.07);
+}
+.bento-ai { grid-row: span 2; }
+.bento-ai::before {
+    background:
+        radial-gradient(ellipse at 100% 20%, rgba(105,71,255,.20), transparent 48%),
+        radial-gradient(ellipse at 18% 82%, rgba(18,169,255,.09), transparent 49%),
+        linear-gradient(110deg, rgba(97,136,255,.055), transparent 45%);
+}
+.bento-voice { background: radial-gradient(ellipse at 86% 15%, rgba(61,99,255,.16), transparent 42%), linear-gradient(145deg, rgba(20,31,67,.93), rgba(9,16,36,.98)); }
+.bento-deadline { background: radial-gradient(ellipse at 100% 100%, rgba(8,198,207,.09), transparent 53%), linear-gradient(145deg, rgba(17,34,60,.92), rgba(8,18,35,.98)); }
+.bento-library { background: radial-gradient(ellipse at 100% 0%, rgba(161,80,255,.12), transparent 45%), linear-gradient(145deg, rgba(23,27,61,.92), rgba(10,16,36,.98)); }
+.bento-topline { display:flex; align-items:center; gap:10px; position:relative; z-index:2; }
+.bento-icon {
+    display:grid; place-items:center;
+    width:37px; height:37px;
+    border-radius:12px;
+    border:1px solid rgba(127,158,255,.32);
+    color:#9DEEFF;
+    background:linear-gradient(140deg, rgba(125,88,255,.18), rgba(45,159,255,.09));
+    font-size:18px;
+    box-shadow:0 0 20px rgba(105,117,255,.10);
+}
+.bento-index { color:#7F95C3; font-family:Orbitron,sans-serif; font-size:8px; letter-spacing:1.2px; font-weight:800; }
+.bento-corner { margin-left:auto; color:#718DCC; font-size:17px; }
+.bento-overline { margin-top:26px; color:#74DEFF; font-family:Orbitron,sans-serif; font-size:8px; font-weight:800; letter-spacing:1.55px; }
+.nexus-bento-card h3 {
+    position:relative;
+    z-index:2;
+    margin:10px 0 9px !important;
+    color:#F1F5FF !important;
+    font-size:clamp(24px, 2.8vw, 36px) !important;
+    line-height:1.04 !important;
+    letter-spacing:-.06em !important;
+}
+.nexus-bento-card h3 em { color:transparent; background:linear-gradient(90deg,#A293FF,#75C7FF 60%,#82F5E0); -webkit-background-clip:text; background-clip:text; font-style:normal; }
+.nexus-bento-card p {
+    max-width:460px;
+    color:#A5B6DD !important;
+    font-size:11px !important;
+    line-height:1.8 !important;
+}
+.bento-ai .bento-copy { max-width:390px; position:relative; z-index:2; }
+.bento-ambient-ring {
+    position:absolute;
+    top:10%; right:-23%;
+    width:330px; height:330px;
+    border-radius:50%;
+    border:1px solid rgba(118,127,255,.10);
+    box-shadow:0 0 0 22px rgba(116,124,255,.025), 0 0 0 45px rgba(116,124,255,.018);
+    pointer-events:none;
+    animation: ambientTurn 28s linear infinite;
+}
+.bento-ambient-ring::before,.bento-ambient-ring::after {
+    content:""; position:absolute; border-radius:50%; border:1px dashed rgba(105,211,255,.14);
+}
+.bento-ambient-ring::before { inset:22px; }
+.bento-ambient-ring::after { inset:56px; border-color:rgba(162,111,255,.18); }
+@keyframes ambientTurn { to { rotate:360deg; } }
+.nexus-mini-terminal {
+    position:relative; z-index:2;
+    max-width:450px;
+    margin-top:25px;
+    padding:16px;
+    border-radius:16px;
+    border:1px solid rgba(114,151,255,.24);
+    background:linear-gradient(145deg, rgba(6,14,32,.88), rgba(13,24,48,.86));
+    box-shadow:0 18px 34px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.035);
+}
+.terminal-top { display:flex; justify-content:space-between; align-items:center; gap:10px; color:#748DBD; font-family:Orbitron,sans-serif; font-size:7px; font-weight:800; letter-spacing:.8px; }
+.terminal-lights { display:flex; gap:4px; }
+.terminal-lights i { display:block; width:5px; height:5px; border-radius:50%; background:#596D9F; }
+.terminal-lights i:first-child { background:#A48EFF; box-shadow:0 0 8px rgba(164,142,255,.55); }
+.terminal-scan { display:flex; align-items:center; gap:9px; margin:16px 0 12px; padding:9px 10px; border-radius:9px; border:1px solid rgba(103,217,255,.16); background:rgba(46,117,162,.07); color:#A7DFFF; font-size:9px; font-weight:800; letter-spacing:.65px; }
+.terminal-scan span { width:6px; height:6px; border-radius:50%; background:#78FFD2; box-shadow:0 0 10px #78FFD2; }
+.terminal-scan i { margin-left:auto; color:#78FFD2; font-size:7px; font-style:normal; letter-spacing:1px; }
+.terminal-rule { height:6px; margin:10px 0; overflow:hidden; border-radius:99px; background:rgba(107,132,190,.13); }
+.terminal-rule span { display:block; height:100%; border-radius:inherit; background:linear-gradient(90deg, rgba(116,98,255,.7), rgba(93,218,255,.68)); box-shadow:0 0 10px rgba(93,218,255,.24); }
+.terminal-result { display:flex; align-items:center; gap:10px; margin-top:16px; padding:12px 10px; border-radius:11px; border:1px solid rgba(120,255,216,.17); background:rgba(57,183,151,.055); }
+.terminal-result-icon { display:grid; place-items:center; width:29px; height:29px; border-radius:9px; background:rgba(130,255,223,.11); color:#8BFFE1; }
+.terminal-result small { display:block; color:#75BFB8; font-size:7px; font-family:Orbitron,sans-serif; letter-spacing:1px; }
+.terminal-result b { display:block; margin-top:4px; color:#DAFDF2; font-size:10px; }
+.terminal-check { margin-left:auto; color:#8DFFD4; font-size:16px; }
+.bento-voice-orb { position:relative; float:right; width:92px; height:92px; margin:10px 3px 0 12px; display:grid; place-items:center; }
+.bento-voice-orb::before,.bento-voice-orb::after { content:""; position:absolute; inset:0; border:1px solid rgba(118,143,255,.26); border-radius:50%; }
+.bento-voice-orb::before { transform:scale(.76); border-style:dashed; animation:ambientTurn 16s linear infinite; }
+.bento-voice-orb::after { transform:scale(1.12); border-color:rgba(91,232,255,.18); box-shadow:0 0 22px rgba(91,232,255,.05); }
+.voice-orb-core { display:grid; place-items:center; width:48px; height:48px; border-radius:17px; color:#E9F7FF; font-family:Orbitron,sans-serif; font-size:12px; font-weight:900; background:linear-gradient(145deg,rgba(130,92,255,.55),rgba(30,155,221,.4)); border:1px solid rgba(148,197,255,.48); box-shadow:0 0 23px rgba(95,114,255,.25), inset 0 1px 0 rgba(255,255,255,.24); }
+.bento-voice-orb > span { position:absolute; width:6px; height:6px; border-radius:50%; background:#84FFE2; box-shadow:0 0 9px #84FFE2; }
+.bento-voice-orb > span:nth-child(2) { top:3px; left:44px; }
+.bento-voice-orb > span:nth-child(3) { right:0; bottom:27px; background:#B5A1FF; box-shadow:0 0 9px #B5A1FF; }
+.bento-voice-orb > span:nth-child(4) { left:11px; bottom:8px; }
+.bento-wave { display:flex; align-items:center; gap:3px; height:28px; margin-top:20px; overflow:hidden; }
+.bento-wave i { display:block; width:3px; border-radius:9px; height:var(--wave-height, 13px); background:linear-gradient(180deg,#8D7EFF,#60DBFF); box-shadow:0 0 8px rgba(96,219,255,.22); animation:miniWave .95s ease-in-out infinite alternate; }
+.bento-wave i:nth-child(3n) { --wave-height:22px; animation-delay:-.35s; }
+.bento-wave i:nth-child(3n + 1) { --wave-height:10px; animation-delay:-.1s; }
+.bento-wave i:nth-child(3n + 2) { --wave-height:17px; animation-delay:-.55s; }
+@keyframes miniWave { from { height:5px; opacity:.55; } to { height:var(--wave-height,13px); opacity:1; } }
+.bento-calendar-preview { margin-top:15px; padding:12px; border:1px solid rgba(98,176,226,.18); border-radius:14px; background:rgba(5,15,33,.47); }
+.calendar-preview-head { display:flex; align-items:center; justify-content:space-between; color:#A5DFFF; font-family:Orbitron,sans-serif; font-size:8px; letter-spacing:1px; }
+.calendar-preview-head span { color:#708AB7; font-size:7px; }
+.calendar-preview-days,.calendar-preview-numbers { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:4px; margin-top:12px; text-align:center; }
+.calendar-preview-days span { color:#687FAE; font-size:8px; }
+.calendar-preview-numbers span { display:grid; place-items:center; min-height:27px; border-radius:7px; background:rgba(57,84,138,.10); color:#A9BBE3; font-size:9px; }
+.calendar-preview-numbers .calendar-preview-mark { color:#061826; background:linear-gradient(145deg,#82F5E0,#70CFFF); font-weight:900; box-shadow:0 0 14px rgba(95,229,232,.17); }
+.calendar-preview-foot { display:flex; align-items:center; gap:7px; margin-top:11px; color:#78BEBE; font-size:7px; font-weight:900; letter-spacing:.8px; }
+.calendar-preview-foot i { display:block; width:5px; height:5px; border-radius:50%; background:#79FBD8; box-shadow:0 0 8px #79FBD8; }
+.bento-stack { position:relative; width:100%; height:110px; margin-top:19px; perspective:600px; }
+.stack-sheet { position:absolute; width:190px; max-width:75%; height:88px; border-radius:12px; border:1px solid rgba(126,149,241,.26); }
+.sheet-back { left:12px; top:0; transform:rotate(-8deg); background:linear-gradient(135deg,rgba(102,87,255,.13),rgba(19,36,68,.5)); }
+.sheet-mid { left:26px; top:4px; transform:rotate(5deg); background:linear-gradient(135deg,rgba(43,165,218,.15),rgba(12,30,53,.7)); }
+.sheet-front { left:19px; top:8px; padding:12px; background:linear-gradient(135deg,rgba(20,37,73,.98),rgba(9,21,43,.98)); box-shadow:0 12px 25px rgba(0,0,0,.22); }
+.sheet-front > span { display:block; color:#71BFD9; font-size:7px; font-family:Orbitron,sans-serif; letter-spacing:1px; }
+.sheet-front b { display:block; margin-top:8px; color:#E4EBFF; font-size:12px; }
+.sheet-front > i { display:block; margin-top:4px; color:#7F91B9; font-size:6px; font-style:normal; letter-spacing:.4px; }
+.stack-lines { width:82%; height:4px; margin-top:9px; border-radius:8px; background:linear-gradient(90deg,#6378C9 70%,transparent 70%); opacity:.45; }
+.stack-star { position:absolute; top:2px; left:192px; color:#A5A1FF; font-size:24px; text-shadow:0 0 14px rgba(165,161,255,.5); animation:starBlink 3s ease-in-out infinite; }
+@keyframes starBlink { 0%,100% { opacity:.5; transform:scale(.9) rotate(-8deg); } 50% { opacity:1; transform:scale(1.1) rotate(7deg); } }
+.bento-local-note { display:flex; align-items:center; gap:7px; margin-top:14px; color:#8DA8CA; font-size:7px; font-weight:900; letter-spacing:.7px; }
+.bento-local-note span { width:5px; height:5px; border-radius:50%; background:#87EFD0; box-shadow:0 0 8px #87EFD0; }
+
+/* A connected pipeline rail replaces generic floating feature tiles. */
+.nexus-process-head { display:flex; align-items:end; justify-content:space-between; gap:22px; margin:36px 0 15px; }
+.nexus-process-head h2 { margin:10px 0 0; color:#F0F4FF; font-size:clamp(23px,3vw,33px); letter-spacing:-.055em; }
+.nexus-process-head > p { max-width:350px; margin:0 0 2px; font-size:10px; }
+.nexus-process-rail { display:grid; grid-template-columns:minmax(0,1fr) 24px minmax(0,1fr) 24px minmax(0,1fr) 24px minmax(0,1fr); align-items:center; gap:4px; margin-bottom:30px; }
+.process-node { min-width:0; min-height:130px; padding:16px; border:1px solid rgba(112,140,232,.23); border-radius:17px; background:linear-gradient(145deg,rgba(19,32,65,.8),rgba(9,17,37,.82)); box-shadow:inset 0 1px 0 rgba(255,255,255,.04); transition:transform .25s ease,border-color .25s ease; }
+.process-node:hover { transform:translateY(-4px); border-color:rgba(93,219,255,.48); }
+.process-node-top { display:flex; justify-content:space-between; align-items:center; color:#7188C3; font-family:Orbitron,sans-serif; font-size:8px; }
+.process-node-top i { display:grid; place-items:center; width:26px; height:26px; border-radius:9px; color:#A2EFFF; background:rgba(93,193,255,.09); border:1px solid rgba(93,193,255,.16); font-style:normal; font-size:13px; }
+.process-node > b { display:block; margin-top:13px; color:#EAF0FF; font-size:13px; }
+.process-node > p { margin:6px 0 0; color:#91A7D1 !important; font-size:9px !important; line-height:1.65; }
+.process-connector { position:relative; height:1px; background:rgba(99,126,202,.25); }
+.process-connector span { position:absolute; top:-2px; left:0; width:5px; height:5px; border-radius:50%; background:#70E9FF; box-shadow:0 0 9px #70E9FF; animation:connectorTravel 2.4s ease-in-out infinite; }
+@keyframes connectorTravel { from { left:0; opacity:.3; } 50% { opacity:1; } to { left:calc(100% - 5px); opacity:.3; } }
+
+/* Navigation selected state and restrained ambient motion. */
+div[data-testid="stSidebar"] div[role="radiogroup"] label:has(input:checked) {
+    border:1px solid rgba(118,153,255,.32);
+    background:linear-gradient(100deg,rgba(111,84,255,.18),rgba(47,153,220,.08));
+    box-shadow:inset 3px 0 0 #8B82FF,0 5px 18px rgba(0,0,0,.10);
+}
+div[data-testid="stSidebar"] div[role="radiogroup"] label:has(input:checked) p { color:#F0F5FF !important; font-weight:800; }
+.stApp::after {
+    content:"";
+    position:fixed;
+    z-index:-1;
+    top:17%;
+    right:-180px;
+    width:330px;
+    height:520px;
+    border-radius:50%;
+    background:linear-gradient(180deg,rgba(117,71,255,.045),rgba(58,207,255,.035));
+    filter:blur(60px);
+    pointer-events:none;
+    animation:ambientDrift 18s ease-in-out infinite alternate;
+}
+@keyframes ambientDrift { from { transform:translate3d(0,-20px,0); } to { transform:translate3d(-110px,45px,0); } }
+
+@media (max-width: 950px) {
+    .nexus-bento-grid { grid-template-columns:1fr 1fr; grid-template-rows:auto; }
+    .bento-ai { grid-row:auto; grid-column:span 2; }
+    .bento-ai .bento-copy { max-width:520px; }
+    .nexus-mini-terminal { max-width:560px; }
+    .nexus-process-rail { grid-template-columns:1fr 20px 1fr; row-gap:10px; }
+    .process-connector:nth-of-type(4) { display:none; }
+    .nexus-signal-tail { display:none; }
+}
+@media (max-width: 620px) {
+    .nexus-section-head { margin-top:32px; }
+    .nexus-section-kicker { font-size:8px; gap:7px; }
+    .nexus-section-kicker > i { width:17px; }
+    .nexus-signal-strip { gap:9px; padding:12px 11px; }
+    .nexus-signal-brand { width:100%; padding-bottom:8px; border-bottom:1px solid rgba(110,136,222,.14); }
+    .nexus-signal-arrow { display:none; }
+    .nexus-signal-item { font-size:7px; }
+    .nexus-bento-grid { grid-template-columns:1fr; gap:10px; }
+    .bento-ai { grid-column:auto; }
+    .nexus-bento-card { padding:17px; border-radius:18px; }
+    .nexus-bento-card h3 { font-size:29px !important; }
+    .nexus-mini-terminal { padding:12px; }
+    .bento-voice-orb { width:72px; height:72px; margin-right:0; }
+    .voice-orb-core { width:40px; height:40px; border-radius:14px; }
+    .stack-star { left:min(192px,66%); }
+    .nexus-process-head { display:block; }
+    .nexus-process-head > p { margin-top:9px; }
+    .nexus-process-rail { grid-template-columns:1fr; gap:8px; }
+    .process-node { min-height:0; padding:14px; }
+    .process-connector { display:block !important; width:1px; height:12px; margin-left:23px; }
+    .process-connector span { top:0; left:-2px; width:5px; height:5px; animation:connectorTravelVertical 2.4s ease-in-out infinite; }
+    @keyframes connectorTravelVertical { from { top:0; opacity:.3; } to { top:calc(100% - 5px); opacity:.3; } }
+}
+@media (prefers-reduced-motion: reduce) {
+    .nexus-signal-strip::after, .nexus-section-kicker > span, .bento-ambient-ring,
+    .bento-voice-orb::before, .bento-voice-orb > span, .bento-wave i,
+    .stack-star, .process-connector span, .stApp::after { animation:none !important; }
+    .nexus-bento-card, .process-node { transition:none !important; }
+}
+
 </style>  
 
 """, unsafe_allow_html=True)
@@ -2827,38 +3189,80 @@ if page == "🏠 Home":
             unsafe_allow_html=True
         )
 
-    st.markdown('<div class="home-section-title">One notice. Clear next steps.</div>'
-                '<div class="home-section-subtitle">Designed to make dense official information easier for students to understand.</div>',
-                unsafe_allow_html=True)
     st.markdown("""
-    <div class="home-feature-grid">
-      <article class="home-feature-card">
-        <div class="feature-icon">📄</div>
-        <h3>Read the notice</h3>
-        <p>Paste text, upload an image for OCR, or extract selectable text from a PDF.</p>
+    <div class="nexus-section-head">
+      <div class="nexus-section-kicker"><span></span> THE NOTICE INTELLIGENCE PLATFORM <i></i> CORE CAPABILITIES</div>
+      <div class="nexus-section-title">Not just read.<br><b>Understood.</b></div>
+      <p>One focused workspace. Every important detail brought into view.</p>
+    </div>
+    <div class="nexus-signal-strip">
+      <span class="nexus-signal-brand">NB <b>/ CORE</b></span>
+      <span class="nexus-signal-item"><i></i> DOCUMENT INPUT</span>
+      <b class="nexus-signal-arrow">→</b>
+      <span class="nexus-signal-item"><i></i> AI EXPLANATION</span>
+      <b class="nexus-signal-arrow">→</b>
+      <span class="nexus-signal-item"><i></i> CLEAR NEXT STEPS</span>
+      <span class="nexus-signal-tail">NOTICE CLARITY SYSTEM</span>
+    </div>
+    <div class="nexus-bento-grid">
+      <article class="nexus-bento-card bento-ai">
+        <div class="bento-topline"><span class="bento-icon">◈</span><span class="bento-index">01 / INTELLIGENCE</span><span class="bento-corner">↗</span></div>
+        <div class="bento-copy">
+          <div class="bento-overline">THE NOTICE DECODER</div>
+          <h3>Decode the<br><em>fine print.</em></h3>
+          <p>Turn long circulars into a structured brief with summaries, dates, eligibility, documents and next steps.</p>
+        </div>
+        <div class="nexus-mini-terminal">
+          <div class="terminal-top"><span>NOTICE ANALYSIS / UI PREVIEW</span><span class="terminal-lights"><i></i><i></i><i></i></span></div>
+          <div class="terminal-scan"><span></span><b>TEXT EXTRACTION</b><i>READY</i></div>
+          <div class="terminal-rule"><span style="width:92%"></span></div>
+          <div class="terminal-rule"><span style="width:68%"></span></div>
+          <div class="terminal-rule"><span style="width:81%"></span></div>
+          <div class="terminal-result"><span class="terminal-result-icon">✦</span><div><small>STRUCTURED OUTPUT</small><b>Summary · Dates · Actions</b></div><span class="terminal-check">✓</span></div>
+        </div>
+        <div class="bento-ambient-ring"></div>
       </article>
-      <article class="home-feature-card">
-        <div class="feature-icon">🧠</div>
-        <h3>Understand the details</h3>
-        <p>Get a student-friendly explanation in English or Hindi, grounded in the provided notice.</p>
+      <article class="nexus-bento-card bento-voice">
+        <div class="bento-topline"><span class="bento-icon">⌁</span><span class="bento-index">02 / VOICE STUDIO</span></div>
+        <div class="bento-voice-orb"><div class="voice-orb-core">NB</div><span></span><span></span><span></span></div>
+        <div class="bento-overline">SPEAK NATURALLY</div>
+        <h3>Your voice.<br><em>Your assistant.</em></h3>
+        <p>Ask in Hindi, English or Hinglish. Review the transcript, get an answer and listen to the reply.</p>
+        <div class="bento-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
       </article>
-      <article class="home-feature-card">
-        <div class="feature-icon">✅</div>
-        <h3>Know what to do next</h3>
-        <p>Review the dates, eligibility and document requirements the notice actually mentions.</p>
+      <article class="nexus-bento-card bento-deadline">
+        <div class="bento-topline"><span class="bento-icon">◷</span><span class="bento-index">03 / DEADLINE RADAR</span></div>
+        <div class="bento-overline">KEEP THE NEXT DATE IN SIGHT</div>
+        <h3>Dates become<br><em>decisions.</em></h3>
+        <p>Spot explicit full dates in notices, review countdowns and add your own reminders.</p>
+        <div class="bento-calendar-preview">
+          <div class="calendar-preview-head"><b>DATE RADAR</b><span>PREVIEW</span></div>
+          <div class="calendar-preview-days"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+          <div class="calendar-preview-numbers"><span>01</span><span>02</span><span>03</span><span>04</span><span>05</span><span class="calendar-preview-mark">06</span><span>07</span></div>
+          <div class="calendar-preview-foot"><i></i> DEADLINES STAND OUT</div>
+        </div>
+      </article>
+      <article class="nexus-bento-card bento-library">
+        <div class="bento-topline"><span class="bento-icon">▤</span><span class="bento-index">04 / SESSION LIBRARY</span></div>
+        <div class="bento-stack" aria-hidden="true"><div class="stack-sheet sheet-back"></div><div class="stack-sheet sheet-mid"></div><div class="stack-sheet sheet-front"><span>NOTICE / 001</span><b>Saved analysis</b><i>SUMMARY · DATES · ACTIONS</i><div class="stack-lines"></div></div><span class="stack-star">✦</span></div>
+        <div class="bento-overline">YOUR WORKSPACE</div>
+        <h3>Keep your<br><em>work in reach.</em></h3>
+        <p>Save important notices, revisit recent analyses and export session history when needed.</p>
+        <div class="bento-local-note"><span></span> PRIVATE TO THE ACTIVE SESSION</div>
       </article>
     </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown('<div class="home-section-title">How NoticeBuddy works</div>'
-                '<div class="home-section-subtitle">Four simple steps from a complex notice to a clearer plan.</div>',
-                unsafe_allow_html=True)
-    st.markdown("""
-    <div class="workflow-home">
-      <div class="workflow-home-step"><span>STEP 01</span><b>Upload</b><p>Paste text or choose an image/PDF.</p></div>
-      <div class="workflow-home-step"><span>STEP 02</span><b>Extract</b><p>Read text from images or selectable PDFs.</p></div>
-      <div class="workflow-home-step"><span>STEP 03</span><b>Analyze</b><p>AI organizes the key information.</p></div>
-      <div class="workflow-home-step"><span>STEP 04</span><b>Take action</b><p>Review the summary and verify official details.</p></div>
+    <div class="nexus-process-head">
+      <div><div class="nexus-section-kicker"><span></span> THE PIPELINE</div><h2>From notice <b>to next move.</b></h2></div>
+      <p>A deliberate workflow, designed to reduce confusion—not replace the official source.</p>
+    </div>
+    <div class="nexus-process-rail">
+      <div class="process-node"><div class="process-node-top"><span>01</span><i>↗</i></div><b>Ingest</b><p>Paste text or upload a readable image/PDF.</p></div>
+      <div class="process-connector"><span></span></div>
+      <div class="process-node"><div class="process-node-top"><span>02</span><i>⌗</i></div><b>Extract</b><p>Read the text that can be found in the notice.</p></div>
+      <div class="process-connector"><span></span></div>
+      <div class="process-node"><div class="process-node-top"><span>03</span><i>✦</i></div><b>Understand</b><p>Organize the details into clear sections.</p></div>
+      <div class="process-connector"><span></span></div>
+      <div class="process-node"><div class="process-node-top"><span>04</span><i>✓</i></div><b>Act</b><p>Verify official requirements, then plan the next step.</p></div>
     </div>
     """, unsafe_allow_html=True)
 
