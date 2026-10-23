@@ -2,6 +2,7 @@ import fitz
 import streamlit as st
 from PIL import Image
 from google import genai
+from google.genai import types
 import easyocr
 import numpy as np
 import re
@@ -1650,6 +1651,45 @@ NOTICE:
     return response_text or "No explanation was returned."
 
 
+def transcribe_voice_question(audio_bytes, speech_language="Auto detect"):
+    """Transcribe a short microphone recording into text."""
+    client = genai.Client(api_key=st.secrets["GEMMA_API_KEY"])
+    language_instruction = {
+        "Hindi": "Transcribe in Devanagari Hindi.",
+        "English": "Transcribe in English.",
+        "Hinglish": "Preserve the natural mix of spoken Hindi and English.",
+        "Auto detect": "Detect Hindi, English, or Hinglish and preserve the spoken language naturally."
+    }.get(speech_language, "Detect the spoken language.")
+    audio_part = types.Part.from_bytes(data=audio_bytes, mime_type="audio/wav")
+    prompt = f"""
+Transcribe this recording accurately.
+{language_instruction}
+Return only the recognized words. Do not answer the question or add commentary.
+If any words are unclear, mark those parts as [unclear].
+"""
+    return generate_notice_response(client, [prompt, audio_part]).strip()
+
+
+def answer_voice_question(question, language, record=None):
+    """Answer a voice question using the selected notice when available."""
+    if record:
+        return answer_notice_question(
+            record.get("source_text", ""), record.get("explanation", ""), question, language
+        )
+    client = genai.Client(api_key=st.secrets["GEMMA_API_KEY"])
+    prompt = f"""
+You are NoticeBuddy AI, a helpful voice assistant for students.
+Reply in {language}, using concise, natural, student-friendly wording.
+Help with using NoticeBuddy and general study/productivity questions.
+For official deadlines, eligibility, fees, or documents, never guess. Ask the
+student to analyze or select the original notice first. Encourage official verification.
+
+Student's voice question:
+{question}
+"""
+    return generate_notice_response(client, prompt)
+
+
 def answer_notice_question(notice_text, explanation, question, language):
     """Answer a follow-up using the specific notice as the source of truth."""
     client = genai.Client(api_key=st.secrets["GEMMA_API_KEY"])
@@ -1960,6 +2000,8 @@ st.session_state.setdefault("notice_history", [])
 st.session_state.setdefault("manual_deadlines", [])
 st.session_state.setdefault("notice_chats", {})
 st.session_state.setdefault("latest_notice_id", None)
+st.session_state.setdefault("voice_history", [])
+st.session_state.setdefault("voice_draft_transcript", "")
 
 
 # ---------- APP NAVIGATION ----------
@@ -1973,7 +2015,7 @@ with st.sidebar:
     st.markdown("---")
     page = st.radio(
         "NAVIGATION",
-        ["🏠 Home", "📊 Dashboard", "✨ Analyzer", "📘 How it works", "ℹ️ About"],
+        ["🏠 Home", "📊 Dashboard", "🎙️ Voice Assistant", "✨ Analyzer", "📘 How it works", "ℹ️ About"],
         key="main_navigation"
     )
     st.markdown(
