@@ -7,6 +7,8 @@ import easyocr
 import numpy as np
 import re
 import json
+import csv
+from io import StringIO
 from html import escape as html_escape
 import time
 import uuid
@@ -4089,6 +4091,90 @@ div[data-testid="stMainBlockContainer"] {
     }
 }
 
+
+/* ACTION CENTER — dedicated workspace components */
+.action-hero {
+    position: relative; overflow: hidden; isolation: isolate;
+    margin: 0 0 22px; padding: clamp(24px,3.2vw,40px);
+    border-radius: 26px; border: 1px solid rgba(124,111,255,.44);
+    background:
+      radial-gradient(ellipse at 86% 12%,rgba(83,204,255,.22),transparent 30%),
+      radial-gradient(ellipse at 10% 100%,rgba(126,65,255,.22),transparent 42%),
+      linear-gradient(125deg,rgba(34,24,83,.98),rgba(13,51,91,.98),rgba(9,17,40,.98));
+    box-shadow: 0 22px 55px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.09);
+}
+.action-hero::after {
+    content:"";position:absolute;z-index:-1;width:300px;height:300px;right:-90px;top:-140px;
+    border:1px solid rgba(119,220,255,.27);border-radius:50%;
+    box-shadow:0 0 0 24px rgba(112,116,255,.05),0 0 0 52px rgba(112,116,255,.03);
+    animation:actionHeroOrbit 26s linear infinite;
+}
+@keyframes actionHeroOrbit { to { transform:rotate(360deg); } }
+.action-eyebrow { display:flex;align-items:center;gap:9px;color:#C4BCFF;font-size:9px;font-weight:900;letter-spacing:1.6px; }
+.action-eyebrow span { display:inline-block;width:7px;height:7px;border-radius:50%;background:#65F0C6;box-shadow:0 0 14px rgba(101,240,198,.65); }
+.action-hero h1 { margin:15px 0 10px;font-size:clamp(31px,4vw,48px);line-height:1.08;letter-spacing:-.05em;color:#F8FAFF !important; }
+.action-hero h1 b { background:linear-gradient(95deg,#C3B5FF,#73E6FF);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent; }
+.action-hero p { max-width:740px;color:#CAD5F1 !important;font-size:14px;line-height:1.8;margin:0; }
+.action-hero-footer { display:flex;align-items:center;gap:12px;margin-top:25px;color:#9EB2DA;font-size:8px;font-weight:900;letter-spacing:1.4px; }
+.action-hero-footer i { display:block;width:32px;height:1px;background:linear-gradient(90deg,#9E8BFF,#6EEBFF); }
+.action-kpi { position:relative;overflow:hidden;padding:17px 18px;border-radius:17px;border:1px solid rgba(117,143,224,.24);background:linear-gradient(145deg,rgba(23,33,65,.96),rgba(9,20,42,.98));box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 12px 26px rgba(0,0,0,.13);margin-bottom:8px; }
+.action-kpi::after { content:"";position:absolute;right:-23px;bottom:-35px;width:88px;height:88px;border:1px solid rgba(140,130,255,.20);border-radius:50%;box-shadow:0 0 0 12px rgba(107,99,255,.04);pointer-events:none; }
+.action-kpi-top { display:flex;align-items:center;gap:8px;color:#9FB0D4;font-size:8px;font-weight:900;letter-spacing:1px; }
+.action-kpi-top span { display:grid;place-items:center;width:25px;height:25px;border-radius:9px;background:rgba(130,118,255,.15);color:#BCB2FF;font-size:13px; }
+.action-kpi strong { display:block;margin-top:9px;color:#F7FAFF;font-size:27px;line-height:1;font-weight:800; }
+.action-kpi-green .action-kpi-top span { background:rgba(48,215,166,.12);color:#69E6BE; }
+.action-kpi-red .action-kpi-top span { background:rgba(255,101,133,.12);color:#FF90A7; }
+.action-progress-label { display:flex;justify-content:space-between;align-items:center;margin:7px 0 3px;color:#ACBBDD;font-size:12px; }
+.action-progress-label b { color:#73E4FF;font-size:17px; }
+.action-progress-caption { display:flex;flex-direction:column;justify-content:center;min-height:65px;padding-left:12px;border-left:1px solid rgba(120,144,220,.25); }
+.action-progress-caption b { color:#EAF1FF;font-size:16px; }
+.action-progress-caption span { color:#8FA3CA;font-size:10px; }
+.action-section-title { display:flex;align-items:flex-start;gap:13px;margin:29px 0 14px; }
+.action-section-title > span { display:grid;place-items:center;width:34px;height:34px;flex:0 0 34px;border:1px solid rgba(133,121,255,.34);border-radius:11px;background:rgba(105,88,255,.13);color:#BDB3FF;font-size:11px;font-weight:900; }
+.action-section-title > div { display:flex;flex-direction:column;gap:3px; }
+.action-section-title b { color:#F0F4FF;font-size:16px; }
+.action-section-title small { color:#93A7CF;font-size:11px;line-height:1.6; }
+.action-source-pill { display:flex;align-items:center;gap:12px;margin:12px 0;padding:13px 15px;border:1px solid rgba(115,142,230,.22);border-radius:14px;background:rgba(10,20,42,.76); }
+.action-source-pill > span { display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:rgba(101,120,255,.15);color:#AFA3FF;font-size:16px; }
+.action-source-pill > div { min-width:0;display:flex;flex-direction:column;gap:3px;flex:1; }
+.action-source-pill small { color:#8FA6D4;font-size:8px;letter-spacing:1.3px;font-weight:900; }
+.action-source-pill b { color:#EEF3FF;font-size:12px;overflow-wrap:anywhere; }
+.action-source-pill em { color:#78DFFF;font-size:10px;font-style:normal;white-space:nowrap; }
+div[class*="st-key-action_task_"] { padding:4px 0;margin:5px 0; }
+.action-task-card { padding:11px 13px;border:1px solid rgba(113,138,215,.20);border-radius:13px;background:linear-gradient(110deg,rgba(16,29,58,.89),rgba(9,18,39,.90));min-width:0; }
+.action-task-title { color:#EDF3FF;font-size:12px;font-weight:800;line-height:1.55;overflow-wrap:anywhere; }
+.action-task-meta { color:#8EA4CC;font-size:9px;margin-top:4px;overflow-wrap:anywhere; }
+.action-task-evidence { color:#AEBDE0;font-size:10px;line-height:1.6;margin-top:6px;padding-top:6px;border-top:1px solid rgba(113,138,215,.12);overflow-wrap:anywhere; }
+.action-task-card.action-done { background:rgba(23,95,83,.22);border-color:rgba(60,219,173,.22); }
+.action-task-card.action-done .action-task-title { color:#8FE8C9;text-decoration:line-through; }
+.action-task-status { display:flex;flex-direction:column;align-items:flex-start;gap:7px;min-width:0; }
+.action-task-status small { color:#91A5CA;font-size:9px;line-height:1.4; }
+.action-priority { display:inline-block;padding:4px 7px;border-radius:99px;font-size:8px;font-weight:900;letter-spacing:.5px; }
+.action-priority-high { color:#FF9AAA;background:rgba(255,91,119,.13);border:1px solid rgba(255,91,119,.20); }
+.action-priority-normal { color:#BDB1FF;background:rgba(135,113,255,.13);border:1px solid rgba(135,113,255,.20); }
+.action-priority-low { color:#83D7FA;background:rgba(51,166,222,.12);border:1px solid rgba(51,166,222,.20); }
+.action-board-heading { display:flex;justify-content:space-between;gap:10px;margin:12px 0;color:#C7D5F0;font-size:11px; }
+.action-board-heading span { color:#8298C4;font-weight:500; }
+.action-empty-state { display:flex;align-items:center;flex-direction:column;text-align:center;padding:35px 22px;margin:10px 0;border:1px dashed rgba(113,138,215,.3);border-radius:20px;background:rgba(9,17,38,.44); }
+.action-empty-state > span { display:grid;place-items:center;width:47px;height:47px;margin-bottom:12px;border-radius:15px;background:rgba(76,219,172,.12);color:#66E7BD;font-size:22px; }
+.action-empty-state b { color:#EFF4FF;font-size:16px; }
+.action-empty-state p { color:#96AACE !important;max-width:560px;font-size:11px;line-height:1.8; }
+@media (max-width: 760px) {
+    .action-hero { padding:22px 18px;border-radius:20px; }
+    .action-hero-footer { gap:6px;font-size:7px;letter-spacing:.6px; }
+    .action-hero-footer i { width:16px; }
+    .action-section-title b { font-size:14px; }
+    .action-source-pill { align-items:flex-start; }
+    .action-source-pill em { font-size:9px;white-space:normal; }
+    .action-task-card { padding:9px; }
+    .action-task-title { font-size:10px; }
+    .action-task-meta,.action-task-evidence { font-size:8px; }
+    .action-task-status small { font-size:8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .action-hero::after { animation:none !important; }
+}
+
 </style>  
 
 """, unsafe_allow_html=True)
@@ -4635,11 +4721,16 @@ st.session_state.setdefault("notice_chats", {})
 st.session_state.setdefault("latest_notice_id", None)
 st.session_state.setdefault("voice_history", [])
 st.session_state.setdefault("voice_draft_transcript", "")
+st.session_state.setdefault("action_tasks", [])
 
 
 # ---------- APP NAVIGATION ----------
 def go_to_analyzer():
     st.session_state["main_navigation"] = "✨ Analyzer"
+
+
+def go_to_action_center():
+    st.session_state["main_navigation"] = "✅ Action Center"
 
 
 with st.sidebar:
@@ -4648,7 +4739,7 @@ with st.sidebar:
     st.markdown("---")
     page = st.radio(
         "NAVIGATION",
-        ["🏠 Home", "📊 Dashboard", "🎙️ Voice Assistant", "✨ Analyzer", "📘 How it works", "ℹ️ About"],
+        ["🏠 Home", "📊 Dashboard", "✅ Action Center", "🎙️ Voice Assistant", "✨ Analyzer", "📘 How it works", "ℹ️ About"],
         key="main_navigation"
     )
     st.markdown(
@@ -4939,7 +5030,8 @@ elif page == "📊 Dashboard":
                     key="export_notice_history",
                     use_container_width=True
                 )
-        st.caption("Privacy note: history and saved notices are held only in this active app session. They are not stored in a permanent database and may be cleared when the session ends.")
+        st.button("✅ Open Action Center", key="dashboard_open_action_center", on_click=go_to_action_center, use_container_width=True)
+    st.caption("Privacy note: history and saved notices are held only in this active app session. They are not stored in a permanent database and may be cleared when the session ends.")
 
     with saved_tab:
         st.markdown('<div class="home-section-title">Your saved notices</div>', unsafe_allow_html=True)
@@ -5070,6 +5162,339 @@ elif page == "📊 Dashboard":
                         args=(record["id"],),
                         use_container_width=True
                     )
+
+
+
+# ---------- NOTICEBUDDY ACTION CENTER ----------
+elif page == "✅ Action Center":
+    st.markdown("""
+    <div class="action-hero">
+      <div class="action-eyebrow"><span></span> NOTICEBUDDY / ACTION CENTER</div>
+      <h1>From notice to <b>done.</b></h1>
+      <p>Turn the exact instructions in your notices into a trackable plan. Add your own tasks, set priorities, watch due dates and export your checklist.</p>
+      <div class="action-hero-footer"><span>01 / EXTRACT</span><i></i><span>02 / ORGANIZE</span><i></i><span>03 / COMPLETE</span></div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    all_notice_records = st.session_state.get("notice_history", [])
+    action_tasks = st.session_state.setdefault("action_tasks", [])
+    today_action = date.today()
+
+    def _action_priority(task):
+        return task.get("priority", "Normal")
+
+    def _action_is_overdue(task):
+        due = task.get("due_date", "")
+        if not due or task.get("completed"):
+            return False
+        try:
+            return date.fromisoformat(due) < today_action
+        except (ValueError, TypeError):
+            return False
+
+    completed_count = sum(1 for task in action_tasks if task.get("completed"))
+    open_count = len(action_tasks) - completed_count
+    overdue_count = sum(1 for task in action_tasks if _action_is_overdue(task))
+    completion_pct = int((completed_count / len(action_tasks)) * 100) if action_tasks else 0
+
+    kpi_cols = st.columns(4)
+    kpi_items = [
+        ("TOTAL TASKS", str(len(action_tasks)), "◈", "action-kpi-blue"),
+        ("IN PROGRESS", str(open_count), "↗", "action-kpi-violet"),
+        ("COMPLETED", str(completed_count), "✓", "action-kpi-green"),
+        ("OVERDUE", str(overdue_count), "!", "action-kpi-red"),
+    ]
+    for col, (label, value, icon, kpi_class) in zip(kpi_cols, kpi_items):
+        with col:
+            st.markdown(
+                f'<div class="action-kpi {kpi_class}"><div class="action-kpi-top"><span>{icon}</span><small>{label}</small></div><strong>{value}</strong></div>',
+                unsafe_allow_html=True
+            )
+
+    progress_left, progress_right = st.columns([0.72, 0.28])
+    with progress_left:
+        st.markdown(
+            f'<div class="action-progress-label"><span>Overall completion</span><b>{completion_pct}%</b></div>',
+            unsafe_allow_html=True
+        )
+        st.progress(completion_pct / 100 if action_tasks else 0.0, text="Checklist progress")
+    with progress_right:
+        st.markdown(
+            f'<div class="action-progress-caption"><b>{completed_count} of {len(action_tasks)}</b><span>tasks completed</span></div>',
+            unsafe_allow_html=True
+        )
+
+    st.markdown('<div class="action-section-title"><span>01</span><div><b>Build a checklist from a notice</b><small>Suggestions are extracted from your original notice text—not invented requirements.</small></div></div>', unsafe_allow_html=True)
+    if not all_notice_records:
+        st.info("Pehle Analyzer page par ek notice analyze kar. Uske baad yahan se source-based checklist bana sakta hai.")
+        if st.button("✨ Open Analyzer", key="action_open_analyzer_empty", use_container_width=True):
+            go_to_analyzer()
+            st.rerun()
+    else:
+        notice_options = ["No notice selected"] + [
+            f"{index + 1}. {record.get('title', 'Untitled notice')}" for index, record in enumerate(all_notice_records)
+        ]
+        selected_notice_label = st.selectbox(
+            "Select an analyzed notice",
+            notice_options,
+            key="action_center_notice_select",
+            help="The checklist is built from the selected notice's extracted source text and dates."
+        )
+        selected_action_record = None
+        if selected_notice_label != "No notice selected":
+            selected_index = notice_options.index(selected_notice_label) - 1
+            if 0 <= selected_index < len(all_notice_records):
+                selected_action_record = all_notice_records[selected_index]
+                st.markdown(
+                    f'<div class="action-source-pill"><span>▤</span><div><small>SELECTED SOURCE</small><b>{html_escape(selected_action_record.get("title", "Untitled notice"))}</b></div><em>{len(selected_action_record.get("dates", []))} date(s) detected</em></div>',
+                    unsafe_allow_html=True
+                )
+
+        if st.button(
+            "✦ Generate checklist from this notice",
+            key="action_generate_from_notice",
+            type="primary",
+            disabled=selected_action_record is None,
+            use_container_width=True
+        ):
+            record = selected_action_record
+            source_id = record.get("id")
+            source_title = record.get("title", "Notice")
+            source_text = record.get("source_text", "") or ""
+            existing_signatures = {
+                (item.get("source_notice_id"), item.get("evidence", ""))
+                for item in action_tasks if item.get("evidence")
+            }
+            candidate_lines = []
+            seen_lines = set()
+            action_pattern = re.compile(
+                r"\b(submit|upload|apply|register|visit|report|carry|bring|attach|complete|verify|contact|pay|renew|collect|download|fill|email|send|provide|produce|present|appear|deadline|last date|due date|must submit|must carry|should submit|required to|on or before|no later than|applications close|registration closes|valid till)\b|जमा|अपलोड|आवेदन|भरें|ले जाएं|संपर्क|अंतिम तिथि|प्रस्तुत|सत्यापित|करें",
+                re.IGNORECASE
+            )
+            for raw_line in source_text.splitlines():
+                clean_line = re.sub(r"\s+", " ", raw_line).strip().lstrip("•*- \t")
+                normalized_line = clean_line.casefold()
+                if len(clean_line) < 18 or len(clean_line) > 420:
+                    continue
+                if normalized_line in seen_lines or not action_pattern.search(clean_line):
+                    continue
+                seen_lines.add(normalized_line)
+                candidate_lines.append(clean_line)
+                if len(candidate_lines) >= 12:
+                    break
+
+            new_tasks = []
+            notice_dates = record.get("dates", []) or []
+
+            def _priority_for_line(line):
+                if re.search(r"urgent|immediately|last date|deadline|no later than|on or before|must submit|अंतिम तिथि|तुरंत", line, re.IGNORECASE):
+                    return "High"
+                if re.search(r"verify|check|confirm|contact|सत्यापित|जांच", line, re.IGNORECASE):
+                    return "Low"
+                return "Normal"
+
+            def _date_for_line(line):
+                normalized_source = re.sub(r"\s+", " ", line).casefold()
+                for date_item in notice_dates:
+                    date_label = re.sub(r"\s+", " ", str(date_item.get("label", ""))).casefold()
+                    if normalized_source == date_label or normalized_source in date_label or date_label in normalized_source:
+                        return date_item.get("date", "")
+                    if len(normalized_source) > 70 and (normalized_source[:70] in date_label or date_label[:70] in normalized_source):
+                        return date_item.get("date", "")
+                return ""
+
+            for source_line in candidate_lines:
+                signature = (source_id, source_line)
+                if signature in existing_signatures:
+                    continue
+                due_value = _date_for_line(source_line)
+                new_tasks.append({
+                    "id": uuid.uuid4().hex[:12],
+                    "title": source_line[:170] + ("…" if len(source_line) > 170 else ""),
+                    "evidence": source_line,
+                    "source_notice_id": source_id,
+                    "source_title": source_title,
+                    "due_date": due_value,
+                    "priority": _priority_for_line(source_line),
+                    "category": "From notice",
+                    "completed": False,
+                    "created_at": datetime.now().isoformat(timespec="minutes"),
+                    "origin": "notice"
+                })
+                existing_signatures.add(signature)
+
+            # Keep dates visible even if the notice phrases them without an action verb.
+            for date_item in notice_dates[:8]:
+                date_evidence = str(date_item.get("label", "Date stated in notice"))
+                date_signature = (source_id, "DATE: " + date_evidence)
+                if date_signature in existing_signatures:
+                    continue
+                date_label = date_evidence[:135] + ("…" if len(date_evidence) > 135 else "")
+                new_tasks.append({
+                    "id": uuid.uuid4().hex[:12],
+                    "title": "Verify date stated in the notice",
+                    "evidence": date_evidence,
+                    "source_notice_id": source_id,
+                    "source_title": source_title,
+                    "due_date": date_item.get("date", ""),
+                    "priority": "High" if re.search(r"deadline|last date|due|submit by|final date|अंतिम तिथि", date_evidence, re.IGNORECASE) else "Normal",
+                    "category": "Notice date",
+                    "completed": False,
+                    "created_at": datetime.now().isoformat(timespec="minutes"),
+                    "origin": "notice"
+                })
+                existing_signatures.add(date_signature)
+
+            if new_tasks:
+                action_tasks.extend(new_tasks)
+                st.success(f"Checklist built: {len(new_tasks)} task(s) added from **{source_title}**.")
+            else:
+                st.info("Is notice se koi naya matching action/date nahi mila, ya checklist pehle hi ban chuki hai. Neeche manual task add kar sakta hai.")
+
+    st.markdown('<div class="action-section-title"><span>02</span><div><b>Add your own task</b><small>Track a personal follow-up, document collection, call or study step.</small></div></div>', unsafe_allow_html=True)
+    with st.form("action_add_task_form", clear_on_submit=True):
+        manual_title = st.text_input("Task name", placeholder="e.g. Scan my marksheet and save a PDF")
+        manual_cols = st.columns([1, 1, 1])
+        with manual_cols[0]:
+            manual_priority = st.selectbox("Priority", ["High", "Normal", "Low"], index=1)
+        with manual_cols[1]:
+            manual_category = st.selectbox("Category", ["Documents", "Submit / Apply", "Follow up", "Verify", "Study / Prepare", "Other"])
+        with manual_cols[2]:
+            manual_has_due_date = st.checkbox("Set due date", value=False)
+            manual_due_date = st.date_input("Due date", value=today_action + timedelta(days=7))
+        manual_note = st.text_input("Optional note", placeholder="Add a small detail or reference")
+        manual_submitted = st.form_submit_button("＋ Add task to my plan", use_container_width=True)
+
+    if manual_submitted:
+        if not manual_title.strip():
+            st.warning("Task name empty hai — pehle task ka naam likh.")
+        else:
+            linked_id = selected_action_record.get("id") if all_notice_records and "selected_action_record" in locals() and selected_action_record else None
+            linked_title = selected_action_record.get("title", "Notice") if all_notice_records and "selected_action_record" in locals() and selected_action_record else "Personal task"
+            task_evidence = manual_note.strip() or "Manually added by you"
+            action_tasks.append({
+                "id": uuid.uuid4().hex[:12],
+                "title": manual_title.strip(),
+                "evidence": task_evidence,
+                "source_notice_id": linked_id,
+                "source_title": linked_title,
+                "due_date": manual_due_date.isoformat() if manual_has_due_date else "",
+                "priority": manual_priority,
+                "category": manual_category,
+                "completed": False,
+                "created_at": datetime.now().isoformat(timespec="minutes"),
+                "origin": "manual"
+            })
+            st.success("Task added to your Action Center.")
+
+    st.markdown('<div class="action-section-title"><span>03</span><div><b>Your action board</b><small>Mark tasks complete, filter the list and export the whole plan.</small></div></div>', unsafe_allow_html=True)
+    if action_tasks:
+        filter_value = st.radio(
+            "Show tasks",
+            ["All tasks", "To do", "Completed", "Overdue"],
+            horizontal=True,
+            key="action_task_filter"
+        )
+        visible_tasks = []
+        for task in action_tasks:
+            is_overdue = _action_is_overdue(task)
+            if filter_value == "To do" and task.get("completed"):
+                continue
+            if filter_value == "Completed" and not task.get("completed"):
+                continue
+            if filter_value == "Overdue" and not is_overdue:
+                continue
+            visible_tasks.append(task)
+
+        st.markdown(f'<div class="action-board-heading"><b>{len(visible_tasks)} <span>task(s) shown</span></b><span>{completed_count}/{len(action_tasks)} complete</span></div>', unsafe_allow_html=True)
+        for task in visible_tasks:
+            task_cols = st.columns([0.075, 0.61, 0.16, 0.155], vertical_alignment="center")
+            with task_cols[0]:
+                task_done_now = st.checkbox(
+                    "Complete task",
+                    value=bool(task.get("completed")),
+                    key=f"action_done_{task['id']}",
+                    label_visibility="collapsed"
+                )
+            task["completed"] = task_done_now
+            with task_cols[1]:
+                status_class = "action-done" if task_done_now else "action-open"
+                st.markdown(
+                    f'<div class="action-task-card {status_class}"><div class="action-task-title">{html_escape(task.get("title", "Untitled task"))}</div><div class="action-task-meta">{html_escape(task.get("source_title", "Personal task"))} · {html_escape(task.get("category", "Other"))}</div><div class="action-task-evidence">{html_escape(task.get("evidence", ""))}</div></div>',
+                    unsafe_allow_html=True
+                )
+            with task_cols[2]:
+                due_date = task.get("due_date", "")
+                priority_class = {"High": "action-priority-high", "Normal": "action-priority-normal", "Low": "action-priority-low"}.get(task.get("priority", "Normal"), "action-priority-normal")
+                priority_text = html_escape(task.get("priority", "Normal"))
+                due_text = "No due date"
+                if due_date:
+                    try:
+                        parsed_due = date.fromisoformat(due_date)
+                        due_delta = (parsed_due - today_action).days
+                        if task_done_now:
+                            due_text = "Completed"
+                        elif due_delta < 0:
+                            due_text = f"{abs(due_delta)}d overdue"
+                        elif due_delta == 0:
+                            due_text = "Due today"
+                        elif due_delta == 1:
+                            due_text = "Due tomorrow"
+                        else:
+                            due_text = parsed_due.strftime("%d %b %Y")
+                    except (ValueError, TypeError):
+                        due_text = due_date
+                st.markdown(
+                    f'<div class="action-task-status"><span class="action-priority {priority_class}">{priority_text}</span><small>{html_escape(due_text)}</small></div>',
+                    unsafe_allow_html=True
+                )
+            with task_cols[3]:
+                if st.button("Delete", key=f"action_delete_{task['id']}", use_container_width=True):
+                    st.session_state["action_tasks"] = [item for item in action_tasks if item.get("id") != task.get("id")]
+                    st.rerun()
+
+        export_csv_buffer = StringIO()
+        csv_writer = csv.writer(export_csv_buffer)
+        csv_writer.writerow(["Task", "Status", "Priority", "Due date", "Category", "Notice source", "Evidence / note", "Created at"])
+        for task in action_tasks:
+            csv_writer.writerow([
+                task.get("title", ""),
+                "Completed" if task.get("completed") else "Open",
+                task.get("priority", "Normal"),
+                task.get("due_date", ""),
+                task.get("category", "Other"),
+                task.get("source_title", "Personal task"),
+                task.get("evidence", ""),
+                task.get("created_at", "")
+            ])
+        export_left, export_right = st.columns(2)
+        with export_left:
+            st.download_button(
+                "⬇ Export CSV checklist",
+                data=export_csv_buffer.getvalue(),
+                file_name="noticebuddy_action_plan.csv",
+                mime="text/csv",
+                key="action_export_csv",
+                use_container_width=True
+            )
+        with export_right:
+            st.download_button(
+                "⬇ Export JSON backup",
+                data=json.dumps(action_tasks, ensure_ascii=False, indent=2),
+                file_name="noticebuddy_action_plan.json",
+                mime="application/json",
+                key="action_export_json",
+                use_container_width=True
+            )
+    else:
+        st.markdown("""
+        <div class="action-empty-state">
+          <span>✓</span><b>Your action board is ready.</b>
+          <p>Generate a checklist from an analyzed notice above, or add your own first task. Your tasks will appear here with deadlines and progress tracking.</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.caption("Action Center tasks are stored only in this active Streamlit session. Export CSV/JSON to keep a copy. Suggested items come from matching lines/dates in the provided notice; always verify them against the official source.")
 
 
 # ---------- VOICE ASSISTANT ----------
