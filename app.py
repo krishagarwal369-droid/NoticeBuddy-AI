@@ -932,6 +932,122 @@ div[class*="st-key-result-card-5"] h4::before { content: "i"; color: #94BAFF; }
     .workflow-step, .workflow-timeline > i { animation: none; }
 }
 
+
+
+/* ===== MAJOR REDESIGN: HOME + COMMAND CENTER ===== */
+.page-heading { margin: 0.2rem 0 1.2rem; }
+.page-heading .eyebrow { margin-bottom: 10px; }
+.page-heading h1 {
+    margin: 8px 0 6px;
+    font-size: clamp(28px, 4vw, 42px);
+    letter-spacing: -1px;
+    color: #F4F6FF;
+    text-shadow: 0 0 24px rgba(113, 104, 255, 0.18);
+}
+.page-heading p { color: #AEBDE5 !important; max-width: 780px; }
+.home-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 4px 0 26px; }
+.home-feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin: 17px 0 26px;
+}
+.home-feature-card {
+    position: relative;
+    min-height: 185px;
+    padding: 21px 19px;
+    overflow: hidden;
+    border: 1px solid rgba(102, 130, 204, 0.53);
+    border-radius: 19px;
+    background: linear-gradient(145deg, rgba(24, 35, 72, 0.95), rgba(10, 24, 48, 0.96));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 13px 28px rgba(0,0,0,0.14);
+    transition: transform .28s ease, border-color .28s ease, box-shadow .28s ease;
+}
+.home-feature-card::after {
+    content: "";
+    position: absolute;
+    right: -35px;
+    bottom: -56px;
+    width: 130px;
+    height: 130px;
+    border: 1px solid rgba(111, 132, 255, 0.23);
+    border-radius: 50%;
+    box-shadow: 0 0 0 14px rgba(115, 95, 255, 0.035), 0 0 0 30px rgba(115, 95, 255, 0.025);
+}
+.home-feature-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(130, 151, 255, 0.85);
+    box-shadow: 0 18px 38px rgba(67, 75, 194, 0.20);
+}
+.feature-icon {
+    width: 45px;
+    height: 45px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    margin-bottom: 16px;
+    font-size: 22px;
+    border: 1px solid rgba(171, 166, 255, 0.45);
+    background: linear-gradient(135deg, rgba(127, 86, 255, 0.28), rgba(36, 173, 255, 0.16));
+    box-shadow: 0 0 22px rgba(104, 89, 255, 0.14);
+}
+.home-feature-card h3 { font-size: 16px; margin: 0 0 7px; color: #F3F4FF; }
+.home-feature-card p { font-size: 12px; line-height: 1.65; color: #AEBBE0 !important; margin: 0; }
+.home-section-title { margin: 25px 0 4px; font-size: 22px; font-weight: 800; color: #F3F5FF; }
+.home-section-subtitle { margin: 0 0 15px; color: #A7B5DC; font-size: 13px; }
+.workflow-home {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 11px;
+    margin: 15px 0 28px;
+}
+.workflow-home-step {
+    padding: 15px 14px;
+    background: rgba(13, 24, 49, 0.74);
+    border: 1px solid rgba(96, 120, 191, 0.38);
+    border-radius: 15px;
+}
+.workflow-home-step span { display: block; color: #7EE7FF; font-size: 10px; font-weight: 900; letter-spacing: 1.5px; margin-bottom: 8px; }
+.workflow-home-step b { display: block; color: #EFF0FF; font-size: 13px; margin-bottom: 5px; }
+.workflow-home-step p { color: #A5B4DA !important; font-size: 11px; line-height: 1.55; margin: 0; }
+.workspace-card {
+    padding: 20px;
+    border: 1px solid rgba(96, 123, 194, 0.52);
+    border-radius: 18px;
+    background: linear-gradient(145deg, rgba(20, 32, 66, 0.8), rgba(10, 22, 44, 0.78));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.workspace-kicker { color: #7FE6FF; font-size: 10px; font-weight: 900; letter-spacing: 1.6px; text-transform: uppercase; margin-bottom: 8px; }
+.workspace-title { color: #F1F3FF; font-size: 19px; font-weight: 800; margin-bottom: 7px; }
+.workspace-copy { color: #AAB9DF; font-size: 12px; line-height: 1.65; }
+.workspace-list { display: grid; gap: 10px; margin-top: 16px; }
+.workspace-list div { display: flex; gap: 10px; align-items: flex-start; color: #D8E0FF; font-size: 12px; line-height: 1.55; }
+.workspace-list span { color: #7FE6FF; font-size: 16px; }
+.page-chip {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 7px 10px; margin-bottom: 10px;
+    border-radius: 999px; border: 1px solid rgba(117, 138, 226, 0.38);
+    background: rgba(40, 53, 108, 0.35); color: #C9D5FF;
+    font-size: 10px; font-weight: 800; letter-spacing: 1px;
+}
+.page-chip i { width: 6px; height: 6px; background: #5DE4C1; border-radius: 50%; box-shadow: 0 0 9px rgba(93,228,193,.7); }
+.sidebar-cta {
+    margin-top: 13px; padding: 12px 13px;
+    border-radius: 13px; border: 1px solid rgba(114, 132, 222, 0.32);
+    background: linear-gradient(110deg, rgba(107, 75, 255, 0.13), rgba(29, 144, 221, 0.08));
+    color: #AEBDE5; font-size: 11px; line-height: 1.5;
+}
+@media (max-width: 800px) {
+    .home-feature-grid { grid-template-columns: 1fr; }
+    .home-feature-card { min-height: auto; }
+    .workflow-home { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 480px) {
+    .workflow-home { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .workflow-home-step { padding: 12px 10px; }
+    .workspace-card { padding: 15px; }
+}
+
 </style>  
 
 """, unsafe_allow_html=True)
@@ -1048,18 +1164,27 @@ AI_ACTIVITY_HTML = """
 """
 
 
-# ---------- SIDEBAR ----------
+# ---------- APP NAVIGATION ----------
+def go_to_analyzer():
+    st.session_state["main_navigation"] = "✨ Analyzer"
+
+
 with st.sidebar:
     st.markdown("## 📄 NoticeBuddy AI")
     st.caption("Your personal notice assistant")
     st.markdown("---")
     page = st.radio(
         "NAVIGATION",
-        ["🏠 Dashboard", "📘 How it works", "ℹ️ About"]
+        ["🏠 Home", "✨ Analyzer", "📘 How it works", "ℹ️ About"],
+        key="main_navigation"
+    )
+    st.markdown(
+        '<div class="sidebar-cta"><b style="color:#EEF1FF">Understand every notice.</b><br>'
+        'Turn complicated information into simple steps, dates and checklists.</div>',
+        unsafe_allow_html=True
     )
     st.markdown("---")
-    st.markdown("**AI-powered notice help**")
-    st.caption("Read • Understand • Take action")
+    st.caption("Built by Kushagra Agarwal")
 
 
 # ---------- PREMIUM TOP NAVBAR ----------
@@ -1077,105 +1202,147 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# ---------- HERO ----------
-robot_image_url = "https://raw.githubusercontent.com/krishagarwal369-droid/NoticeBuddy-AI/main/Neon%20AI%20Robot%20Greeting.png"
-
-st.markdown(f"""
-<div class="hero">
-  <div class="hero-content">
-    <div class="hero-particles" aria-hidden="true">
-      <span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span>
-    </div>
-    <div class="hero-copy">
-      <div class="eyebrow">YOUR PERSONAL NOTICE ASSISTANT</div>
-      <h1>Confusing notices?<br>We've got you. ✨</h1>
-      <p>Turn college, scholarship and government notices into
-      simple explanations and clear next steps.</p>
-      <div class="creator-byline"><span class="creator-star">✦</span> Built by Kushagra Agarwal</div>
-    </div>
-    <div class="hero-robot-wrap">
-      <img class="hero-robot" src="{robot_image_url}" alt="NoticeBuddy AI robot assistant">
-    </div>
-  </div>
-</div>
-""", unsafe_allow_html=True)
-
-
-if page == "📘 How it works":
-    st.markdown("## How it works")
-    st.markdown("""
-    <div class="panel">
-    <h3>01 · Upload</h3>Paste notice text or upload an image.
-    <hr>
-    <h3>02 · Understand</h3>AI explains it in your selected language.
-    <hr>
-    <h3>03 · Take action</h3>Review dates, eligibility and documents.
+# ---------- HOME ----------
+if page == "🏠 Home":
+    robot_image_url = "https://raw.githubusercontent.com/krishagarwal369-droid/NoticeBuddy-AI/main/Neon%20AI%20Robot%20Greeting.png"
+    st.markdown(f"""
+    <div class="hero">
+      <div class="hero-content">
+        <div class="hero-particles" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <div class="hero-copy">
+          <div class="eyebrow">YOUR PERSONAL NOTICE ASSISTANT</div>
+          <h1>Confusing notices?<br>We've got you. ✨</h1>
+          <p>Turn college, scholarship and government notices into
+          simple explanations and clear next steps.</p>
+          <div class="creator-byline"><span class="creator-star">✦</span> Built by Kushagra Agarwal</div>
+        </div>
+        <div class="hero-robot-wrap">
+          <img class="hero-robot" src="{robot_image_url}" alt="NoticeBuddy AI robot assistant">
+        </div>
+      </div>
     </div>
     """, unsafe_allow_html=True)
 
-elif page == "ℹ️ About":
-    st.markdown("## About NoticeBuddy AI")
+    home_left, home_right = st.columns([1.0, 1.0], gap="large")
+    with home_left:
+        st.markdown(
+            '<div class="page-chip"><i></i> NOTICE CLARITY, REIMAGINED</div>',
+            unsafe_allow_html=True
+        )
+        if st.button("✨ Start Analyzing a Notice", key="home_start_analyzer", use_container_width=True):
+            go_to_analyzer()
+            st.rerun()
+    with home_right:
+        st.markdown(
+            '<div style="padding:12px 2px;color:#9FB0DB;font-size:12px;line-height:1.7">'
+            'Paste text or add a notice image/PDF. Get a simple summary, key dates, eligibility and next steps—'
+            'then verify important details against the original notice.</div>',
+            unsafe_allow_html=True
+        )
+
+    st.markdown('<div class="home-section-title">One notice. Clear next steps.</div>'
+                '<div class="home-section-subtitle">Designed to make dense official information easier for students to understand.</div>',
+                unsafe_allow_html=True)
     st.markdown("""
-    <div class="panel">
-    NoticeBuddy AI helps students understand official notices
-    more easily by extracting text and organizing important details.
-    <br><br>
-    Always verify important information with the original official notice.
+    <div class="home-feature-grid">
+      <article class="home-feature-card">
+        <div class="feature-icon">📄</div>
+        <h3>Read the notice</h3>
+        <p>Paste text, upload an image for OCR, or extract selectable text from a PDF.</p>
+      </article>
+      <article class="home-feature-card">
+        <div class="feature-icon">🧠</div>
+        <h3>Understand the details</h3>
+        <p>Get a student-friendly explanation in English or Hindi, grounded in the provided notice.</p>
+      </article>
+      <article class="home-feature-card">
+        <div class="feature-icon">✅</div>
+        <h3>Know what to do next</h3>
+        <p>Review the dates, eligibility and document requirements the notice actually mentions.</p>
+      </article>
     </div>
     """, unsafe_allow_html=True)
 
-else:
-    # ---------- DASHBOARD ----------
-    c1, c2, c3 = st.columns(3)
+    st.markdown('<div class="home-section-title">How NoticeBuddy works</div>'
+                '<div class="home-section-subtitle">Four simple steps from a complex notice to a clearer plan.</div>',
+                unsafe_allow_html=True)
+    st.markdown("""
+    <div class="workflow-home">
+      <div class="workflow-home-step"><span>STEP 01</span><b>Upload</b><p>Paste text or choose an image/PDF.</p></div>
+      <div class="workflow-home-step"><span>STEP 02</span><b>Extract</b><p>Read text from images or selectable PDFs.</p></div>
+      <div class="workflow-home-step"><span>STEP 03</span><b>Analyze</b><p>AI organizes the key information.</p></div>
+      <div class="workflow-home-step"><span>STEP 04</span><b>Take action</b><p>Review the summary and verify official details.</p></div>
+    </div>
+    """, unsafe_allow_html=True)
 
-    for col, title, value, icon in [
-        (c1, "INPUT", "Text + Image", "📄"),
-        (c2, "POWERED BY", "Generative AI", "✦"),
-        (c3, "BUILT FOR", "Students 🎓", "◎")
-    ]:
-        with col:
-            st.markdown(
-                f'<div class="metric"><span class="metric-icon">{icon}</span>'
-                f'<div class="metric-label">{title}</div>'
-                f'<div class="metric-value">{value}</div></div>',
-                unsafe_allow_html=True
-            )
+    st.markdown("""
+    <div class="workspace-card">
+      <div class="workspace-kicker">Built for clarity</div>
+      <div class="workspace-title">Your notice stays the source of truth.</div>
+      <div class="workspace-copy">NoticeBuddy helps explain the text; it does not replace an official notice or guarantee eligibility. Always confirm deadlines, conditions and submission rules with the issuing organization.</div>
+    </div>
+    """, unsafe_allow_html=True)
 
-    left, right = st.columns([1.05, .95], gap="large")
 
+# ---------- ANALYZER COMMAND CENTER ----------
+elif page == "✨ Analyzer":
+    st.markdown("""
+    <div class="page-heading">
+      <div class="eyebrow">NOTICEBUDDY COMMAND CENTER</div>
+      <h1>Analyze your notice</h1>
+      <p>Bring a notice in. Get a clearer, structured explanation out.</p>
+    </div>
+    <div class="page-chip"><i></i> READY FOR YOUR NOTICE</div>
+    """, unsafe_allow_html=True)
+
+    left, right = st.columns([1.03, 0.97], gap="large")
     with left:
-        st.markdown("## 📝 Analyze a notice")
+        st.markdown("""
+        <div class="workspace-card">
+          <div class="workspace-kicker">01 / Input</div>
+          <div class="workspace-title">Add a notice</div>
+          <div class="workspace-copy">Paste notice text, upload an image, or use a PDF with selectable text.</div>
+        </div>
+        """, unsafe_allow_html=True)
         language = st.selectbox(
-            "Explanation language", ["English", "Hindi"]
+            "Explanation language", ["English", "Hindi"], key="analysis_language"
         )
         notice = st.text_area(
             "Paste notice text",
-            placeholder="Paste your notice here...",
-            height=190
+            placeholder="Paste the official notice text here...",
+            height=210,
+            key="notice_text"
         )
         uploaded_file = st.file_uploader(
-            "Or upload a notice image",
-            type=["png", "jpg", "jpeg","pdf"]
+            "Or upload a notice image/PDF",
+            type=["png", "jpg", "jpeg", "pdf"],
+            key="notice_upload"
         )
         analyze = st.button(
             "✨ Extract & Explain",
             type="primary",
-            use_container_width=True
+            use_container_width=True,
+            key="analyze_notice"
         )
 
     with right:
-        st.markdown("## 💡 What you'll get")
         st.markdown("""
-        <div class="panel">
-        <h3>📌 Simple summary</h3>Understand the main message.
-        <hr>
-        <h3>📅 Important dates</h3>Find deadlines in the notice.
-        <hr>
-        <h3>🎯 Eligibility</h3>See the stated requirements.
-        <hr>
-        <h3>📑 Document checklist</h3>Review required documents.
+        <div class="workspace-card">
+          <div class="workspace-kicker">02 / What you'll get</div>
+          <div class="workspace-title">A clear action brief</div>
+          <div class="workspace-copy">The AI response is organized into cards so the most useful details are easier to scan.</div>
+          <div class="workspace-list">
+            <div><span>✦</span><span><b>Simple summary</b><br>Understand the main purpose.</span></div>
+            <div><span>◷</span><span><b>Important dates</b><br>Spot stated dates and deadlines.</span></div>
+            <div><span>◎</span><span><b>Eligibility</b><br>Review criteria present in the notice.</span></div>
+            <div><span>▤</span><span><b>Required documents</b><br>Check what the notice asks for.</span></div>
+            <div><span>✓</span><span><b>Next steps</b><br>See suggested actions based on the text.</span></div>
+          </div>
         </div>
+        <div class="workspace-copy" style="margin-top:14px">🔒 Your API key should be stored only in Streamlit Secrets, never in the public repository.</div>
         """, unsafe_allow_html=True)
 
     if analyze:
@@ -1185,21 +1352,17 @@ else:
             try:
                 with st.spinner("Reading your notice..."):
                     if uploaded_file.name.lower().endswith(".pdf"):
-                        import fitz
                         pdf = fitz.open(
                             stream=uploaded_file.getvalue(),
                             filetype="pdf"
                         )
-                        pdf_text = "\n".join(
-                            page.get_text() for page in pdf
-                        )
+                        pdf_text = "\n".join(page.get_text() for page in pdf)
                         pdf.close()
                         text = (text + "\n" + pdf_text).strip()
 
                         if not pdf_text.strip():
                             st.warning(
-                                "PDF has no selectable text. "
-                                "Scanned PDF needs OCR."
+                                "This PDF has no selectable text. Scanned PDFs need OCR; upload the page as an image for now."
                             )
                     else:
                         image = Image.open(uploaded_file).convert("RGB")
@@ -1212,11 +1375,12 @@ else:
                 text = ""
 
         if not text:
-            st.warning("Please paste text or upload an image.")
+            st.warning("Please paste notice text or upload an image/PDF with readable text.")
         else:
             with st.expander("View extracted notice text"):
                 st.write(text)
 
+            st.markdown('<div class="home-section-title">03 / AI analysis</div>', unsafe_allow_html=True)
             activity_slot = st.empty()
             try:
                 with st.spinner("🧠 AI is analyzing your notice..."):
@@ -1232,15 +1396,76 @@ else:
 
             else:
                 activity_slot.empty()
-                st.markdown("## 🤖 Your notice explained")
+                st.markdown('<div class="home-section-title">04 / Your notice explained</div>', unsafe_allow_html=True)
                 render_explanation_cards(explanation)
-
                 st.download_button(
                     "⬇️ Download explanation",
                     data=explanation,
                     file_name="noticebuddy_explanation.txt",
                     mime="text/plain"
                 )
+
+
+# ---------- HOW IT WORKS ----------
+elif page == "📘 How it works":
+    st.markdown("""
+    <div class="page-heading">
+      <div class="eyebrow">A SIMPLE WORKFLOW</div>
+      <h1>From notice to next steps</h1>
+      <p>NoticeBuddy organizes information from the notice you provide. Use the original notice as the final authority.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    st.markdown("""
+    <div class="workflow-home">
+      <div class="workflow-home-step"><span>01 / INPUT</span><b>Paste or upload</b><p>Add notice text, an image, or a selectable-text PDF.</p></div>
+      <div class="workflow-home-step"><span>02 / EXTRACT</span><b>Read the text</b><p>Image OCR extracts readable text; PDFs use selectable text.</p></div>
+      <div class="workflow-home-step"><span>03 / EXPLAIN</span><b>Use AI carefully</b><p>Gemma organizes the text into student-friendly sections.</p></div>
+      <div class="workflow-home-step"><span>04 / VERIFY</span><b>Check official details</b><p>Confirm dates and requirements with the issuing organization.</p></div>
+    </div>
+    """, unsafe_allow_html=True)
+    st.markdown("""
+    <div class="workspace-card">
+      <div class="workspace-kicker">Important limitation</div>
+      <div class="workspace-title">Scanned PDFs need a readable image for OCR.</div>
+      <div class="workspace-copy">The current version extracts selectable text from PDFs. If a PDF is just scanned pages, upload the page as an image for OCR.</div>
+    </div>
+    """, unsafe_allow_html=True)
+    if st.button("✨ Open the Analyzer", key="how_to_analyzer", use_container_width=True):
+        go_to_analyzer()
+        st.rerun()
+
+
+# ---------- ABOUT ----------
+elif page == "ℹ️ About":
+    st.markdown("""
+    <div class="page-heading">
+      <div class="eyebrow">THE PROJECT</div>
+      <h1>NoticeBuddy AI</h1>
+      <p>A student-focused assistant that turns dense notices into structured, easier-to-understand information.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    st.markdown("""
+    <div class="home-feature-grid">
+      <article class="home-feature-card"><div class="feature-icon">🧠</div><h3>AI explanation</h3><p>Uses the Google GenAI SDK to request an explanation in English or Hindi.</p></article>
+      <article class="home-feature-card"><div class="feature-icon">🔎</div><h3>Text extraction</h3><p>EasyOCR handles uploaded images; PyMuPDF extracts selectable PDF text.</p></article>
+      <article class="home-feature-card"><div class="feature-icon">🎓</div><h3>Student-first design</h3><p>Highlights summaries, dates, eligibility, documents and next steps.</p></article>
+    </div>
+    <div class="workspace-card">
+      <div class="workspace-kicker">Project team</div>
+      <div class="workspace-title">Built by Kushagra Agarwal, Kartik Sharma and Kanishk Shakya</div>
+      <div class="workspace-copy">Contact: krishagarwal369@gmail.com · +91 79063 87966 · 7060414455</div>
+      <div class="workspace-list">
+        <div><span>↗</span><span><a href="https://github.com/krishagarwal369-droid" target="_blank" rel="noopener noreferrer">Kushagra / GitHub</a></span></div>
+        <div><span>↗</span><span><a href="https://github.com/kartik45cloud" target="_blank" rel="noopener noreferrer">Kartik / GitHub</a></span></div>
+        <div><span>↗</span><span><a href="https://github.com/Kanishk095" target="_blank" rel="noopener noreferrer">Kanishk / GitHub</a></span></div>
+      </div>
+    </div>
+    """, unsafe_allow_html=True)
+    st.markdown("<br>", unsafe_allow_html=True)
+    if st.button("✨ Start analyzing", key="about_to_analyzer", use_container_width=True):
+        go_to_analyzer()
+        st.rerun()
+
 
 st.markdown("""
 <footer class="site-footer">
