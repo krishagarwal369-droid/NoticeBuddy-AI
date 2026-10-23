@@ -4,6 +4,7 @@ from PIL import Image
 from google import genai
 import easyocr
 import numpy as np
+import re
 
 st.set_page_config(
     page_title="NoticeBuddy AI",
@@ -578,6 +579,183 @@ h2 {
     font-size: 15px;
 }
 
+
+/* ===== PREMIUM TOP NAVBAR ===== */
+.top-nav {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 0 0 1.15rem 0;
+    padding: 13px 17px;
+    border: 1px solid rgba(117, 139, 220, 0.38);
+    border-radius: 18px;
+    background: linear-gradient(105deg, rgba(15, 24, 52, 0.91), rgba(30, 24, 69, 0.82), rgba(11, 35, 61, 0.89));
+    box-shadow: 0 10px 28px rgba(0,0,0,0.16), inset 0 1px 0 rgba(255,255,255,0.07);
+    backdrop-filter: blur(16px);
+}
+.top-nav-brand { display: flex; align-items: center; gap: 11px; min-width: 0; }
+.top-nav-logo {
+    width: 42px; height: 42px; flex: 0 0 42px;
+    display: grid; place-items: center;
+    border: 1px solid rgba(184, 169, 255, 0.65);
+    border-radius: 13px;
+    color: white; font-weight: 900; font-size: 14px;
+    background: linear-gradient(140deg, #8054FF, #168DEB);
+    box-shadow: 0 0 22px rgba(111, 85, 255, 0.32), inset 0 1px 0 rgba(255,255,255,0.25);
+}
+.top-nav-wordmark { color: #F5F5FF; font-size: 16px; font-weight: 800; line-height: 1.15; }
+.top-nav-wordmark b {
+    color: #7EE7FF;
+    text-shadow: 0 0 13px rgba(65, 199, 255, 0.45);
+}
+.top-nav-wordmark small {
+    display: block; margin-top: 4px;
+    color: #9EAED5; font-size: 9px; font-weight: 700; letter-spacing: 1.7px;
+}
+.top-nav-right { display: flex; align-items: center; justify-content: flex-end; gap: 15px; flex-wrap: wrap; }
+.nav-status {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 7px 10px; border: 1px solid rgba(63, 218, 183, 0.28);
+    border-radius: 999px; background: rgba(27, 179, 141, 0.08);
+    color: #A8FFE8; font-size: 10px; font-weight: 800; letter-spacing: 1px;
+}
+.nav-status i {
+    display: inline-block; width: 7px; height: 7px; border-radius: 50%;
+    background: #46E2B6; box-shadow: 0 0 11px rgba(70, 226, 182, 0.85);
+    animation: statusPulse 1.8s ease-in-out infinite;
+}
+.nav-journey { color: #C4CDEF; font-size: 10px; font-weight: 800; letter-spacing: 1.1px; white-space: nowrap; }
+.nav-journey b { color: #8E80FF; padding: 0 3px; }
+@keyframes statusPulse {
+    0%,100% { opacity: 1; box-shadow: 0 0 10px rgba(70,226,182,0.6); }
+    50% { opacity: 0.48; box-shadow: 0 0 3px rgba(70,226,182,0.3); }
+}
+@media (max-width: 640px) {
+    .top-nav { align-items: flex-start; flex-direction: column; padding: 12px; }
+    .top-nav-right { justify-content: flex-start; gap: 8px; }
+    .nav-journey { font-size: 9px; }
+}
+
+/* ===== ANIMATED UPLOAD BOX ===== */
+div[data-testid="stFileUploader"] {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border: 1px dashed rgba(113, 151, 255, 0.88) !important;
+    background: linear-gradient(130deg, rgba(11, 24, 49, 0.96), rgba(27, 22, 66, 0.88)) !important;
+    box-shadow: inset 0 0 28px rgba(65, 98, 255, 0.09), 0 0 0 1px rgba(100, 115, 255, 0.07);
+}
+div[data-testid="stFileUploader"]::before {
+    content: "";
+    position: absolute;
+    top: 0; left: -38%; width: 34%; height: 2px;
+    background: linear-gradient(90deg, transparent, #8D7BFF, #54DFFF, transparent);
+    box-shadow: 0 0 13px rgba(91, 155, 255, 0.62);
+    animation: uploadSweep 3.2s linear infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+div[data-testid="stFileUploader"] > div { position: relative; z-index: 1; }
+@keyframes uploadSweep {
+    from { left: -38%; }
+    to { left: 104%; }
+}
+
+/* ===== AI SCANNER + WAVEFORM DURING ANALYSIS ===== */
+.ai-activity-card {
+    margin: 0.6rem 0 1.2rem;
+    padding: 17px 19px 15px;
+    border: 1px solid rgba(107, 131, 220, 0.57);
+    border-radius: 19px;
+    background: linear-gradient(135deg, rgba(16, 27, 56, 0.97), rgba(25, 23, 67, 0.96), rgba(9, 33, 56, 0.96));
+    box-shadow: 0 12px 34px rgba(33, 37, 124, 0.20), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+.ai-activity-header { display: flex; align-items: center; gap: 9px; color: #EEF0FF; font-size: 13px; }
+.activity-pulse {
+    display: inline-block; width: 8px; height: 8px; flex: 0 0 8px; border-radius: 50%;
+    background: #58E8D0; box-shadow: 0 0 14px rgba(88,232,208,0.78);
+    animation: statusPulse 1.2s ease-in-out infinite;
+}
+.activity-live {
+    margin-left: auto; padding: 5px 8px; border-radius: 999px;
+    border: 1px solid rgba(89, 209, 255, 0.34);
+    color: #85E4FF; background: rgba(36, 147, 213, 0.10);
+    font-size: 9px; font-weight: 900; letter-spacing: 1.2px;
+}
+.scanner-stage {
+    height: 112px; position: relative; overflow: hidden; margin: 14px 0 8px;
+    border: 1px solid rgba(93, 122, 211, 0.23); border-radius: 12px;
+    background-image: linear-gradient(rgba(94, 125, 232, 0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(94, 125, 232, 0.07) 1px, transparent 1px);
+    background-size: 18px 18px;
+}
+.scanner-doc {
+    width: 55%; max-width: 260px; height: 76px; margin: 17px auto 0; padding: 13px 15px;
+    border-radius: 5px; border: 1px solid rgba(139, 154, 255, 0.36);
+    background: rgba(21, 33, 68, 0.69); box-shadow: 0 0 22px rgba(80, 103, 255, 0.08);
+}
+.doc-line { display: block; height: 3px; margin: 0 0 8px; border-radius: 999px; background: rgba(137, 164, 255, 0.53); }
+.doc-line.long { width: 96%; }
+.doc-line.medium { width: 70%; }
+.doc-line.short { width: 43%; }
+.scanner-beam {
+    position: absolute; left: 7%; right: 7%; height: 2px; top: 3%;
+    background: linear-gradient(90deg, transparent, #5CE5FF 18%, #A99AFF 50%, #5CE5FF 82%, transparent);
+    box-shadow: 0 0 13px 2px rgba(66, 200, 255, 0.48);
+    animation: scannerMove 2.1s ease-in-out infinite alternate;
+}
+.scanner-corner { position: absolute; width: 13px; height: 13px; border-color: #6CDFFF; border-style: solid; opacity: 0.9; }
+.scanner-corner.top-left { left: 10px; top: 10px; border-width: 1px 0 0 1px; }
+.scanner-corner.bottom-right { right: 10px; bottom: 10px; border-width: 0 1px 1px 0; }
+@keyframes scannerMove {
+    from { top: 4%; }
+    to { top: 94%; }
+}
+.ai-waveform { display: flex; align-items: center; justify-content: center; gap: 4px; height: 28px; margin: 7px 0 3px; }
+.ai-waveform span {
+    display: block; height: 8px; width: 3px; border-radius: 999px;
+    background: linear-gradient(180deg, #7FEAFF, #8F78FF);
+    box-shadow: 0 0 7px rgba(91, 174, 255, 0.33);
+    animation: waveformPulse 0.9s ease-in-out infinite alternate;
+}
+.ai-waveform span:nth-child(3n) { animation-delay: -0.6s; }
+.ai-waveform span:nth-child(3n+1) { animation-delay: -0.25s; }
+.ai-waveform span:nth-child(4n) { height: 18px; }
+.ai-waveform span:nth-child(5n) { height: 23px; }
+@keyframes waveformPulse {
+    from { transform: scaleY(0.45); opacity: 0.52; }
+    to { transform: scaleY(1.25); opacity: 1; }
+}
+.ai-activity-caption { margin-top: 5px; text-align: center; color: #AAB9E7; font-size: 11px; letter-spacing: 0.4px; }
+
+/* ===== COLORFUL AI RESULT CARDS ===== */
+div[class*="st-key-result-card-"] {
+    position: relative;
+    overflow: hidden;
+    margin: 0.75rem 0 !important;
+    padding: 1rem 1.25rem 0.9rem !important;
+    border: 1px solid rgba(100, 124, 194, 0.56) !important;
+    border-radius: 18px !important;
+    background: linear-gradient(135deg, rgba(22, 33, 67, 0.95), rgba(11, 24, 47, 0.96)) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.055), 0 10px 27px rgba(0,0,0,0.12) !important;
+}
+div[class*="st-key-result-card-"] h4 { margin-top: 0.25rem; color: #EDEBFF !important; }
+div[class*="st-key-result-card-0"] { border-left: 4px solid #A78BFA !important; }
+div[class*="st-key-result-card-1"] { border-left: 4px solid #42D8FF !important; }
+div[class*="st-key-result-card-2"] { border-left: 4px solid #FF9BD8 !important; }
+div[class*="st-key-result-card-3"] { border-left: 4px solid #58E2BE !important; }
+div[class*="st-key-result-card-4"] { border-left: 4px solid #FFCF70 !important; }
+div[class*="st-key-result-card-5"] { border-left: 4px solid #7FA8FF !important; }
+
+/* Accessibility: reduce decorative motion when requested */
+@media (prefers-reduced-motion: reduce) {
+    .nav-status i, div[data-testid="stFileUploader"]::before,
+    .scanner-beam, .ai-waveform span {
+        animation: none;
+    }
+}
+
 </style>  
 
 """, unsafe_allow_html=True)
@@ -623,6 +801,64 @@ NOTICE:
     return response.text or "No explanation was returned."
 
 
+def render_explanation_cards(explanation):
+    """Display each AI response section as a separate, colorful card."""
+    parts = re.split(r"(?m)^##\\s+", explanation.strip())
+    sections = []
+
+    if len(parts) > 1:
+        if parts[0].strip():
+            sections.append(("Additional Details", parts[0].strip()))
+        for part in parts[1:]:
+            lines = part.splitlines()
+            if not lines:
+                continue
+            title = lines[0].strip().lstrip("#").strip()
+            body = "\\n".join(lines[1:]).strip()
+            if title or body:
+                sections.append((title or "Notice Details", body))
+    else:
+        sections.append(("Notice Summary", explanation.strip()))
+
+    for index, (title, body) in enumerate(sections):
+        with st.container(key=f"result-card-{index}"):
+            st.markdown(f"#### {title}")
+            if body:
+                st.markdown(body)
+
+
+AI_ACTIVITY_HTML = """
+<div class="ai-activity-card">
+  <div class="ai-activity-header">
+    <span class="activity-pulse"></span>
+    <strong>NoticeBuddy AI is working</strong>
+    <span class="activity-live">LIVE SCAN</span>
+  </div>
+  <div class="scanner-stage" aria-hidden="true">
+    <div class="scanner-doc">
+      <span class="doc-line long"></span>
+      <span class="doc-line medium"></span>
+      <span class="doc-line short"></span>
+      <span class="doc-line long"></span>
+      <span class="doc-line medium"></span>
+      <span class="doc-line short"></span>
+    </div>
+    <div class="scanner-beam"></div>
+    <div class="scanner-corner top-left"></div>
+    <div class="scanner-corner bottom-right"></div>
+  </div>
+  <div class="ai-waveform" aria-label="AI analysis animation">
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span>
+  </div>
+  <div class="ai-activity-caption">Reading key details · organizing dates · preparing your summary</div>
+</div>
+"""
+
+
 # ---------- SIDEBAR ----------
 with st.sidebar:
     st.markdown("## 📄 NoticeBuddy AI")
@@ -635,6 +871,21 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("**AI-powered notice help**")
     st.caption("Read • Understand • Take action")
+
+
+# ---------- PREMIUM TOP NAVBAR ----------
+st.markdown("""
+<div class="top-nav">
+  <div class="top-nav-brand">
+    <span class="top-nav-logo">NB</span>
+    <span class="top-nav-wordmark">NoticeBuddy <b>AI</b><small>SMART NOTICE ASSISTANT</small></span>
+  </div>
+  <div class="top-nav-right">
+    <span class="nav-status"><i></i> AI POWERED</span>
+    <span class="nav-journey">READ <b>•</b> UNDERSTAND <b>•</b> ACT</span>
+  </div>
+</div>
+""", unsafe_allow_html=True)
 
 
 # ---------- HERO ----------
@@ -777,17 +1028,23 @@ else:
             with st.expander("View extracted notice text"):
                 st.write(text)
 
+            activity_slot = st.empty()
             try:
                 with st.spinner("🧠 AI is analyzing your notice..."):
+                    activity_slot.markdown(AI_ACTIVITY_HTML, unsafe_allow_html=True)
                     explanation = explain_notice(text, language)
 
-                st.markdown("## 🤖 Your notice explained")
-                st.markdown(
-                    '<div class="panel">',
-                    unsafe_allow_html=True
+            except Exception as e:
+                activity_slot.empty()
+                st.error(
+                    "AI request failed. Check internet, API key and model access."
                 )
-                st.markdown(explanation)
-                st.markdown("</div>", unsafe_allow_html=True)
+                st.caption(f"Technical details: {e}")
+
+            else:
+                activity_slot.empty()
+                st.markdown("## 🤖 Your notice explained")
+                render_explanation_cards(explanation)
 
                 st.download_button(
                     "⬇️ Download explanation",
@@ -795,12 +1052,6 @@ else:
                     file_name="noticebuddy_explanation.txt",
                     mime="text/plain"
                 )
-
-            except Exception as e:
-                st.error(
-                    "AI request failed. Check internet, API key and model access."
-                )
-                st.caption(f"Technical details: {e}")
 
 st.markdown("---")
 st.markdown(
