@@ -254,8 +254,15 @@ section[data-testid="stSidebar"] {
     z-index: 1;
 }
 .hero h1 {
-    text-shadow: 0 0 26px rgba(156, 134, 255, 0.35);
+    background: linear-gradient(100deg, #FFFFFF 0%, #C7C4FF 42%, #76D7FF 82%, #FFFFFF 100%);
+    background-size: 220% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent !important;
+    color: transparent !important;
+    text-shadow: 0 0 26px rgba(156, 134, 255, 0.22);
     letter-spacing: -1.5px;
+    animation: titleShimmer 8s ease-in-out infinite alternate;
 }
 .hero p {
     max-width: 680px;
@@ -412,7 +419,8 @@ h2 {
     to { transform: rotate(12deg) translateY(14px); }
 }
 @media (prefers-reduced-motion: reduce) {
-    .hero::after, .hero::before, .stApp::before, .stApp::after {
+    .hero::after, .hero::before, .stApp::before, .stApp::after,
+    .hero-robot, .hero-robot-wrap::after, .hero-particles span, .hero h1 {
         animation: none;
     }
     .metric, .panel, .stButton > button, .stDownloadButton > button {
@@ -420,6 +428,39 @@ h2 {
     }
 }
 
+
+/* Tiny floating stars in the hero panel */
+.hero-particles {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+}
+.hero-particles span {
+    position: absolute;
+    display: block;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #A9B8FF;
+    box-shadow: 0 0 9px 2px rgba(115, 143, 255, 0.72);
+    opacity: 0;
+    animation: particleRise 8s ease-in-out infinite;
+}
+.hero-particles span:nth-child(1) { left: 7%; top: 74%; animation-delay: -1s; }
+.hero-particles span:nth-child(2) { left: 18%; top: 24%; width: 3px; height: 3px; animation-delay: -5s; }
+.hero-particles span:nth-child(3) { left: 36%; top: 82%; animation-delay: -3s; }
+.hero-particles span:nth-child(4) { left: 54%; top: 16%; width: 3px; height: 3px; animation-delay: -6s; }
+.hero-particles span:nth-child(5) { left: 71%; top: 72%; animation-delay: -2s; }
+.hero-particles span:nth-child(6) { left: 91%; top: 30%; width: 5px; height: 5px; animation-delay: -4s; }
+.hero-particles span:nth-child(7) { left: 43%; top: 45%; width: 2px; height: 2px; animation-delay: -7s; }
+.hero-particles span:nth-child(8) { left: 83%; top: 86%; width: 3px; height: 3px; animation-delay: -1.5s; }
+@keyframes particleRise {
+    0%, 100% { transform: translate3d(0, 12px, 0) scale(0.55); opacity: 0; }
+    22%, 72% { opacity: 0.86; }
+    50% { transform: translate3d(16px, -16px, 0) scale(1.25); opacity: 1; }
+}
 
 /* Robot art in the hero panel */
 .hero-content {
@@ -451,9 +492,30 @@ h2 {
     aspect-ratio: 1;
     max-width: 340px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(59, 126, 255, 0.30), rgba(121, 67, 255, 0.15) 45%, transparent 72%);
+    background: radial-gradient(circle, rgba(59, 126, 255, 0.34), rgba(121, 67, 255, 0.18) 45%, transparent 72%);
     filter: blur(14px);
     animation: neonDrift 7s ease-in-out infinite alternate;
+    z-index: 0;
+}
+.hero-robot-wrap::after {
+    content: "";
+    position: absolute;
+    width: 88%;
+    max-width: 350px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 1px solid rgba(109, 205, 255, 0.48);
+    box-shadow: 0 0 0 12px rgba(103, 105, 255, 0.055), 0 0 0 26px rgba(103, 105, 255, 0.035), inset 0 0 28px rgba(70, 130, 255, 0.12);
+    transform: perspective(400px) rotateX(62deg) rotateZ(-12deg);
+    animation: robotRing 16s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+.hero-robot-wrap {
+    z-index: 2;
+}
+.hero-robot {
+    z-index: 2;
 }
 .hero-robot {
     position: relative;
@@ -473,6 +535,14 @@ h2 {
     0%, 100% { transform: translateY(0) rotate(0deg); }
     50% { transform: translateY(-9px) rotate(1deg); }
 }
+@keyframes robotRing {
+    from { transform: perspective(400px) rotateX(62deg) rotateZ(-12deg); }
+    to { transform: perspective(400px) rotateX(62deg) rotateZ(348deg); }
+}
+@keyframes titleShimmer {
+    from { background-position: 0% center; }
+    to { background-position: 100% center; }
+}
 @media (max-width: 760px) {
     .hero-content {
         grid-template-columns: 1fr;
@@ -481,6 +551,7 @@ h2 {
     .hero { padding: 28px 22px; }
     .hero-robot-wrap { min-height: 160px; margin-top: 0.25rem; }
     .hero-robot { max-height: 225px; max-width: 245px; }
+    .hero-robot-wrap::after { max-width: 230px; }
     .hero h1 { font-size: clamp(30px, 8vw, 42px); }
 }
 
@@ -572,6 +643,10 @@ robot_image_url = "https://raw.githubusercontent.com/krishagarwal369-droid/Notic
 st.markdown(f"""
 <div class="hero">
   <div class="hero-content">
+    <div class="hero-particles" aria-hidden="true">
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
+    </div>
     <div class="hero-copy">
       <div class="eyebrow">YOUR PERSONAL NOTICE ASSISTANT</div>
       <h1>Confusing notices?<br>We've got you. ✨</h1>
