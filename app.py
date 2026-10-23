@@ -2477,6 +2477,42 @@ h1, h2, h3 { letter-spacing: -.045em; }
 @media(max-width:650px) { .bento-deadline .bento-calendar-preview{padding:9px}.bento-deadline .calendar-preview-numbers{gap:2px;grid-auto-rows:minmax(20px,auto)}.bento-deadline .calendar-preview-numbers .calendar-holo-cell{min-height:20px;font-size:7px}.bento-deadline .calendar-holo-info{padding:8px}.bento-deadline .calendar-holo-info-date{font-size:9px} }
 @media(prefers-reduced-motion:reduce) { .bento-deadline .calendar-preview-numbers .calendar-holo-cell{transition:none!important} }
 
+/* Deadline Radar polish: slow holographic drift + a restrained light sweep.
+   Kept strictly inside this card; the CSS layer also remains as the WebGL fallback. */
+.bento-deadline .calendar-holo-stage { animation: deadlineHoloFloat 7s ease-in-out infinite; transform-origin: 50% 50%; }
+.bento-deadline .calendar-holo-stage::after {
+    content:""; position:absolute; z-index:1; top:-7px; bottom:-7px; left:-34%; width:32%;
+    border-radius:14px; pointer-events:none; mix-blend-mode:screen;
+    background:linear-gradient(110deg,transparent 0%,rgba(104,229,255,.025) 28%,rgba(132,118,255,.13) 49%,rgba(104,238,255,.07) 56%,transparent 100%);
+    transform:translateX(-70%) skewX(-17deg); opacity:0;
+    animation:deadlineHoloSweep 8.5s ease-in-out infinite;
+}
+@keyframes deadlineHoloFloat {
+    0%,100% { transform:translateY(0) rotateX(0deg); }
+    50% { transform:translateY(-2px) rotateX(.35deg); }
+}
+@keyframes deadlineHoloSweep {
+    0%,12% { transform:translateX(-70%) skewX(-17deg); opacity:0; }
+    24% { opacity:.9; }
+    62% { transform:translateX(430%) skewX(-17deg); opacity:.42; }
+    70%,100% { transform:translateX(430%) skewX(-17deg); opacity:0; }
+}
+.bento-deadline .calendar-holo-stack.is-webgl-fallback {
+    background:radial-gradient(ellipse at 18% 14%,rgba(117,236,255,.11),transparent 54%),linear-gradient(145deg,rgba(71,90,178,.12),rgba(21,44,76,.24));
+    border-color:rgba(99,226,255,.4);
+    box-shadow:0 0 22px rgba(73,194,255,.11),inset 0 0 18px rgba(102,112,255,.08);
+}
+@media (hover:hover) and (pointer:fine) {
+    .bento-deadline .bento-calendar-preview:hover {
+        border-color:rgba(119,225,255,.42);
+        box-shadow:inset 0 1px 0 rgba(255,255,255,.075),0 16px 30px rgba(0,0,0,.16),0 0 22px rgba(74,163,255,.075);
+    }
+}
+@media(prefers-reduced-motion:reduce) {
+    .bento-deadline .calendar-holo-stage,
+    .bento-deadline .calendar-holo-stage::after { animation:none!important; transform:none!important; }
+}
+
 .bento-stack { position:relative; width:100%; height:110px; margin-top:19px; perspective:600px; }
 .stack-sheet { position:absolute; width:190px; max-width:75%; height:88px; border-radius:12px; border:1px solid rgba(126,149,241,.26); }
 .sheet-back { left:12px; top:0; transform:rotate(-8deg); background:linear-gradient(135deg,rgba(102,87,255,.13),rgba(19,36,68,.5)); }
