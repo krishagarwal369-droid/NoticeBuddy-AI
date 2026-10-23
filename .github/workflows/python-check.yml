@@ -37,3 +37,21 @@ jobs:
           Path("/tmp/noticebuddy-3d-effects.js").write_text(script, encoding="utf-8")
           PY
           node --check /tmp/noticebuddy-3d-effects.js
+      - name: Validate flying energy ring JavaScript module
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          source = Path("app.py").read_text(encoding="utf-8")
+          marker = '# ---------- FLYING DOCUMENTS UNIVERSE (progressive Three.js enhancement) ----------'
+          if marker not in source:
+              raise SystemExit("Flying Documents Universe controller marker was not found")
+          section = source.split(marker, 1)[1]
+          start = section.find('<script type="module">')
+          end = section.find("</script>", start + len('<script type="module">'))
+          if start < 0 or end < 0:
+              raise SystemExit("Flying Documents Universe module script tags were not found")
+          script = section[start + len('<script type="module">'):end]
+          Path("/tmp/noticebuddy-flying-documents.js").write_text(script, encoding="utf-8")
+          PY
+          node --check /tmp/noticebuddy-flying-documents.js
