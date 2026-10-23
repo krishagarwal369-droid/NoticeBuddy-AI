@@ -1052,6 +1052,81 @@ div[class*="st-key-result-card-5"] h4::before { content: "i"; color: #94BAFF; }
     .workspace-card { padding: 15px; }
 }
 
+
+
+/* ===== STUDENT COMMAND DASHBOARD ===== */
+.deadline-row {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    margin: 9px 0;
+    padding: 11px 12px;
+    border: 1px solid rgba(95, 119, 190, 0.42);
+    border-radius: 14px;
+    background: linear-gradient(110deg, rgba(19, 31, 63, 0.90), rgba(11, 24, 47, 0.92));
+}
+.deadline-date {
+    flex: 0 0 43px;
+    height: 45px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    color: #FFFFFF;
+    font-size: 17px;
+    font-weight: 900;
+    background: linear-gradient(140deg, rgba(124, 84, 255, .42), rgba(24, 145, 226, .30));
+    border: 1px solid rgba(135, 142, 255, .4);
+}
+.deadline-date small { color: #B9CBFF; font-size: 9px; letter-spacing: 1px; }
+.deadline-detail { flex: 1; min-width: 0; }
+.deadline-detail b { display: block; color: #EAF0FF; font-size: 12px; line-height: 1.5; }
+.deadline-detail small { display: block; color: #9BAED8; font-size: 10px; line-height: 1.45; margin-top: 3px; }
+.deadline-pill {
+    flex: 0 0 auto;
+    padding: 6px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(124, 141, 206, .42);
+    background: rgba(72, 93, 163, .16);
+    color: #C5D2FF;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: .45px;
+}
+.deadline-pill.soon { color: #FFE4A1; border-color: rgba(255, 198, 89, .38); background: rgba(255, 177, 54, .08); }
+.deadline-pill.today { color: #FFB7C7; border-color: rgba(255, 112, 153, .46); background: rgba(255, 78, 132, .10); }
+.calendar-title { margin: 12px 0; color: #E4E9FF; font-size: 21px; font-weight: 900; letter-spacing: -.4px; }
+.calendar-weekday {
+    text-align: center; padding: 8px 1px;
+    color: #91A6D8; font-size: 9px; font-weight: 900; letter-spacing: 1px;
+}
+.calendar-cell {
+    min-height: 58px;
+    margin: 2px 0;
+    padding: 7px 3px 5px;
+    text-align: center;
+    border-radius: 9px;
+    border: 1px solid rgba(77, 97, 153, .30);
+    background: rgba(16, 27, 52, .63);
+    color: #DCE5FF;
+}
+.calendar-cell strong { display: block; font-size: 13px; }
+.calendar-cell span { display: inline-block; margin-top: 6px; color: #92E9FF; font-size: 8px; line-height: 1.2; }
+.calendar-cell.has-events {
+    border-color: rgba(104, 127, 255, .74);
+    background: linear-gradient(145deg, rgba(103, 78, 227, .25), rgba(24, 126, 194, .17));
+    box-shadow: inset 0 0 12px rgba(103, 98, 255, .09);
+}
+.calendar-cell.empty { opacity: .18; background: transparent; border-color: transparent; }
+@media (max-width: 620px) {
+    .deadline-row { gap: 7px; padding: 9px 8px; }
+    .deadline-date { flex-basis: 37px; height: 41px; }
+    .deadline-pill { padding: 5px 6px; font-size: 8px; }
+    .calendar-cell { min-height: 48px; padding: 6px 1px 3px; }
+    .calendar-cell span { font-size: 7px; }
+}
+
 </style>  
 
 """, unsafe_allow_html=True)
@@ -1420,7 +1495,7 @@ with st.sidebar:
     st.markdown("---")
     page = st.radio(
         "NAVIGATION",
-        ["🏠 Home", "✨ Analyzer", "📘 How it works", "ℹ️ About"],
+        ["🏠 Home", "📊 Dashboard", "✨ Analyzer", "📘 How it works", "ℹ️ About"],
         key="main_navigation"
     )
     st.markdown(
@@ -1535,6 +1610,239 @@ if page == "🏠 Home":
     """, unsafe_allow_html=True)
 
 
+# ---------- STUDENT COMMAND DASHBOARD ----------
+elif page == "📊 Dashboard":
+    st.markdown("""
+    <div class="page-heading">
+      <div class="eyebrow">STUDENT COMMAND DASHBOARD</div>
+      <h1>Your notices. One place.</h1>
+      <p>Review this session's analysis history, saved notices, important dates and personal deadline reminders.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    records = st.session_state.get("notice_history", [])
+    saved_records = [item for item in records if item.get("saved")]
+    all_events = get_all_date_events()
+    today = date.today()
+    upcoming_events = []
+    for event in all_events:
+        try:
+            event_date = date.fromisoformat(event["date"])
+            if event_date >= today:
+                upcoming_events.append((event_date, event))
+        except (ValueError, TypeError):
+            continue
+    upcoming_events.sort(key=lambda pair: pair[0])
+
+    metric_columns = st.columns(4)
+    metric_data = [
+        ("ANALYZED", str(len(records)), "📄"),
+        ("SAVED", str(len(saved_records)), "★"),
+        ("DATES FOUND", str(len(all_events)), "◷"),
+        ("UPCOMING", str(len(upcoming_events)), "✦")
+    ]
+    for column, (label, value, icon) in zip(metric_columns, metric_data):
+        with column:
+            st.markdown(
+                f'<div class="metric"><span class="metric-icon">{icon}</span>'
+                f'<div class="metric-label">{label}</div>'
+                f'<div class="metric-value">{value}</div></div>',
+                unsafe_allow_html=True
+            )
+
+    overview_tab, saved_tab, calendar_tab, history_tab = st.tabs([
+        "📌 Overview", "⭐ Saved notices", "📅 Calendar", "🗂️ History"
+    ])
+
+    with overview_tab:
+        overview_left, overview_right = st.columns([1.05, 0.95], gap="large")
+        with overview_left:
+            st.markdown('<div class="home-section-title">Upcoming dates</div>', unsafe_allow_html=True)
+            st.markdown('<div class="home-section-subtitle">Dates recognized in your notices plus reminders you add yourself.</div>', unsafe_allow_html=True)
+            if not upcoming_events:
+                st.info("No upcoming dates yet. Analyze a notice or add a reminder in the Calendar tab.")
+            else:
+                for event_date, event in upcoming_events[:6]:
+                    remaining = (event_date - today).days
+                    if remaining == 0:
+                        countdown = "TODAY"
+                        class_name = "today"
+                    elif remaining == 1:
+                        countdown = "1 DAY LEFT"
+                        class_name = "soon"
+                    else:
+                        countdown = f"{remaining} DAYS LEFT"
+                        class_name = "soon" if remaining <= 7 else "normal"
+                    st.markdown(
+                        f'<div class="deadline-row">'
+                        f'<div class="deadline-date">{event_date.strftime("%d")}<small>{event_date.strftime("%b").upper()}</small></div>'
+                        f'<div class="deadline-detail"><b>{event["label"]}</b>'
+                        f'<small>{event["kind"]} · {event["source"]}</small></div>'
+                        f'<span class="deadline-pill {class_name}">{countdown}</span>'
+                        f'</div>',
+                        unsafe_allow_html=True
+                    )
+        with overview_right:
+            st.markdown("""
+            <div class="workspace-card">
+              <div class="workspace-kicker">Quick actions</div>
+              <div class="workspace-title">Keep moving forward</div>
+              <div class="workspace-list">
+                <div><span>✦</span><span><b>Analyze a new notice</b><br>Extract the important information from a fresh notice.</span></div>
+                <div><span>★</span><span><b>Save important notices</b><br>Bookmark them in the Saved notices tab.</span></div>
+                <div><span>◷</span><span><b>Add a personal reminder</b><br>Track a date even when the notice wording is unclear.</span></div>
+              </div>
+            </div>
+            """, unsafe_allow_html=True)
+            st.button(
+                "✨ Analyze a new notice",
+                key="dashboard_open_analyzer",
+                use_container_width=True,
+                on_click=go_to_analyzer
+            )
+            if records:
+                export_data = json.dumps(records, ensure_ascii=False, indent=2)
+                st.download_button(
+                    "⬇️ Export session history (JSON)",
+                    data=export_data,
+                    file_name="noticebuddy_session_history.json",
+                    mime="application/json",
+                    key="export_notice_history",
+                    use_container_width=True
+                )
+        st.caption("Privacy note: history and saved notices are held only in this active app session. They are not stored in a permanent database and may be cleared when the session ends.")
+
+    with saved_tab:
+        st.markdown('<div class="home-section-title">Your saved notices</div>', unsafe_allow_html=True)
+        if not saved_records:
+            st.info("No saved notices yet. Analyze a notice, then choose ☆ Save notice to bookmark it here.")
+        for record in saved_records:
+            with st.expander(f"⭐ {record['title']}", expanded=False):
+                st.caption(f"Analyzed {record['analyzed_at']} · {len(record.get('dates', []))} date(s) detected")
+                st.markdown(record.get("explanation", "No explanation stored."))
+                button_col, delete_col = st.columns(2)
+                with button_col:
+                    st.button(
+                        "★ Unsave",
+                        key=f"unsave-saved-{record['id']}",
+                        on_click=toggle_saved_notice,
+                        args=(record["id"],),
+                        use_container_width=True
+                    )
+                with delete_col:
+                    st.button(
+                        "🗑️ Delete",
+                        key=f"delete-saved-{record['id']}",
+                        on_click=delete_notice_record,
+                        args=(record["id"],),
+                        use_container_width=True
+                    )
+
+    with calendar_tab:
+        st.markdown('<div class="home-section-title">Deadline calendar</div>', unsafe_allow_html=True)
+        st.markdown('<div class="home-section-subtitle">Full dates are detected from notice text. Add a manual reminder whenever you need one.</div>', unsafe_allow_html=True)
+        with st.form("manual_deadline_form", clear_on_submit=True):
+            reminder_title = st.text_input("Reminder title", placeholder="e.g., Submit scholarship documents")
+            reminder_date = st.date_input("Reminder date", value=date.today() + timedelta(days=7))
+            reminder_note = st.text_input("Optional note", placeholder="e.g., Bring the original documents")
+            reminder_submitted = st.form_submit_button("＋ Add reminder", use_container_width=True)
+        if reminder_submitted:
+            if not reminder_title.strip():
+                st.warning("Enter a title for the reminder.")
+            else:
+                st.session_state.setdefault("manual_deadlines", []).append({
+                    "id": uuid.uuid4().hex[:12],
+                    "date": reminder_date.isoformat(),
+                    "label": reminder_title.strip(),
+                    "note": reminder_note.strip() or "Personal reminder",
+                    "kind": "Manual reminder"
+                })
+                st.success("Reminder added to this session's calendar.")
+
+        chosen_date = st.date_input("Choose month to display", value=date.today(), key="calendar_month")
+        year, month = chosen_date.year, chosen_date.month
+        month_label = date(year, month, 1).strftime("%B %Y")
+        st.markdown(f'<div class="calendar-title">{month_label}</div>', unsafe_allow_html=True)
+        events = get_all_date_events()
+        events_by_date = {}
+        for event in events:
+            events_by_date.setdefault(event["date"], []).append(event)
+
+        weekday_columns = st.columns(7, gap="small")
+        for column, weekday in zip(weekday_columns, ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"]):
+            with column:
+                st.markdown(f'<div class="calendar-weekday">{weekday}</div>', unsafe_allow_html=True)
+        for week in calendar_module.monthcalendar(year, month):
+            week_columns = st.columns(7, gap="small")
+            for column, day_number in zip(week_columns, week):
+                with column:
+                    if not day_number:
+                        st.markdown('<div class="calendar-cell empty"></div>', unsafe_allow_html=True)
+                    else:
+                        iso_date = date(year, month, day_number).isoformat()
+                        day_events = events_by_date.get(iso_date, [])
+                        cell_class = "calendar-cell has-events" if day_events else "calendar-cell"
+                        event_badge = f'<span>{len(day_events)} date(s)</span>' if day_events else '<span>&nbsp;</span>'
+                        st.markdown(
+                            f'<div class="{cell_class}"><strong>{day_number}</strong>{event_badge}</div>',
+                            unsafe_allow_html=True
+                        )
+
+        month_events = [
+            item for item in events
+            if item["date"].startswith(f"{year:04d}-{month:02d}-")
+        ]
+        st.markdown('<div class="home-section-title">Dates in this month</div>', unsafe_allow_html=True)
+        if not month_events:
+            st.info("No dates in this month. Dates are only added when a full date is recognized in a notice or you add a reminder.")
+        for event in month_events:
+            date_value = date.fromisoformat(event["date"])
+            delta = (date_value - today).days
+            if delta < 0:
+                countdown = f"{abs(delta)} day(s) ago"
+            elif delta == 0:
+                countdown = "Today"
+            elif delta == 1:
+                countdown = "Tomorrow"
+            else:
+                countdown = f"In {delta} days"
+            st.markdown(
+                f'<div class="deadline-row">'
+                f'<div class="deadline-date">{date_value.strftime("%d")}<small>{date_value.strftime("%b").upper()}</small></div>'
+                f'<div class="deadline-detail"><b>{event["label"]}</b>'
+                f'<small>{event["kind"]} · {event["source"]}</small></div>'
+                f'<span class="deadline-pill normal">{countdown}</span></div>',
+                unsafe_allow_html=True
+            )
+        st.caption("Calendar reminders are local to this active session. Check the original notice before acting on a detected date.")
+
+    with history_tab:
+        st.markdown('<div class="home-section-title">Recent analyses</div>', unsafe_allow_html=True)
+        if not records:
+            st.info("Your analyzed notices will appear here.")
+        for record in records:
+            with st.expander(record["title"], expanded=False):
+                st.caption(f"Analyzed {record['analyzed_at']} · {'⭐ Saved' if record.get('saved') else 'Not saved'}")
+                st.markdown(record.get("explanation", "No explanation stored."))
+                action_col, delete_col = st.columns(2)
+                with action_col:
+                    st.button(
+                        "★ Unsave" if record.get("saved") else "☆ Save",
+                        key=f"toggle-history-{record['id']}",
+                        on_click=toggle_saved_notice,
+                        args=(record["id"],),
+                        use_container_width=True
+                    )
+                with delete_col:
+                    st.button(
+                        "🗑️ Delete record",
+                        key=f"delete-history-{record['id']}",
+                        on_click=delete_notice_record,
+                        args=(record["id"],),
+                        use_container_width=True
+                    )
+
+
 # ---------- ANALYZER COMMAND CENTER ----------
 elif page == "✨ Analyzer":
     st.markdown("""
@@ -1637,21 +1945,24 @@ elif page == "✨ Analyzer":
 
             except Exception as e:
                 activity_slot.empty()
-                st.error(
-                    "AI request failed. Check internet, API key and model access."
-                )
+                st.error("AI request failed. Check internet, API key and model access.")
                 st.caption(f"Technical details: {e}")
 
             else:
                 activity_slot.empty()
-                st.markdown('<div class="home-section-title">04 / Your notice explained</div>', unsafe_allow_html=True)
-                render_explanation_cards(explanation)
-                st.download_button(
-                    "⬇️ Download explanation",
-                    data=explanation,
-                    file_name="noticebuddy_explanation.txt",
-                    mime="text/plain"
-                )
+                record = add_analysis_record(text, explanation, language)
+                st.success("Notice analyzed and added to this session's history. Use ☆ Save notice to bookmark it.")
+                render_saved_analysis(record)
+
+    else:
+        latest_id = st.session_state.get("latest_notice_id")
+        latest_record = next(
+            (item for item in st.session_state.get("notice_history", []) if item.get("id") == latest_id),
+            None
+        )
+        if latest_record:
+            st.markdown('<div class="home-section-title">Your latest session analysis</div>', unsafe_allow_html=True)
+            render_saved_analysis(latest_record)
 
 
 # ---------- HOW IT WORKS ----------
