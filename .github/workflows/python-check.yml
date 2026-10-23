@@ -55,3 +55,21 @@ jobs:
           Path("/tmp/noticebuddy-flying-documents.js").write_text(script, encoding="utf-8")
           PY
           node --check /tmp/noticebuddy-flying-documents.js
+      - name: Validate Deadline Radar holographic calendar JavaScript
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          source = Path("app.py").read_text(encoding="utf-8")
+          marker = '# ---------- DEADLINE RADAR HOLOGRAPHIC 3D CALENDAR ----------'
+          if marker not in source:
+              raise SystemExit("Deadline Radar calendar controller was not found")
+          section = source.split(marker, 1)[1]
+          start = section.find('<script type="module">')
+          end = section.find("</script>", start + len('<script type="module">'))
+          if start < 0 or end < 0:
+              raise SystemExit("Deadline Radar module script tags were not found")
+          script = section[start + len('<script type="module">'):end]
+          Path("/tmp/noticebuddy-deadline-calendar.js").write_text(script, encoding="utf-8")
+          PY
+          node --check /tmp/noticebuddy-deadline-calendar.js
