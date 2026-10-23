@@ -19,3 +19,21 @@ jobs:
           python-version: "3.12"
       - name: Validate Python syntax
         run: python -m py_compile app.py
+      - name: Validate embedded 3D interaction JavaScript
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          source = Path("app.py").read_text(encoding="utf-8")
+          marker = '# ---------- PREMIUM 3D INTERACTIONS (VISUAL ONLY) ----------'
+          if marker not in source:
+              raise SystemExit("3D interaction controller marker was not found")
+          section = source.split(marker, 1)[1]
+          start = section.find("<script>")
+          end = section.find("</script>", start + len("<script>"))
+          if start < 0 or end < 0:
+              raise SystemExit("Embedded 3D interaction script tags were not found")
+          script = section[start + len("<script>"):end]
+          Path("/tmp/noticebuddy-3d-effects.js").write_text(script, encoding="utf-8")
+          PY
+          node --check /tmp/noticebuddy-3d-effects.js
