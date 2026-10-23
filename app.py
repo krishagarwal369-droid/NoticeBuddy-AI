@@ -4733,6 +4733,15 @@ def go_to_action_center():
     st.session_state["main_navigation"] = "✅ Action Center"
 
 
+def sync_action_task_completion(task_id):
+    """Persist checkbox changes before progress is recalculated."""
+    completed = bool(st.session_state.get(f"action_done_{task_id}", False))
+    for task in st.session_state.get("action_tasks", []):
+        if task.get("id") == task_id:
+            task["completed"] = completed
+            break
+
+
 with st.sidebar:
     st.markdown("## 📄 NoticeBuddy AI")
     st.caption("Your personal notice assistant")
@@ -5179,6 +5188,9 @@ elif page == "✅ Action Center":
     all_notice_records = st.session_state.get("notice_history", [])
     action_tasks = st.session_state.setdefault("action_tasks", [])
     today_action = date.today()
+    action_flash_message = st.session_state.pop("action_flash_message", None)
+    if action_flash_message:
+        st.success(action_flash_message)
 
     def _action_priority(task):
         return task.get("priority", "Normal")
@@ -5227,9 +5239,7 @@ elif page == "✅ Action Center":
     st.markdown('<div class="action-section-title"><span>01</span><div><b>Build a checklist from a notice</b><small>Suggestions are extracted from your original notice text—not invented requirements.</small></div></div>', unsafe_allow_html=True)
     if not all_notice_records:
         st.info("Pehle Analyzer page par ek notice analyze kar. Uske baad yahan se source-based checklist bana sakta hai.")
-        if st.button("✨ Open Analyzer", key="action_open_analyzer_empty", use_container_width=True):
-            go_to_analyzer()
-            st.rerun()
+        st.button("✨ Open Analyzer", key="action_open_analyzer_empty", on_click=go_to_analyzer, use_container_width=True)
     else:
         notice_options = ["No notice selected"] + [
             f"{index + 1}. {record.get('title', 'Untitled notice')}" for index, record in enumerate(all_notice_records)
@@ -5347,7 +5357,8 @@ elif page == "✅ Action Center":
 
             if new_tasks:
                 action_tasks.extend(new_tasks)
-                st.success(f"Checklist built: {len(new_tasks)} task(s) added from **{source_title}**.")
+                st.session_state["action_flash_message"] = f"Checklist built: {len(new_tasks)} task(s) added from {source_title}."
+                st.rerun()
             else:
                 st.info("Is notice se koi naya matching action/date nahi mila, ya checklist pehle hi ban chuki hai. Neeche manual task add kar sakta hai.")
 
@@ -5385,7 +5396,8 @@ elif page == "✅ Action Center":
                 "created_at": datetime.now().isoformat(timespec="minutes"),
                 "origin": "manual"
             })
-            st.success("Task added to your Action Center.")
+            st.session_state["action_flash_message"] = "Task added to your Action Center."
+            st.rerun()
 
     st.markdown('<div class="action-section-title"><span>03</span><div><b>Your action board</b><small>Mark tasks complete, filter the list and export the whole plan.</small></div></div>', unsafe_allow_html=True)
     if action_tasks:
@@ -5414,6 +5426,8 @@ elif page == "✅ Action Center":
                     "Complete task",
                     value=bool(task.get("completed")),
                     key=f"action_done_{task['id']}",
+                    on_change=sync_action_task_completion,
+                    args=(task["id"],),
                     label_visibility="collapsed"
                 )
             task["completed"] = task_done_now
