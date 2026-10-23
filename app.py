@@ -145,7 +145,7 @@ hr { border-color: #293557; }
 
 /* 3D FUTURISTIC BACKGROUND */
 .stApp {
-    position: relative;
+    position: relative; isolation: isolate;
     overflow-x: hidden;
     background:
         radial-gradient(circle at 80% 20%,
@@ -187,6 +187,7 @@ hr { border-color: #293557; }
     width: 300px;
     height: 300px;
     border-radius: 50%;
+    z-index:0;
     background: radial-gradient(
         circle, rgba(126, 76, 255, 0.35), transparent 70%
     );
