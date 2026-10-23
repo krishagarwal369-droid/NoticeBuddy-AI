@@ -2774,6 +2774,156 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
     }
 }
 
+
+
+/* =========================================================
+   SITE-WIDE 3D ENVIRONMENT — PERSPECTIVE FLOOR + HOLOGRAPHIC OBJECTS
+   CSS-only background effect. No content or feature logic changes.
+   ========================================================= */
+
+/* Turn the existing floor into a deeper, moving perspective grid. */
+.stApp::before {
+    left: -8% !important;
+    bottom: -43% !important;
+    width: 116% !important;
+    height: 86% !important;
+    z-index: 0 !important;
+    transform: perspective(460px) rotateX(62deg) scale(1.08) !important;
+    transform-origin: center bottom !important;
+    background-image:
+        linear-gradient(rgba(89, 142, 255, .34) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(89, 142, 255, .34) 1px, transparent 1px),
+        radial-gradient(ellipse at 50% 0%, rgba(76, 198, 255, .14), transparent 64%) !important;
+    background-size: 54px 54px, 54px 54px, 100% 100% !important;
+    background-position: 0 0, 0 0, center !important;
+    background-repeat: repeat, repeat, no-repeat !important;
+    opacity: .58 !important;
+    filter: drop-shadow(0 0 18px rgba(78, 111, 255, .18));
+    mask-image: linear-gradient(to top, rgba(0,0,0,.98) 3%, rgba(0,0,0,.72) 52%, transparent 94%) !important;
+    animation: noticeBuddy3DFloorTravel 18s linear infinite !important;
+}
+@keyframes noticeBuddy3DFloorTravel {
+    from { background-position: 0 0, 0 0, center; }
+    to { background-position: 0 270px, 0 270px, center; }
+}
+
+/* Holographic wireframe globe floating on the right side of every page. */
+.stAppViewContainer::before {
+    content: "";
+    position: fixed;
+    z-index: 0;
+    top: 12vh;
+    right: -150px;
+    width: clamp(260px, 36vw, 520px);
+    aspect-ratio: 1;
+    border: 1px solid rgba(115, 164, 255, .18);
+    border-radius: 50%;
+    pointer-events: none;
+    background:
+        radial-gradient(ellipse 29% 50% at 50% 50%, transparent 96%, rgba(95, 221, 255, .32) 98%, transparent 100%),
+        radial-gradient(ellipse 50% 27% at 50% 50%, transparent 96%, rgba(157, 117, 255, .36) 98%, transparent 100%),
+        radial-gradient(ellipse 18% 50% at 50% 50%, transparent 96%, rgba(95, 221, 255, .30) 98%, transparent 100%),
+        radial-gradient(ellipse 39% 50% at 50% 50%, transparent 96%, rgba(120, 135, 255, .25) 98%, transparent 100%),
+        repeating-radial-gradient(circle at 50% 50%, transparent 0 42px, rgba(100, 143, 255, .11) 43px, transparent 44px 66px),
+        radial-gradient(circle at 34% 29%, rgba(75, 144, 255, .12), rgba(114, 63, 255, .035) 46%, transparent 72%);
+    box-shadow:
+        inset 0 0 62px rgba(95, 112, 255, .09),
+        0 0 70px rgba(72, 130, 255, .08),
+        0 0 0 26px rgba(91, 120, 255, .016),
+        0 0 0 55px rgba(91, 120, 255, .012);
+    transform: perspective(900px) rotateY(-28deg) rotateX(12deg);
+    transform-style: preserve-3d;
+    opacity: .58;
+    filter: drop-shadow(0 0 14px rgba(89, 126, 255, .12));
+    animation: noticeBuddy3DGlobe 22s ease-in-out infinite alternate;
+}
+@keyframes noticeBuddy3DGlobe {
+    0% { transform: perspective(900px) rotateY(-31deg) rotateX(12deg) translate3d(0,0,0); }
+    50% { transform: perspective(900px) rotateY(-20deg) rotateX(18deg) translate3d(-17px,18px,0); }
+    100% { transform: perspective(900px) rotateY(-34deg) rotateX(8deg) translate3d(8px,-12px,0); }
+}
+
+/* Second wireframe plane creates a foreground/background depth cue. */
+.stAppViewContainer::after {
+    content: "";
+    position: fixed;
+    z-index: 0;
+    left: -190px;
+    bottom: -125px;
+    width: clamp(370px, 48vw, 680px);
+    height: clamp(250px, 35vw, 470px);
+    border: 1px solid rgba(85, 205, 255, .15);
+    border-radius: 34%;
+    pointer-events: none;
+    transform: perspective(720px) rotateX(61deg) rotateZ(-24deg);
+    transform-origin: center center;
+    background:
+        linear-gradient(90deg, rgba(90, 194, 255, .07) 1px, transparent 1px),
+        linear-gradient(rgba(90, 194, 255, .07) 1px, transparent 1px),
+        radial-gradient(ellipse at 55% 40%, rgba(44, 104, 255, .09), transparent 65%);
+    background-size: 38px 38px, 38px 38px, 100% 100%;
+    box-shadow:
+        inset 0 0 55px rgba(63, 147, 255, .045),
+        0 0 45px rgba(65, 169, 255, .045);
+    opacity: .52;
+    animation: noticeBuddy3DPlane 19s ease-in-out infinite alternate;
+}
+@keyframes noticeBuddy3DPlane {
+    from { transform: perspective(720px) rotateX(61deg) rotateZ(-24deg) translate3d(0,0,0); }
+    to { transform: perspective(720px) rotateX(56deg) rotateZ(-19deg) translate3d(20px,-10px,0); }
+}
+
+/* Keep the real app content above the decorative 3D environment. */
+div[data-testid="stMain"],
+div[data-testid="stMainBlockContainer"],
+header[data-testid="stHeader"] {
+    position: relative !important;
+    z-index: 2 !important;
+    background: transparent !important;
+}
+div[data-testid="stSidebar"] {
+    position: relative !important;
+    z-index: 3 !important;
+}
+.stAppViewContainer {
+    isolation: isolate;
+}
+
+/* Additional atmospheric light behind cards for depth. */
+.nexus-bento-grid,
+.nexus-process-rail,
+.workspace-card,
+.page-heading {
+    position: relative;
+    z-index: 2;
+}
+@media (max-width: 760px) {
+    .stAppViewContainer::before {
+        width: 290px;
+        right: -190px;
+        top: 17vh;
+        opacity: .28;
+    }
+    .stAppViewContainer::after {
+        width: 360px;
+        height: 250px;
+        left: -210px;
+        bottom: -110px;
+        opacity: .26;
+    }
+    .stApp::before {
+        opacity: .30 !important;
+        bottom: -48% !important;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .stApp::before,
+    .stAppViewContainer::before,
+    .stAppViewContainer::after {
+        animation: none !important;
+    }
+}
+
 </style>  
 
 """, unsafe_allow_html=True)
