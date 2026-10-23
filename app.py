@@ -143,91 +143,91 @@ hr { border-color: #293557; }
     .hero::after { animation: none; }
 }
 
-/* 3D FUTURISTIC BACKGROUND */
+/* 3D FUTURISTIC BACKGROUND — clearly visible layered grid + perspective floor */
 .stApp {
-    position: relative; isolation: isolate;
+    position: relative;
+    isolation: isolate;
     overflow-x: hidden;
     background:
-        radial-gradient(circle at 80% 20%,
-            rgba(100, 65, 255, 0.20), transparent 30%),
+        linear-gradient(rgba(103, 126, 255, 0.16) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(103, 126, 255, 0.16) 1px, transparent 1px),
+        radial-gradient(circle at 80% 18%, rgba(100, 65, 255, 0.22), transparent 32%),
+        radial-gradient(circle at 12% 75%, rgba(35, 140, 255, 0.10), transparent 35%),
         linear-gradient(135deg, #080D1C, #111631, #101D39);
+    background-size: 48px 48px, 48px 48px, auto, auto, auto;
+    background-position: center bottom, center bottom, center, center, center;
 }
 
-/* Animated 3D grid */
+/* Perspective floor grid */
 .stApp::before {
     content: "";
     position: fixed;
-    left: -10%;
-    bottom: -30%;
-    width: 120%;
-    height: 70%;
+    left: -15%;
+    bottom: -22%;
+    width: 130%;
+    height: 75%;
     pointer-events: none;
     z-index: 0;
-    background:
-        repeating-linear-gradient(
-            0deg, transparent 0 38px,
-            rgba(91, 112, 255, 0.16) 39px 40px
-        ),
-        repeating-linear-gradient(
-            90deg, transparent 0 38px,
-            rgba(91, 112, 255, 0.16) 39px 40px
-        );
-    transform: perspective(500px) rotateX(58deg);
+    background-image:
+        linear-gradient(rgba(115, 132, 255, 0.40) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(115, 132, 255, 0.40) 1px, transparent 1px);
+    background-size: 44px 44px;
+    transform: perspective(460px) rotateX(58deg);
     transform-origin: center bottom;
-    mask-image: linear-gradient(to bottom, transparent, black);
-    animation: gridDrift 10s ease-in-out infinite alternate;
+    mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.95), transparent 92%);
+    opacity: 0.65;
+    animation: gridDrift 8s ease-in-out infinite alternate;
 }
 
 /* Floating neon glow */
 .stApp::after {
     content: "";
     position: fixed;
-    top: 15%;
-    right: -100px;
-    width: 300px;
-    height: 300px;
+    top: 14%;
+    right: -90px;
+    width: 320px;
+    height: 320px;
     border-radius: 50%;
-    z-index:0;
-    background: radial-gradient(
-        circle, rgba(126, 76, 255, 0.35), transparent 70%
-    );
-    filter: blur(35px);
     pointer-events: none;
     z-index: 0;
+    background: radial-gradient(circle, rgba(126, 76, 255, 0.32), rgba(35, 140, 255, 0.10) 45%, transparent 72%);
+    filter: blur(28px);
     animation: glowDrift 8s ease-in-out infinite alternate;
 }
 
-/* Keep app content above background effects */
+/* Keep Streamlit content clear and above the decorative layers */
 .stAppViewContainer,
-section[data-testid="stSidebar"],
+div[data-testid="stMain"],
 header[data-testid="stHeader"] {
     position: relative;
     z-index: 1;
+    background-color: transparent !important;
+}
+section[data-testid="stSidebar"] {
+    position: relative;
+    z-index: 2;
 }
 
-/* 3D cards */
+/* 3D card tilt on hover */
 .metric {
     transform-style: preserve-3d;
     transition: transform 0.35s ease, box-shadow 0.35s ease;
 }
-
 .metric:hover {
-    transform: perspective(900px) rotateY(-5deg)
-               rotateX(3deg) translateY(-7px);
+    transform: perspective(900px) rotateY(-5deg) rotateX(3deg) translateY(-7px);
     box-shadow: 0 18px 40px rgba(77, 69, 255, 0.25);
 }
 
 @keyframes gridDrift {
-    from { transform: perspective(500px) rotateX(58deg) translateY(0); }
-    to   { transform: perspective(500px) rotateX(58deg) translateY(18px); }
+    from { transform: perspective(460px) rotateX(58deg) translateY(0); }
+    to   { transform: perspective(460px) rotateX(58deg) translateY(18px); }
 }
-
 @keyframes glowDrift {
     from { transform: translate(-20px, -10px) scale(0.9); }
     to   { transform: translate(-100px, 60px) scale(1.2); }
 }
-
 @media (prefers-reduced-motion: reduce) {
+    .hero::after,
     .stApp::before,
     .stApp::after {
         animation: none;
