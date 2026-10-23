@@ -6935,6 +6935,8 @@ if page == "🏠 Home":
       }
       digit.joints[digit.joints.length-1].position.copy(point);digit.joints[digit.joints.length-1].position.z+=.02;digit.tip.copy(point);
     }
+    // Set a complete recognizable hand pose before the first render (including reduced-motion mode).
+    animatedDigits.forEach(d=>updateDigit(d,0));
 
     const makeTexture = (spec, idx) => {
       const c = doc.createElement("canvas"); c.width=512; c.height=680;
