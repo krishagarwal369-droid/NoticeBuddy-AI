@@ -5208,6 +5208,7 @@ elif page == "✅ Action Center":
     open_count = len(action_tasks) - completed_count
     overdue_count = sum(1 for task in action_tasks if _action_is_overdue(task))
     completion_pct = int((completed_count / len(action_tasks)) * 100) if action_tasks else 0
+    selected_action_record = None
 
     kpi_cols = st.columns(4)
     kpi_items = [
@@ -5250,7 +5251,6 @@ elif page == "✅ Action Center":
             key="action_center_notice_select",
             help="The checklist is built from the selected notice's extracted source text and dates."
         )
-        selected_action_record = None
         if selected_notice_label != "No notice selected":
             selected_index = notice_options.index(selected_notice_label) - 1
             if 0 <= selected_index < len(all_notice_records):
@@ -5380,8 +5380,8 @@ elif page == "✅ Action Center":
         if not manual_title.strip():
             st.warning("Task name empty hai — pehle task ka naam likh.")
         else:
-            linked_id = selected_action_record.get("id") if all_notice_records and "selected_action_record" in locals() and selected_action_record else None
-            linked_title = selected_action_record.get("title", "Notice") if all_notice_records and "selected_action_record" in locals() and selected_action_record else "Personal task"
+            linked_id = selected_action_record.get("id") if selected_action_record else None
+            linked_title = selected_action_record.get("title", "Notice") if selected_action_record else "Personal task"
             task_evidence = manual_note.strip() or "Manually added by you"
             action_tasks.append({
                 "id": uuid.uuid4().hex[:12],
