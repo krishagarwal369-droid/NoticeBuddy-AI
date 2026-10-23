@@ -5181,9 +5181,701 @@ hr {
     }
 }
 
+
+
+/* =====================================================================
+   NOTICEBUDDY SIGNATURE CSS-3D MASCOT
+   An original, layered CSS 3D character; the existing PNG remains a fallback.
+   ===================================================================== */
+.nb-mascot-model {
+    --nb-head-yaw: 0deg;
+    --nb-head-pitch: 0deg;
+    --nb-pupil-x: 0px;
+    --nb-pupil-y: 0px;
+    position: relative;
+    display: block;
+    width: 286px;
+    height: 318px;
+    max-width: 100%;
+    flex: 0 0 auto;
+    isolation: isolate;
+    perspective: 920px;
+    transform-style: preserve-3d;
+    filter: drop-shadow(0 16px 24px rgba(0,0,0,.23));
+    contain: layout style;
+}
+.nb-mascot-body-rig {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    translate: 0 0;
+    animation: nbMascotBodyFloat 5.3s ease-in-out infinite;
+}
+@keyframes nbMascotBodyFloat {
+    0%,100% { translate: 0 0; }
+    50% { translate: 0 -7px; }
+}
+.nb-mascot-floor-shadow {
+    position: absolute;
+    left: 50%;
+    bottom: 5px;
+    width: 154px;
+    height: 23px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse,rgba(28,173,255,.22),rgba(116,73,255,.12) 46%,transparent 73%);
+    filter: blur(5px);
+    transform: translateX(-50%) translateZ(-22px);
+    animation: nbMascotShadowPulse 5.3s ease-in-out infinite;
+}
+@keyframes nbMascotShadowPulse {
+    0%,100% { opacity:.68; scale:1; }
+    50% { opacity:.35; scale:.86; }
+}
+.nb-mascot-aura {
+    position: absolute;
+    top: 42px;
+    left: 50%;
+    width: 198px;
+    height: 198px;
+    border: 1px solid rgba(108,209,255,.20);
+    border-radius: 50%;
+    box-shadow: 0 0 0 10px rgba(98,119,255,.035), inset 0 0 22px rgba(82,151,255,.055);
+    transform: translateX(-50%) translateZ(-14px) rotateX(67deg);
+    pointer-events: none;
+}
+.nb-mascot-aura::before,
+.nb-mascot-aura::after {
+    content:"";
+    position:absolute;
+    inset:14px;
+    border:1px dashed rgba(150,128,255,.22);
+    border-radius:50%;
+}
+.nb-mascot-aura::after {
+    inset:31px;
+    border-style:solid;
+    border-color:rgba(95,226,255,.15);
+}
+.nb-mascot-antenna {
+    position:absolute;
+    left:50%;
+    top:1px;
+    width:7px;
+    height:29px;
+    border-radius:9px;
+    background:linear-gradient(90deg,#697FA9,#F5FCFF 45%,#788EB8);
+    box-shadow:0 0 0 2px rgba(119,197,255,.08);
+    transform:translateX(-50%) translateZ(38px);
+    z-index:6;
+}
+.nb-mascot-antenna::before {
+    content:"";
+    position:absolute;
+    top:-6px;
+    left:50%;
+    width:15px;
+    height:15px;
+    border:1px solid rgba(174,245,255,.88);
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 28%,#F7FFFF 0%,#9DF7FF 18%,#3BBAFF 47%,#6557FF 78%);
+    box-shadow:0 0 8px rgba(71,219,255,.72),0 0 19px rgba(98,96,255,.38);
+    transform:translateX(-50%);
+    animation:nbMascotAntennaPulse 3.2s ease-in-out infinite;
+}
+@keyframes nbMascotAntennaPulse {
+    0%,100% { filter:brightness(.92); }
+    50% { filter:brightness(1.22); }
+}
+.nb-mascot-head {
+    position:absolute;
+    top:20px;
+    left:50%;
+    width:158px;
+    height:132px;
+    z-index:8;
+    transform-style:preserve-3d;
+    transform:translateX(-50%) translateZ(34px) rotateX(var(--nb-head-pitch)) rotateY(var(--nb-head-yaw));
+    transform-origin:50% 65%;
+    transition:transform .28s cubic-bezier(.2,.7,.2,1);
+}
+.nb-mascot-head-shell {
+    position:absolute;
+    inset:0;
+    overflow:visible;
+    border:1px solid rgba(255,255,255,.92);
+    border-radius:44% 44% 39% 39% / 44% 44% 47% 47%;
+    background:
+      radial-gradient(ellipse at 26% 14%,rgba(255,255,255,.97),transparent 34%),
+      linear-gradient(115deg,#8E9CB7 0%,#F8FCFF 19%,#CFD9EA 43%,#FFFFFF 57%,#9EACC7 82%,#EFF7FF 100%);
+    box-shadow:
+      inset 0 3px 5px rgba(255,255,255,.92),
+      inset 0 -7px 12px rgba(59,82,132,.25),
+      0 8px 16px rgba(0,0,0,.22),
+      0 0 22px rgba(86,187,255,.12);
+    transform-style:preserve-3d;
+}
+.nb-mascot-head-shell::before {
+    content:"";
+    position:absolute;
+    inset:5px 8px auto;
+    height:16px;
+    border-radius:50%;
+    border-top:2px solid rgba(255,255,255,.87);
+    opacity:.88;
+    pointer-events:none;
+}
+.nb-mascot-head-shell::after {
+    content:"";
+    position:absolute;
+    width:44px;
+    height:7px;
+    left:50%;
+    bottom:5px;
+    border-radius:50%;
+    background:linear-gradient(90deg,#8DA1C2,#E9F3FF,#879BBE);
+    box-shadow:0 2px 5px rgba(20,32,61,.24);
+    transform:translateX(-50%) translateZ(3px);
+}
+.nb-mascot-ear {
+    position:absolute;
+    z-index:-1;
+    top:43px;
+    width:21px;
+    height:40px;
+    border-radius:9px;
+    border:1px solid rgba(239,250,255,.8);
+    background:linear-gradient(100deg,#687D9E,#F4F8FF 40%,#9EADC8 80%,#DCE9F8);
+    box-shadow:inset 0 1px 2px #FFFFFF,0 4px 7px rgba(0,0,0,.22);
+}
+.nb-mascot-ear-left { left:-12px; transform:translateZ(-5px) rotateY(-20deg); }
+.nb-mascot-ear-right { right:-12px; transform:translateZ(-5px) rotateY(20deg); }
+.nb-mascot-ear span {
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:5px;
+    height:19px;
+    border-radius:99px;
+    background:linear-gradient(#8EF5FF,#4CA9FF);
+    box-shadow:0 0 8px rgba(68,201,255,.62);
+    transform:translate(-50%,-50%);
+}
+.nb-mascot-faceplate {
+    position:absolute;
+    inset:20px 12px 19px;
+    overflow:hidden;
+    border:1px solid rgba(104,204,255,.52);
+    border-radius:37% 37% 34% 34% / 35% 35% 37% 37%;
+    background:
+      radial-gradient(ellipse at 50% 0%,rgba(47,75,124,.66),transparent 48%),
+      linear-gradient(135deg,#071225 0%,#0E1B38 45%,#070D1D 100%);
+    box-shadow:inset 0 0 0 2px rgba(255,255,255,.035),inset 0 10px 18px rgba(0,0,0,.42),0 0 13px rgba(54,174,255,.12);
+    transform:translateZ(13px);
+    transform-style:preserve-3d;
+}
+.nb-mascot-faceplate::before {
+    content:"";
+    position:absolute;
+    top:0;
+    left:17%;
+    width:42%;
+    height:31%;
+    border-radius:0 0 100% 12%;
+    background:linear-gradient(110deg,rgba(255,255,255,.13),transparent 82%);
+    transform:skewX(-16deg);
+}
+.nb-mascot-eye {
+    position:absolute;
+    top:34%;
+    display:block;
+    width:28px;
+    height:25px;
+    border-radius:48% 48% 44% 44%;
+    background:radial-gradient(ellipse at 48% 36%,rgba(153,249,255,.20),rgba(24,173,255,.07) 58%,transparent 74%);
+    box-shadow:0 0 8px rgba(43,194,255,.18);
+    animation:nbMascotBlink 5.5s infinite;
+    transform-origin:center;
+}
+.nb-mascot-eye-left { left:21px; }
+.nb-mascot-eye-right { right:21px; animation-delay:.10s; }
+@keyframes nbMascotBlink {
+    0%,42%,45%,100% { scale:1 1; }
+    43.3%,44% { scale:1 .08; }
+}
+.nb-mascot-pupil {
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:13px;
+    height:17px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 27%,#FFFFFF 0%,#D9FFFF 12%,#74F4FF 33%,#22B4FF 66%,#3674FF 100%);
+    box-shadow:0 0 5px #72F4FF,0 0 13px rgba(35,190,255,.84),0 0 21px rgba(77,122,255,.30);
+    transform:translate(calc(-50% + var(--nb-pupil-x)),calc(-50% + var(--nb-pupil-y))) translateZ(2px);
+    transition:transform .18s ease,filter .22s ease;
+}
+.nb-mascot-pupil::after {
+    content:"";
+    position:absolute;
+    top:3px;
+    left:3px;
+    width:3px;
+    height:4px;
+    border-radius:50%;
+    background:white;
+    box-shadow:0 0 3px white;
+}
+.nb-mascot-mouth {
+    position:absolute;
+    left:50%;
+    top:70%;
+    width:25px;
+    height:9px;
+    border-bottom:2px solid #8BF4FF;
+    border-radius:0 0 70% 70%;
+    filter:drop-shadow(0 0 4px rgba(84,224,255,.8));
+    transform:translateX(-50%) translateZ(3px);
+}
+.nb-mascot-cheek {
+    position:absolute;
+    top:62%;
+    width:10px;
+    height:4px;
+    border-radius:50%;
+    background:rgba(72,180,255,.42);
+    filter:blur(1px);
+}
+.nb-mascot-cheek-left { left:14px; }
+.nb-mascot-cheek-right { right:14px; }
+.nb-mascot-neck {
+    position:absolute;
+    z-index:4;
+    top:136px;
+    left:50%;
+    width:48px;
+    height:34px;
+    border-radius:12px 12px 15px 15px;
+    border:1px solid rgba(238,249,255,.65);
+    background:linear-gradient(90deg,#657B9E,#F0F6FF 24%,#9DACC6 53%,#E6F0FF 78%,#7186AA);
+    box-shadow:inset 0 2px 3px rgba(255,255,255,.75),0 5px 10px rgba(0,0,0,.2);
+    transform:translateX(-50%) translateZ(15px);
+}
+.nb-mascot-neck::after {
+    content:"";
+    position:absolute;
+    bottom:5px;
+    left:50%;
+    width:28px;
+    height:3px;
+    border-radius:9px;
+    background:linear-gradient(90deg,#7D6CFF,#7CEBFF);
+    box-shadow:0 0 7px rgba(105,206,255,.48);
+    transform:translateX(-50%);
+}
+.nb-mascot-torso {
+    position:absolute;
+    top:157px;
+    left:50%;
+    width:139px;
+    height:115px;
+    z-index:5;
+    border:1px solid rgba(255,255,255,.9);
+    border-radius:35% 35% 26% 26% / 31% 31% 22% 22%;
+    background:
+      radial-gradient(ellipse at 28% 6%,rgba(255,255,255,.95),transparent 34%),
+      linear-gradient(105deg,#92A1BE,#F5FAFF 23%,#CDD8EA 43%,#FFFFFF 51%,#B7C6DF 75%,#F1F7FF 91%,#8798B9);
+    box-shadow:
+      inset 0 3px 5px rgba(255,255,255,.9),
+      inset 0 -8px 15px rgba(45,67,114,.23),
+      0 10px 16px rgba(0,0,0,.22);
+    transform:translateX(-50%) translateZ(15px);
+    transform-style:preserve-3d;
+}
+.nb-mascot-torso::before {
+    content:"";
+    position:absolute;
+    inset:8px 11px auto;
+    height:19px;
+    border-top:1px solid rgba(255,255,255,.92);
+    border-radius:50%;
+}
+.nb-mascot-torso::after {
+    content:"";
+    position:absolute;
+    bottom:8px;
+    left:50%;
+    width:74px;
+    height:8px;
+    border-radius:50%;
+    background:linear-gradient(90deg,#687B9E,#E8F5FF,#8B9BB9);
+    box-shadow:0 2px 4px rgba(42,63,103,.2);
+    transform:translateX(-50%) translateZ(4px);
+}
+.nb-mascot-chest-panel {
+    position:absolute;
+    top:25px;
+    left:50%;
+    width:51px;
+    height:40px;
+    display:grid;
+    place-items:center;
+    border-radius:11px;
+    border:1px solid rgba(102,179,255,.48);
+    background:linear-gradient(145deg,rgba(14,33,68,.97),rgba(8,17,40,.99));
+    color:#BDF8FF;
+    font:800 15px/1 "Space Grotesk",sans-serif;
+    letter-spacing:-1px;
+    text-shadow:0 0 10px rgba(91,221,255,.64);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 0 14px rgba(67,155,255,.16);
+    transform:translateX(-50%) translateZ(14px);
+}
+.nb-mascot-chest-panel::after {
+    content:"";
+    position:absolute;
+    inset:4px;
+    border:1px solid rgba(107,230,255,.23);
+    border-radius:7px;
+}
+.nb-mascot-status-light {
+    position:absolute;
+    top:74px;
+    left:50%;
+    width:15px;
+    height:4px;
+    border-radius:99px;
+    background:linear-gradient(90deg,#9477FF,#73F2FF);
+    box-shadow:0 0 8px rgba(85,222,255,.65);
+    transform:translateX(-50%) translateZ(7px);
+}
+.nb-mascot-arm {
+    position:absolute;
+    top:163px;
+    width:41px;
+    height:92px;
+    z-index:4;
+    transform-style:preserve-3d;
+    transform-origin:50% 13px;
+}
+.nb-mascot-arm-left { left:48px; transform:translateZ(7px) rotateZ(16deg); }
+.nb-mascot-arm-right { right:48px; transform:translateZ(7px) rotateZ(-16deg); }
+.nb-mascot-shoulder {
+    position:absolute;
+    top:0;
+    left:3px;
+    width:34px;
+    height:32px;
+    border-radius:13px;
+    border:1px solid rgba(255,255,255,.86);
+    background:linear-gradient(110deg,#7A8CAB,#F5FAFF 36%,#B4C4DD 70%,#F4F9FF);
+    box-shadow:inset 0 2px 3px rgba(255,255,255,.8),0 4px 8px rgba(0,0,0,.17);
+}
+.nb-mascot-shoulder::after {
+    content:"";
+    position:absolute;
+    inset:8px 10px;
+    border-radius:6px;
+    background:linear-gradient(135deg,#8A74FF,#65E8FF);
+    box-shadow:0 0 7px rgba(91,203,255,.33);
+}
+.nb-mascot-forearm {
+    position:absolute;
+    top:24px;
+    left:8px;
+    width:26px;
+    height:48px;
+    border:1px solid rgba(255,255,255,.84);
+    border-radius:10px 10px 12px 12px;
+    background:linear-gradient(100deg,#7F91B1,#F9FCFF 30%,#BDCBE0 72%,#F1F7FF);
+    box-shadow:inset 0 2px 3px rgba(255,255,255,.88),0 5px 7px rgba(0,0,0,.15);
+}
+.nb-mascot-forearm::after {
+    content:"";
+    position:absolute;
+    top:6px;
+    left:50%;
+    width:3px;
+    height:17px;
+    border-radius:5px;
+    background:linear-gradient(#8B79FF,#76EBFF);
+    box-shadow:0 0 6px rgba(92,212,255,.45);
+    transform:translateX(-50%);
+}
+.nb-mascot-hand {
+    position:absolute;
+    bottom:0;
+    left:8px;
+    width:26px;
+    height:20px;
+    border-radius:9px 9px 12px 12px;
+    border:1px solid rgba(248,252,255,.85);
+    background:linear-gradient(100deg,#879AB9,#F7FBFF 34%,#BFCDE2 75%,#EDF7FF);
+    box-shadow:inset 0 1px 2px white,0 2px 4px rgba(0,0,0,.14);
+}
+.nb-mascot-hand::before,
+.nb-mascot-hand::after {
+    content:"";
+    position:absolute;
+    bottom:-4px;
+    width:7px;
+    height:10px;
+    border-radius:0 0 5px 5px;
+    background:linear-gradient(90deg,#9FAFC9,#F1F7FF,#8E9FBD);
+}
+.nb-mascot-hand::before { left:3px; }
+.nb-mascot-hand::after { right:3px; }
+.nb-mascot-orbit {
+    position:absolute;
+    top:130px;
+    left:50%;
+    width:187px;
+    height:67px;
+    border:1px solid rgba(88,221,255,.52);
+    border-radius:50%;
+    box-shadow:0 0 10px rgba(69,187,255,.12),inset 0 0 8px rgba(84,115,255,.08);
+    transform:translateX(-50%) translateZ(26px) rotateX(67deg) rotateZ(-14deg);
+    pointer-events:none;
+    animation:nbMascotOrbit 18s linear infinite;
+}
+@keyframes nbMascotOrbit { to { rotate:0 0 1 360deg; } }
+.nb-mascot-orbit::before {
+    content:"";
+    position:absolute;
+    width:7px;
+    height:7px;
+    left:14%;
+    top:18%;
+    border-radius:50%;
+    background:#9CF8FF;
+    box-shadow:0 0 8px #55DFFF,0 0 15px rgba(102,108,255,.7);
+}
+.nb-mascot-shoulder .nb-mascot-joint {
+    position:absolute;
+    z-index:2;
+    bottom:-5px;
+    left:50%;
+    width:15px;
+    height:15px;
+    border:1px solid rgba(255,255,255,.9);
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 27%,#FFFFFF,#A4BEDD 53%,#5E759A);
+    box-shadow:0 2px 5px rgba(0,0,0,.2);
+    transform:translateX(-50%) translateZ(5px);
+}
+.nb-mascot-spark {
+    position:absolute;
+    z-index:9;
+    color:#B9F8FF;
+    text-shadow:0 0 9px #55DFFF;
+    font-size:13px;
+    animation:nbMascotSparkle 4s ease-in-out infinite;
+    pointer-events:none;
+}
+.nb-mascot-spark-one { top:76px; left:19px; }
+.nb-mascot-spark-two { right:16px; top:125px; animation-delay:-1.8s; }
+@keyframes nbMascotSparkle {
+    0%,100% { opacity:.30; scale:.78; }
+    50% { opacity:.95; scale:1.1; }
+}
+.nb-mascot-fallback {
+    display:none;
+    width:100%;
+    max-width:310px;
+    max-height:318px;
+    height:auto;
+    object-fit:contain;
+    filter:drop-shadow(0 0 24px rgba(72,96,255,.34));
+    mix-blend-mode:screen;
+}
+.nb-mascot-hotspot {
+    position:absolute;
+    z-index:4;
+    left:50%;
+    top:50%;
+    width:186px;
+    height:270px;
+    padding:0;
+    border:1px solid transparent;
+    border-radius:48% 48% 35% 35%;
+    background:transparent;
+    box-shadow:none;
+    transform:translate(-50%,-48%);
+    cursor:pointer;
+    outline:none;
+    transition:border-color .2s ease,background .2s ease,box-shadow .2s ease;
+}
+.nb-mascot-hotspot:focus-visible {
+    border-color:rgba(103,229,255,.9);
+    background:rgba(83,195,255,.035);
+    box-shadow:0 0 0 3px rgba(103,205,255,.14),0 0 22px rgba(100,108,255,.14);
+}
+.nb-mascot-hotspot:hover {
+    border-color:rgba(122,213,255,.12);
+}
+.nb-mascot-model[data-state="looking"] .nb-mascot-pupil {
+    filter:brightness(1.12);
+}
+.nb-mascot-model[data-state="looking"] .nb-mascot-faceplate {
+    box-shadow:inset 0 0 0 2px rgba(255,255,255,.035),inset 0 10px 18px rgba(0,0,0,.42),0 0 18px rgba(54,174,255,.20);
+}
+.nb-mascot-model[data-state="greeting"] .nb-mascot-arm-right {
+    animation:nbMascotWave .92s cubic-bezier(.33,.05,.2,1) 1;
+}
+@keyframes nbMascotWave {
+    0% { transform:translateZ(7px) rotateZ(-16deg); }
+    24% { transform:translateZ(16px) rotateZ(-64deg); }
+    45% { transform:translateZ(16px) rotateZ(-48deg); }
+    67% { transform:translateZ(16px) rotateZ(-64deg); }
+    86%,100% { transform:translateZ(7px) rotateZ(-16deg); }
+}
+.nb-mascot-model[data-state="thinking"] .nb-mascot-pupil {
+    box-shadow:0 0 6px #72F4FF,0 0 17px rgba(35,190,255,.94),0 0 24px rgba(98,96,255,.42);
+    animation:nbMascotThinkGlow 1.8s ease-in-out infinite alternate;
+}
+@keyframes nbMascotThinkGlow {
+    from { filter:brightness(.88); }
+    to { filter:brightness(1.25); }
+}
+.nb-mascot-model[data-state="thinking"] .nb-mascot-orbit {
+    animation-duration:5.5s;
+    border-color:rgba(102,223,255,.72);
+}
+.nb-mascot-model[data-state="listening"] .nb-mascot-eye {
+    box-shadow:0 0 14px rgba(70,219,255,.36);
+}
+.nb-mascot-model[data-state="success"] .nb-mascot-pupil {
+    background:radial-gradient(circle at 35% 27%,#FFFFFF 0%,#D9FFFF 12%,#A3F8DF 33%,#33D7B0 66%,#219EAF 100%);
+}
+.nb-mascot-model[data-state="error"] .nb-mascot-status-light {
+    background:linear-gradient(90deg,#9477FF,#FF8AAE);
+    box-shadow:0 0 8px rgba(255,138,174,.5);
+}
+.nb-mascot-compact {
+    width:286px;
+    height:318px;
+    max-width:none;
+    transform:scale(.39);
+    transform-origin:top left;
+    filter:drop-shadow(0 8px 15px rgba(0,0,0,.2));
+}
+.nb-activity-mascot {
+    display:flex;
+    align-items:center;
+    gap:4px;
+    min-height:112px;
+    margin:2px 0 8px;
+    padding:9px 12px;
+    overflow:hidden;
+    border:1px solid rgba(112,184,255,.20);
+    border-radius:15px;
+    background:linear-gradient(110deg,rgba(8,18,40,.36),rgba(44,45,109,.15));
+}
+.nb-activity-mascot-visual {
+    width:112px;
+    height:106px;
+    flex:0 0 112px;
+    position:relative;
+    overflow:hidden;
+}
+.nb-activity-mascot-copy {
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    min-width:0;
+    color:#EAF5FF;
+}
+.nb-activity-mascot-copy b {
+    font-size:12px;
+    letter-spacing:.01em;
+}
+.nb-activity-mascot-copy span {
+    font-size:10px;
+    line-height:1.6;
+    color:#93B5D9;
+}
+@supports not (transform-style:preserve-3d) {
+    .nb-mascot-model { display:none !important; }
+    .nb-mascot-fallback { display:block !important; }
+    .nb-mascot-hotspot { display:none !important; }
+}
+@media (max-width:760px) {
+    .nb-mascot-model:not(.nb-mascot-compact) {
+        width:244px;
+        height:280px;
+        scale:.90;
+        scale-origin:center center;
+        transform-origin:center center;
+    }
+    .nb-mascot-hotspot { width:164px;height:242px; }
+    .nb-activity-mascot { padding:7px;gap:0; }
+    .nb-activity-mascot-visual { width:82px;height:96px;flex-basis:82px; }
+    .nb-mascot-compact { scale:.31; }
+    .nb-activity-mascot-copy b { font-size:11px; }
+}
+@media (prefers-reduced-motion:reduce) {
+    .nb-mascot-body-rig,.nb-mascot-floor-shadow,.nb-mascot-antenna::before,
+    .nb-mascot-eye,.nb-mascot-orbit,.nb-mascot-spark,
+    .nb-mascot-model[data-state="thinking"] .nb-mascot-pupil {
+        animation:none !important;
+    }
+    .nb-mascot-head,.nb-mascot-pupil,.nb-mascot-hotspot { transition:none !important; }
+    .nb-mascot-model,.nb-mascot-model * { scroll-behavior:auto !important; }
+    .nb-mascot-model[data-state="greeting"] .nb-mascot-arm-right { animation:none !important; }
+}
+
 </style>  
 
 """, unsafe_allow_html=True)
+
+
+# ---------- SIGNATURE CSS-3D NOTICEBUDDY MASCOT ----------
+ROBOT_IMAGE_URL = "https://raw.githubusercontent.com/krishagarwal369-droid/NoticeBuddy-AI/main/Neon%20AI%20Robot%20Greeting.png"
+
+
+def build_mascot_markup(fallback_url="", compact=False, state="idle"):
+    """Build the original CSS 3D mascot. The existing robot art remains a fallback."""
+    root_classes = "nb-mascot-model nb-mascot-compact" if compact else "nb-mascot-model"
+    safe_state = html_escape(state, quote=True)
+    safe_url = html_escape(fallback_url, quote=True)
+    return f"""
+    <div class="{root_classes}" data-state="{safe_state}" aria-hidden="true">
+      <div class="nb-mascot-floor-shadow"></div>
+      <div class="nb-mascot-body-rig">
+        <div class="nb-mascot-aura"></div>
+        <div class="nb-mascot-orbit"></div>
+        <div class="nb-mascot-antenna"></div>
+        <span class="nb-mascot-spark nb-mascot-spark-one">✦</span>
+        <span class="nb-mascot-spark nb-mascot-spark-two">✧</span>
+        <div class="nb-mascot-arm nb-mascot-arm-left">
+          <div class="nb-mascot-shoulder"><i class="nb-mascot-joint"></i></div>
+          <div class="nb-mascot-forearm"></div>
+          <div class="nb-mascot-hand"></div>
+        </div>
+        <div class="nb-mascot-arm nb-mascot-arm-right">
+          <div class="nb-mascot-shoulder"><i class="nb-mascot-joint"></i></div>
+          <div class="nb-mascot-forearm"></div>
+          <div class="nb-mascot-hand"></div>
+        </div>
+        <div class="nb-mascot-torso">
+          <div class="nb-mascot-chest-panel">NB</div>
+          <div class="nb-mascot-status-light"></div>
+        </div>
+        <div class="nb-mascot-neck"></div>
+        <div class="nb-mascot-head">
+          <div class="nb-mascot-ear nb-mascot-ear-left"><span></span></div>
+          <div class="nb-mascot-ear nb-mascot-ear-right"><span></span></div>
+          <div class="nb-mascot-head-shell">
+            <div class="nb-mascot-faceplate">
+              <span class="nb-mascot-eye nb-mascot-eye-left"><i class="nb-mascot-pupil"></i></span>
+              <span class="nb-mascot-eye nb-mascot-eye-right"><i class="nb-mascot-pupil"></i></span>
+              <span class="nb-mascot-cheek nb-mascot-cheek-left"></span>
+              <span class="nb-mascot-cheek nb-mascot-cheek-right"></span>
+              <span class="nb-mascot-mouth"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    """.strip()
 
 
 # ---------- OCR ----------
@@ -5783,7 +6475,7 @@ st.markdown("""
 
 # ---------- HOME ----------
 if page == "🏠 Home":
-    robot_image_url = "https://raw.githubusercontent.com/krishagarwal369-droid/NoticeBuddy-AI/main/Neon%20AI%20Robot%20Greeting.png"
+    robot_image_url = ROBOT_IMAGE_URL
     st.markdown(f"""
     <div class="hero hero-ultimate">
       <div class="hero-circuit" aria-hidden="true">
@@ -5817,7 +6509,10 @@ if page == "🏠 Home":
             <div><small>NOTICE CORE</small><b>AI READY</b></div>
             <i></i>
           </div>
-          <img class="hero-robot" src="{robot_image_url}" alt="NoticeBuddy AI robot assistant">
+          {build_mascot_markup(robot_image_url)}
+          <img class="nb-mascot-fallback" src="{robot_image_url}" alt="" aria-hidden="true">
+          <button class="nb-mascot-hotspot" type="button" aria-label="Make the NoticeBuddy mascot wave"
+                  title="Click for a friendly hello"></button>
           <div class="hero-hud hero-hud-bottom">
             <span class="hero-wave-icon">〰</span>
             <div><small>INTELLIGENCE ENGINE</small><b>READ · DECODE · ACT</b></div>
