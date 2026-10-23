@@ -5296,7 +5296,8 @@ hr {
     transform-style:preserve-3d;
     transform:translateX(-50%) translateZ(34px) rotateX(var(--nb-head-pitch)) rotateY(var(--nb-head-yaw));
     transform-origin:50% 65%;
-    transition:transform .28s cubic-bezier(.2,.7,.2,1);
+    transition:transform .20s cubic-bezier(.18,.72,.25,1);
+    will-change:transform;
 }
 .nb-mascot-head-shell {
     position:absolute;
@@ -5411,8 +5412,9 @@ hr {
     border-radius:50%;
     background:radial-gradient(circle at 35% 27%,#FFFFFF 0%,#D9FFFF 12%,#74F4FF 33%,#22B4FF 66%,#3674FF 100%);
     box-shadow:0 0 5px #72F4FF,0 0 13px rgba(35,190,255,.84),0 0 21px rgba(77,122,255,.30);
-    transform:translate(calc(-50% + var(--nb-pupil-x)),calc(-50% + var(--nb-pupil-y))) translateZ(2px);
-    transition:transform .18s ease,filter .22s ease;
+    transform:translate3d(calc(-50% + var(--nb-pupil-x)),calc(-50% + var(--nb-pupil-y)),2px);
+    transition:transform .12s cubic-bezier(.18,.72,.25,1),filter .22s ease;
+    will-change:transform;
 }
 .nb-mascot-pupil::after {
     content:"";
@@ -7810,11 +7812,27 @@ components.html(r"""
 
         const mascot = hero.querySelector(".nb-mascot-model:not(.nb-mascot-compact)");
         if (mascot && mascot.dataset.state !== "greeting") {
-          mascot.dataset.state = "looking";
-          mascot.style.setProperty("--nb-head-yaw", (x * 8).toFixed(2) + "deg");
-          mascot.style.setProperty("--nb-head-pitch", (-y * 5).toFixed(2) + "deg");
-          mascot.style.setProperty("--nb-pupil-x", (x * 4.0).toFixed(2) + "px");
-          mascot.style.setProperty("--nb-pupil-y", (y * 2.4).toFixed(2) + "px");
+          const head = mascot.querySelector(".nb-mascot-head");
+          const face = mascot.querySelector(".nb-mascot-faceplate");
+          if (head && face) {
+            /* Aim from the actual head/face position in the viewport, not the hero centre. */
+            const headRect = head.getBoundingClientRect();
+            const faceRect = face.getBoundingClientRect();
+            const headDx = event.clientX - (headRect.left + headRect.width / 2);
+            const headDy = event.clientY - (headRect.top + headRect.height * 0.46);
+            const gazeX = clamp(headDx / Math.max(1, headRect.width * 0.72), -1, 1);
+            const gazeY = clamp(headDy / Math.max(1, headRect.height * 0.78), -1, 1);
+            const faceDx = event.clientX - (faceRect.left + faceRect.width / 2);
+            const faceDy = event.clientY - (faceRect.top + faceRect.height / 2);
+            const eyeX = clamp(faceDx / Math.max(1, faceRect.width * 0.52), -1, 1);
+            const eyeY = clamp(faceDy / Math.max(1, faceRect.height * 0.60), -1, 1);
+
+            mascot.dataset.state = "looking";
+            mascot.style.setProperty("--nb-head-yaw", (gazeX * 13).toFixed(2) + "deg");
+            mascot.style.setProperty("--nb-head-pitch", (-gazeY * 7.5).toFixed(2) + "deg");
+            mascot.style.setProperty("--nb-pupil-x", (eyeX * 6.0).toFixed(2) + "px");
+            mascot.style.setProperty("--nb-pupil-y", (eyeY * 4.2).toFixed(2) + "px");
+          }
         }
       } else if (activeHero) {
         resetHero(activeHero);
