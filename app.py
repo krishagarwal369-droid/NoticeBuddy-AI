@@ -803,7 +803,7 @@ NOTICE:
 
 def render_explanation_cards(explanation):
     """Display each AI response section as a separate, colorful card."""
-    parts = re.split(r"(?m)^##\\s+", explanation.strip())
+    parts = re.split(r"(?m)^##\s+", explanation.strip())
     sections = []
 
     if len(parts) > 1:
@@ -814,7 +814,7 @@ def render_explanation_cards(explanation):
             if not lines:
                 continue
             title = lines[0].strip().lstrip("#").strip()
-            body = "\\n".join(lines[1:]).strip()
+            body = "\n".join(lines[1:]).strip()
             if title or body:
                 sections.append((title or "Notice Details", body))
     else:
