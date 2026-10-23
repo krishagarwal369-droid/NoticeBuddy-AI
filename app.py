@@ -1140,6 +1140,38 @@ def get_reader():
 
 
 # ---------- AI ----------
+def generate_notice_response(client, prompt):
+    """Try the current stable Gemini model first, then supported Gemma fallbacks."""
+    model_order = [
+        "gemini-3.8-flash",
+        "gemma-4-26b-a4b-it",
+        "gemma-4-31b-it",
+    ]
+    failures = []
+
+    for model_name in model_order:
+        try:
+            response = client.models.generate_content(
+                model=model_name,
+                contents=prompt
+            )
+            response_text = getattr(response, "text", None)
+            if response_text and response_text.strip():
+                st.session_state["last_ai_model"] = model_name
+                return response_text
+            failures.append(f"{model_name}: empty response")
+        except Exception as exc:
+            # Try the next provider model instead of failing the whole feature.
+            failures.append(f"{model_name}: {str(exc)[:220]}")
+
+    failure_summary = " | ".join(failures)
+    raise RuntimeError(
+        "All NoticeBuddy AI models failed. Check the Google AI Studio API key, "
+        "model availability/quota, or retry after a short wait. Attempts: "
+        + failure_summary
+    )
+
+
 def explain_notice(text, language):
     client = genai.Client(
         api_key=st.secrets["GEMMA_API_KEY"]
@@ -1170,11 +1202,8 @@ Use these sections:
 NOTICE:
 {text}
 """
-    response = client.models.generate_content(
-        model="gemma-4-26b-a4b-it",
-        contents=prompt
-    )
-    return response.text or "No explanation was returned."
+    response_text = generate_notice_response(client, prompt)
+    return response_text or "No explanation was returned."
 
 
 def answer_notice_question(notice_text, explanation, question, language):
@@ -1198,11 +1227,8 @@ EXISTING EXPLANATION (context only; defer to the original notice):
 STUDENT QUESTION:
 {question}
 """
-    response = client.models.generate_content(
-        model="gemma-4-26b-a4b-it",
-        contents=prompt
-    )
-    return response.text or "No answer was returned."
+    response_text = generate_notice_response(client, prompt)
+    return response_text or "No answer was returned."
 
 
 def extract_notice_dates(notice_text):
@@ -1402,7 +1428,8 @@ def render_saved_analysis(record):
                     chats.append({"role": "user", "text": question.strip()})
                     chats.append({"role": "assistant", "text": answer})
                 except Exception as exc:
-                    st.error("Could not answer this question. Check the API key and model access.")
+                    st.error("NoticeBuddy could not answer after trying its available AI models.")
+                    st.info("Retry in a moment. If the problem continues, check GEMMA_API_KEY in Streamlit Secrets and the Google AI Studio quota.")
                     st.caption(f"Technical details: {exc}")
         for message in chats:
             if message.get("role") == "user":
@@ -1946,7 +1973,8 @@ elif page == "✨ Analyzer":
 
             except Exception as e:
                 activity_slot.empty()
-                st.error("AI request failed. Check internet, API key and model access.")
+                st.error("NoticeBuddy could not get an AI response after trying its available models.")
+                st.info("Wait a few seconds and retry. If this keeps happening, check that GEMMA_API_KEY in Streamlit Secrets is a valid Google AI Studio API key and that its quota is available.")
                 st.caption(f"Technical details: {e}")
 
             else:
