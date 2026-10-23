@@ -1256,7 +1256,7 @@ def extract_notice_dates(notice_text):
 
 def add_analysis_record(notice_text, explanation, language):
     """Keep personal notice history only in this browser session."""
-    first_line = next((line.strip(" #\\t") for line in notice_text.splitlines() if line.strip()), "")
+    first_line = next((line.strip(" #\t") for line in notice_text.splitlines() if line.strip()), "")
     title = first_line[:88] + ("…" if len(first_line) > 88 else "")
     if not title:
         title = "Notice analysis"
