@@ -5336,7 +5336,7 @@ elif page == "✅ Action Center":
             # Keep dates visible even if the notice phrases them without an action verb.
             for date_item in notice_dates[:8]:
                 date_evidence = str(date_item.get("label", "Date stated in notice"))
-                date_signature = (source_id, "DATE: " + date_evidence)
+                date_signature = (source_id, date_evidence)
                 if date_signature in existing_signatures:
                     continue
                 date_label = date_evidence[:135] + ("…" if len(date_evidence) > 135 else "")
