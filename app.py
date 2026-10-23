@@ -1455,6 +1455,71 @@ div[data-testid="stFileUploader"]:hover {
     }
 }
 
+
+
+/* ===== VOICE ASSISTANT STUDIO ===== */
+.voice-studio-card {
+    border-color: rgba(92, 235, 255, .36) !important;
+    background:
+        radial-gradient(ellipse at 8% 0%, rgba(87, 104, 255, .18), transparent 44%),
+        linear-gradient(145deg, rgba(21, 34, 70, .96), rgba(10, 22, 45, .95)) !important;
+}
+.voice-context-card {
+    border-color: rgba(166, 105, 255, .30) !important;
+}
+.voice-context-pill {
+    margin: 12px 0 6px;
+    padding: 10px 13px;
+    border-radius: 12px;
+    border: 1px solid rgba(118, 255, 211, .25);
+    background: rgba(35, 160, 134, .075);
+    color: #A7F9DD;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+.voice-message-card {
+    margin: 8px 0 5px;
+    padding: 15px 16px;
+    border: 1px solid rgba(117, 138, 226, .34);
+    border-radius: 16px;
+    background: linear-gradient(120deg, rgba(23, 34, 71, .78), rgba(11, 24, 47, .88));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
+}
+.voice-message-meta {
+    color: #8EA7DE;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 1.25px;
+    margin-bottom: 8px;
+}
+.voice-question-text {
+    color: #EDF3FF;
+    font-size: 14px;
+    font-weight: 750;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+.voice-context-text {
+    color: #A3B3DD;
+    font-size: 10px;
+    margin-top: 8px;
+    overflow-wrap: anywhere;
+}
+div[data-testid="stAudioInput"] {
+    padding: 13px;
+    border: 1px solid rgba(103, 133, 244, .44);
+    border-radius: 15px;
+    background: linear-gradient(135deg, rgba(24, 35, 75, .60), rgba(11, 23, 45, .70));
+    box-shadow: 0 0 20px rgba(92, 119, 255, .055);
+}
+div[data-testid="stAudioInput"] button {
+    border-radius: 50% !important;
+    border: 1px solid rgba(92, 235, 255, .42) !important;
+}
+div[data-testid="stAudio"] {
+    border-radius: 12px;
+    overflow: hidden;
+}
 </style>  
 
 """, unsafe_allow_html=True)
@@ -1471,7 +1536,6 @@ def generate_notice_response(client, prompt):
     """Try several currently documented Gemini text models if one is overloaded."""
     model_order = [
         "gemini-3.8-flash",
-        "gemini-3.7-flash",
         "gemini-3.6-flash",
         "gemini-3.5-flash-lite",
     ]
@@ -2485,7 +2549,6 @@ elif page == "🎙️ Voice Assistant":
                     }
                     st.session_state.setdefault("voice_history", []).append(entry)
                     st.session_state["voice_draft_transcript"] = ""
-                    st.session_state["voice_question_editor"] = ""
                     st.success("Answer ready! Neeche se sun sakta hai.")
                 except Exception as exc:
                     st.warning("AI reply service is temporarily unavailable.")
