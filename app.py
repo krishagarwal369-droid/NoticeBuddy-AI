@@ -3777,6 +3777,146 @@ div[data-testid="stDataFrame"],div[data-testid="stTable"] { border-color: rgba(1
     .stApp::before { opacity: .22 !important; }
 }
 
+
+/* =========================================================
+   MOTION PACK — EXTRA MOVING DECORATIONS (8 DISTINCT EFFECTS)
+   Purple/blue neon identity retained. Decorative only.
+   ========================================================= */
+
+/* 1) Independent orbit accents rotate around the hero robot. */
+.hero .hero-orbit-outer::before {
+    animation: noticeOrbitArcSpin 17s linear infinite !important;
+    transform-origin: center;
+}
+.hero .hero-orbit-outer::after {
+    animation: noticeOrbitArcSpin 26s linear infinite reverse !important;
+    transform-origin: center;
+}
+@keyframes noticeOrbitArcSpin {
+    from { transform: rotate(25deg); }
+    to { transform: rotate(385deg); }
+}
+
+/* 2) The robot glow gently breathes without changing its float motion. */
+.hero .hero-robot {
+    animation: robotFloat 5s ease-in-out infinite, noticeRobotGlow 4.6s ease-in-out infinite !important;
+}
+@keyframes noticeRobotGlow {
+    0%,100% { filter: drop-shadow(0 0 20px rgba(72,96,255,.27)); }
+    50% { filter: drop-shadow(0 0 38px rgba(96,119,255,.58)) drop-shadow(0 0 15px rgba(93,227,255,.20)); }
+}
+
+/* 3) A travelling light gradient sweeps over primary actions. */
+.stButton > button, .stDownloadButton > button, button[kind="primary"] {
+    background-size: 220% 220% !important;
+    animation: noticeButtonFlow 7s ease-in-out infinite;
+}
+@keyframes noticeButtonFlow {
+    0%,100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* 4) Stat-card halo rings softly pulse like a live status indicator. */
+.metric::after {
+    animation: noticeMetricPulse 5.5s ease-in-out infinite;
+}
+.metric:nth-child(2)::after { animation-delay: -1.4s; }
+.metric:nth-child(3)::after { animation-delay: -2.8s; }
+.metric:nth-child(4)::after { animation-delay: -4.1s; }
+@keyframes noticeMetricPulse {
+    0%,100% { opacity: .42; transform: scale(.94) rotate(0deg); }
+    50% { opacity: .95; transform: scale(1.08) rotate(24deg); }
+}
+
+/* 5) Page-header orbital outline turns slowly behind its heading. */
+.page-heading::after {
+    animation: noticeHeadingOrbit 34s linear infinite;
+    transform-origin: center;
+}
+@keyframes noticeHeadingOrbit {
+    from { transform: rotate(0deg) scale(.98); }
+    50% { transform: rotate(180deg) scale(1.04); }
+    to { transform: rotate(360deg) scale(.98); }
+}
+
+/* 6) The top navigation's neon underline continuously sweeps. */
+.top-nav::after {
+    background-size: 220% 100% !important;
+    animation: noticeNavSweep 5.8s ease-in-out infinite;
+}
+@keyframes noticeNavSweep {
+    0%,100% { background-position: -100% center; opacity: .30; }
+    50% { background-position: 200% center; opacity: .95; }
+}
+
+/* 7) A small light streak glides across the footer edge. */
+.site-footer {
+    position: relative;
+    overflow: hidden;
+}
+.site-footer::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -35%;
+    width: 32%;
+    height: 2px;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent, rgba(103,225,255,.95), rgba(157,112,255,.86), transparent);
+    box-shadow: 0 0 16px rgba(92,179,255,.32);
+    animation: noticeFooterStreak 8.5s ease-in-out infinite;
+}
+@keyframes noticeFooterStreak {
+    0%,12% { left: -35%; opacity: 0; }
+    25% { opacity: .85; }
+    82% { opacity: .85; }
+    100% { left: 105%; opacity: 0; }
+}
+
+/* 8) Online status has a heartbeat pulse. */
+.hero .hero-live-dot {
+    animation: noticeStatusHeartbeat 2.4s ease-in-out infinite !important;
+}
+@keyframes noticeStatusHeartbeat {
+    0%,100% { transform: scale(1); box-shadow: 0 0 0 3px rgba(72,240,184,.10), 0 0 9px rgba(72,240,184,.25); }
+    18% { transform: scale(1.18); box-shadow: 0 0 0 7px rgba(72,240,184,.07), 0 0 17px rgba(72,240,184,.50); }
+    34% { transform: scale(1); }
+    48% { transform: scale(1.12); }
+    62% { transform: scale(1); }
+}
+
+/* Extra micro-motion: slow sparkle on the section marker. */
+.nexus-section-kicker > i {
+    animation: noticeKickerSpark 3.6s ease-in-out infinite;
+}
+@keyframes noticeKickerSpark {
+    0%,100% { opacity: .68; filter: brightness(1); transform: scale(.96); }
+    50% { opacity: 1; filter: brightness(1.55); transform: scale(1.12); }
+}
+
+/* Keep animations gentle on narrow screens and honor accessibility settings. */
+@media (max-width: 760px) {
+    .hero .hero-orbit-outer::before,
+    .hero .hero-orbit-outer::after { animation-duration: 28s !important; }
+    .site-footer::before { animation-duration: 11s; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .hero .hero-orbit-outer::before,
+    .hero .hero-orbit-outer::after,
+    .hero .hero-robot,
+    .stButton > button,
+    .stDownloadButton > button,
+    button[kind="primary"],
+    .metric::after,
+    .page-heading::after,
+    .top-nav::after,
+    .site-footer::before,
+    .hero .hero-live-dot,
+    .nexus-section-kicker > i {
+        animation: none !important;
+    }
+}
+
 </style>  
 
 """, unsafe_allow_html=True)
