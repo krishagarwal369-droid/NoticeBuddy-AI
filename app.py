@@ -143,61 +143,59 @@ hr { border-color: #293557; }
     .hero::after { animation: none; }
 }
 
-/* 3D FUTURISTIC BACKGROUND — clearly visible layered grid + perspective floor */
+/* DECORATIVE FUTURISTIC BACKGROUND */
 .stApp {
     position: relative;
     isolation: isolate;
     overflow-x: hidden;
     background:
-        linear-gradient(rgba(103, 126, 255, 0.16) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(103, 126, 255, 0.16) 1px, transparent 1px),
-        radial-gradient(circle at 80% 18%, rgba(100, 65, 255, 0.22), transparent 32%),
-        radial-gradient(circle at 12% 75%, rgba(35, 140, 255, 0.10), transparent 35%),
-        linear-gradient(135deg, #080D1C, #111631, #101D39);
-    background-size: 48px 48px, 48px 48px, auto, auto, auto;
-    background-position: center bottom, center bottom, center, center, center;
+        radial-gradient(ellipse at 82% 14%, rgba(118, 82, 255, 0.22), transparent 32%),
+        radial-gradient(ellipse at 8% 65%, rgba(37, 133, 255, 0.12), transparent 38%),
+        linear-gradient(135deg, #080D1C 0%, #111631 52%, #101D39 100%);
 }
 
-/* Perspective floor grid */
+/* Soft perspective grid on the page floor */
 .stApp::before {
     content: "";
     position: fixed;
     left: -15%;
-    bottom: -22%;
+    bottom: -28%;
     width: 130%;
-    height: 75%;
+    height: 78%;
     pointer-events: none;
     z-index: 0;
     background-image:
-        linear-gradient(rgba(115, 132, 255, 0.40) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(115, 132, 255, 0.40) 1px, transparent 1px);
-    background-size: 44px 44px;
+        linear-gradient(rgba(117, 134, 255, 0.34) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(117, 134, 255, 0.34) 1px, transparent 1px);
+    background-size: 46px 46px;
     transform: perspective(460px) rotateX(58deg);
     transform-origin: center bottom;
-    mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.95), transparent 92%);
-    opacity: 0.65;
+    mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent 90%);
+    opacity: 0.72;
     animation: gridDrift 8s ease-in-out infinite alternate;
 }
 
-/* Floating neon glow */
+/* Large drifting purple-blue glow */
 .stApp::after {
     content: "";
     position: fixed;
     top: 14%;
-    right: -90px;
-    width: 320px;
-    height: 320px;
+    right: -100px;
+    width: 340px;
+    height: 340px;
     border-radius: 50%;
     pointer-events: none;
     z-index: 0;
-    background: radial-gradient(circle, rgba(126, 76, 255, 0.32), rgba(35, 140, 255, 0.10) 45%, transparent 72%);
-    filter: blur(28px);
+    background: radial-gradient(circle, rgba(126, 76, 255, 0.33), rgba(35, 140, 255, 0.12) 45%, transparent 72%);
+    filter: blur(24px);
     animation: glowDrift 8s ease-in-out infinite alternate;
 }
 
-/* Keep Streamlit content clear and above the decorative layers */
+/* Keep all Streamlit surfaces transparent so the decoration is visible */
 .stAppViewContainer,
 div[data-testid="stMain"],
+div[data-testid="stMainBlockContainer"],
+.main,
 header[data-testid="stHeader"] {
     position: relative;
     z-index: 1;
@@ -206,31 +204,109 @@ header[data-testid="stHeader"] {
 section[data-testid="stSidebar"] {
     position: relative;
     z-index: 2;
+    background: #0B1022;
 }
 
-/* 3D card tilt on hover */
+/* Hero card: richer gradient + visible floating orb */
+.hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 88% 28%, rgba(126, 76, 255, 0.28), transparent 28%),
+        linear-gradient(120deg, rgba(41, 32, 93, 0.96), rgba(22, 68, 119, 0.94), rgba(21, 26, 54, 0.97));
+    border: 1px solid rgba(135, 123, 255, 0.72);
+    box-shadow: 0 14px 46px rgba(24, 22, 75, 0.52), inset 0 1px 0 rgba(255,255,255,0.08);
+}
+.hero::after {
+    z-index: 0;
+    opacity: 0.58;
+}
+.hero > * {
+    position: relative;
+    z-index: 1;
+}
+.hero h1 {
+    text-shadow: 0 0 24px rgba(145, 120, 255, 0.22);
+}
+.eyebrow {
+    display: inline-block;
+    padding: 7px 11px;
+    border: 1px solid rgba(185, 174, 255, 0.35);
+    border-radius: 999px;
+    background: rgba(115, 86, 255, 0.13);
+    box-shadow: 0 0 22px rgba(120, 87, 255, 0.12);
+}
+
+/* Decorative accent and responsive 3D cards */
 .metric {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(145deg, rgba(27, 36, 70, 0.98), rgba(19, 27, 52, 0.98));
+    border: 1px solid rgba(91, 111, 177, 0.46);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.045), 0 10px 24px rgba(0,0,0,0.12);
     transform-style: preserve-3d;
-    transition: transform 0.35s ease, box-shadow 0.35s ease;
+    transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+}
+.metric::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 16px;
+    right: 16px;
+    height: 2px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #7C5CFF, #3989FF, #4FE2D0);
+    box-shadow: 0 0 16px rgba(112, 104, 255, 0.45);
 }
 .metric:hover {
-    transform: perspective(900px) rotateY(-5deg) rotateX(3deg) translateY(-7px);
-    box-shadow: 0 18px 40px rgba(77, 69, 255, 0.25);
+    transform: perspective(900px) rotateY(-4deg) rotateX(3deg) translateY(-6px);
+    box-shadow: 0 18px 40px rgba(77, 69, 255, 0.24);
+    border-color: rgba(133, 116, 255, 0.8);
 }
 
+/* Glass-like info panels */
+.panel {
+    background: linear-gradient(145deg, rgba(23, 32, 61, 0.88), rgba(15, 24, 47, 0.94));
+    border: 1px solid rgba(84, 103, 166, 0.55);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 12px 28px rgba(0,0,0,0.12);
+    transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+.panel:hover {
+    border-color: rgba(117, 130, 255, 0.68);
+    box-shadow: 0 14px 30px rgba(58, 70, 160, 0.15);
+}
+
+/* Neon buttons and focused inputs */
+.stButton > button, .stDownloadButton > button {
+    box-shadow: 0 5px 18px rgba(91, 83, 255, 0.22);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+.stButton > button:hover, .stDownloadButton > button:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+    box-shadow: 0 8px 26px rgba(91, 83, 255, 0.42);
+}
+div[data-testid="stTextArea"] textarea:focus {
+    border-color: #8D7AFF !important;
+    box-shadow: 0 0 0 2px rgba(141, 122, 255, 0.18) !important;
+}
+
+/* Motion */
 @keyframes gridDrift {
     from { transform: perspective(460px) rotateX(58deg) translateY(0); }
     to   { transform: perspective(460px) rotateX(58deg) translateY(18px); }
 }
 @keyframes glowDrift {
-    from { transform: translate(-20px, -10px) scale(0.9); }
-    to   { transform: translate(-100px, 60px) scale(1.2); }
+    from { transform: translate(-15px, -10px) scale(0.92); }
+    to   { transform: translate(-95px, 52px) scale(1.12); }
 }
 @media (prefers-reduced-motion: reduce) {
-    .hero::after,
-    .stApp::before,
-    .stApp::after {
+    .hero::after, .stApp::before, .stApp::after {
         animation: none;
+    }
+    .metric, .panel, .stButton > button, .stDownloadButton > button {
+        transition: none;
     }
 }
 
