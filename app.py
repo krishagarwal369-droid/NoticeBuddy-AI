@@ -5,7 +5,11 @@ from google import genai
 import easyocr
 import numpy as np
 import re
-
+import json
+import uuid
+import calendar as calendar_module
+from datetime import date, datetime, timedelta
+import streamlit.components.v1 as components
 st.set_page_config(
     page_title="NoticeBuddy AI",
     page_icon="📄",
@@ -1097,6 +1101,240 @@ NOTICE:
     return response.text or "No explanation was returned."
 
 
+def answer_notice_question(notice_text, explanation, question, language):
+    """Answer a follow-up using the specific notice as the source of truth."""
+    client = genai.Client(api_key=st.secrets["GEMMA_API_KEY"])
+    prompt = f"""
+You are NoticeBuddy AI answering a student's follow-up about a notice.
+Reply in {language}, using simple student-friendly language.
+Use the original notice as the source of truth. Do not invent deadlines,
+eligibility, costs, documents, links, or conditions. If the answer is not
+stated in the notice, clearly say it is not mentioned. Do not cite ChatGPT,
+OpenAI, or any AI assistant as a source. Encourage official verification
+for important decisions.
+
+ORIGINAL NOTICE:
+{notice_text}
+
+EXISTING EXPLANATION (context only; defer to the original notice):
+{explanation}
+
+STUDENT QUESTION:
+{question}
+"""
+    response = client.models.generate_content(
+        model="gemma-4-26b-a4b-it",
+        contents=prompt
+    )
+    return response.text or "No answer was returned."
+
+
+def extract_notice_dates(notice_text):
+    """Extract explicit full dates; avoids guessing from month/year alone."""
+    month_tokens = (
+        "January|Jan|February|Feb|March|Mar|April|Apr|May|June|Jun|"
+        "July|Jul|August|Aug|September|Sep|Sept|October|Oct|November|Nov|"
+        "December|Dec"
+    )
+    month_number = {
+        "jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6,
+        "jul": 7, "aug": 8, "sep": 9, "sept": 9, "oct": 10,
+        "nov": 11, "dec": 12
+    }
+    patterns = [
+        (re.compile(r"\b(20\d{2})[-/.](\d{1,2})[-/.](\d{1,2})\b"),
+         lambda m: (int(m.group(1)), int(m.group(2)), int(m.group(3)))),
+        (re.compile(r"\b(\d{1,2})[/-](\d{1,2})[/-](20\d{2})\b"),
+         lambda m: (int(m.group(3)), int(m.group(2)), int(m.group(1)))),
+        (re.compile(rf"\b(\d{{1,2}})(?:st|nd|rd|th)?\s+({month_tokens})\.?,?\s+(20\d{{2}})\b", re.IGNORECASE),
+         lambda m: (int(m.group(3)), month_number[m.group(2).lower()[:4] if m.group(2).lower()[:4] == "sept" else m.group(2).lower()[:3]], int(m.group(1)))),
+        (re.compile(rf"\b({month_tokens})\.?\s+(\d{{1,2}})(?:st|nd|rd|th)?[,]?\s+(20\d{{2}})\b", re.IGNORECASE),
+         lambda m: (int(m.group(3)), month_number[m.group(1).lower()[:4] if m.group(1).lower()[:4] == "sept" else m.group(1).lower()[:3]], int(m.group(2)))),
+    ]
+    found = {}
+    for line in notice_text.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        matches = []
+        for pattern, converter in patterns:
+            for match in pattern.finditer(line):
+                try:
+                    year, month, day_num = converter(match)
+                    parsed = date(year, month, day_num)
+                    matches.append((match.start(), match.end(), parsed))
+                except (ValueError, KeyError, IndexError):
+                    continue
+        for start, end, parsed in sorted(matches, key=lambda item: item[0]):
+            iso = parsed.isoformat()
+            context = line
+            if len(context) > 150:
+                context = context[max(0, start - 52):min(len(line), end + 65)].strip()
+            if iso not in found:
+                found[iso] = {
+                    "date": iso,
+                    "label": context[:150] or "Date found in notice",
+                    "kind": "Notice date"
+                }
+    return sorted(found.values(), key=lambda item: item["date"])
+
+
+def add_analysis_record(notice_text, explanation, language):
+    """Keep personal notice history only in this browser session."""
+    first_line = next((line.strip(" #\\t") for line in notice_text.splitlines() if line.strip()), "")
+    title = first_line[:88] + ("…" if len(first_line) > 88 else "")
+    if not title:
+        title = "Notice analysis"
+    record = {
+        "id": uuid.uuid4().hex[:12],
+        "title": title,
+        "source_text": notice_text,
+        "explanation": explanation,
+        "language": language,
+        "analyzed_at": datetime.now().strftime("%d %b %Y, %I:%M %p"),
+        "dates": extract_notice_dates(notice_text),
+        "saved": False
+    }
+    st.session_state.setdefault("notice_history", []).insert(0, record)
+    st.session_state["latest_notice_id"] = record["id"]
+    return record
+
+
+def toggle_saved_notice(notice_id):
+    for item in st.session_state.get("notice_history", []):
+        if item.get("id") == notice_id:
+            item["saved"] = not item.get("saved", False)
+            break
+
+
+def delete_notice_record(notice_id):
+    st.session_state["notice_history"] = [
+        item for item in st.session_state.get("notice_history", [])
+        if item.get("id") != notice_id
+    ]
+    st.session_state.setdefault("notice_chats", {}).pop(notice_id, None)
+    if st.session_state.get("latest_notice_id") == notice_id:
+        remaining = st.session_state["notice_history"]
+        st.session_state["latest_notice_id"] = remaining[0]["id"] if remaining else None
+
+
+def get_all_date_events():
+    events = []
+    for record in st.session_state.get("notice_history", []):
+        for index, item in enumerate(record.get("dates", [])):
+            events.append({
+                "id": f'{record["id"]}-date-{index}',
+                "date": item["date"],
+                "label": item.get("label", "Date found in notice"),
+                "source": record.get("title", "Saved notice"),
+                "kind": "From notice"
+            })
+    for item in st.session_state.get("manual_deadlines", []):
+        events.append({
+            "id": item["id"],
+            "date": item["date"],
+            "label": item["label"],
+            "source": item.get("note", "Personal reminder"),
+            "kind": "Personal reminder"
+        })
+    return sorted(events, key=lambda item: (item["date"], item["label"]))
+
+
+def render_read_aloud(text_to_read, language):
+    """Use the browser's built-in speech engine; no extra API or library needed."""
+    payload = json.dumps(text_to_read, ensure_ascii=False).replace("</", "<\\/")
+    speech_language = "hi-IN" if language == "Hindi" else "en-IN"
+    components.html(f"""
+    <div style="font-family:Arial,sans-serif;display:flex;gap:9px;align-items:center;flex-wrap:wrap">
+      <button onclick="speakText()" style="cursor:pointer;border:1px solid #766BFF;border-radius:10px;padding:9px 13px;background:linear-gradient(100deg,#8054FF,#168DEB);color:white;font-weight:700">🔊 Listen</button>
+      <button onclick="stopText()" style="cursor:pointer;border:1px solid #455A8A;border-radius:10px;padding:9px 13px;background:#101B37;color:#C9D8FF;font-weight:700">■ Stop</button>
+      <span id="speechStatus" style="font-size:12px;color:#AAB9E7">Uses your browser's speech voice</span>
+    </div>
+    <script>
+      const noticeBuddySpeechText = {payload};
+      const noticeBuddySpeechLang = "{speech_language}";
+      function speakText() {{
+        if (!("speechSynthesis" in window)) {{
+          document.getElementById("speechStatus").textContent = "Speech is not supported by this browser.";
+          return;
+        }}
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(noticeBuddySpeechText);
+        utterance.lang = noticeBuddySpeechLang;
+        utterance.rate = 0.94;
+        utterance.onstart = () => document.getElementById("speechStatus").textContent = "Reading aloud…";
+        utterance.onend = () => document.getElementById("speechStatus").textContent = "Finished";
+        window.speechSynthesis.speak(utterance);
+      }}
+      function stopText() {{
+        if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+        document.getElementById("speechStatus").textContent = "Stopped";
+      }}
+    </script>
+    """, height=56)
+
+
+def render_saved_analysis(record):
+    st.markdown('<div class="home-section-title">🤖 Your notice explained</div>', unsafe_allow_html=True)
+    action_col, voice_col = st.columns([1, 1], gap="small")
+    with action_col:
+        st.button(
+            "★ Unsave notice" if record.get("saved") else "☆ Save notice",
+            key=f"toggle-saved-{record['id']}",
+            on_click=toggle_saved_notice,
+            args=(record["id"],),
+            use_container_width=True
+        )
+    with voice_col:
+        render_read_aloud(record.get("explanation", ""), record.get("language", "English"))
+
+    render_explanation_cards(record.get("explanation", ""))
+    st.download_button(
+        "⬇️ Download explanation",
+        data=record.get("explanation", ""),
+        file_name="noticebuddy_explanation.txt",
+        mime="text/plain",
+        key=f"download-{record['id']}"
+    )
+
+    if record.get("dates"):
+        with st.expander(f"📅 Dates detected in this notice ({len(record['dates'])})"):
+            for item in record["dates"]:
+                st.markdown(f"**{item['date']}** — {item['label']}")
+
+    with st.expander("💬 Chat with this notice", expanded=False):
+        chats = st.session_state.setdefault("notice_chats", {}).setdefault(record["id"], [])
+        with st.form(key=f"chat-form-{record['id']}"):
+            question = st.text_input(
+                "Ask a question about this notice",
+                placeholder="e.g., Which documents are required?",
+                key=f"chat-question-{record['id']}"
+            )
+            submitted = st.form_submit_button("Ask NoticeBuddy ✨", use_container_width=True)
+        if submitted:
+            if not question.strip():
+                st.warning("Write a question first.")
+            else:
+                try:
+                    with st.spinner("Finding the answer in your notice..."):
+                        answer = answer_notice_question(
+                            record.get("source_text", ""),
+                            record.get("explanation", ""),
+                            question.strip(),
+                            record.get("language", "English")
+                        )
+                    chats.append({"role": "user", "text": question.strip()})
+                    chats.append({"role": "assistant", "text": answer})
+                except Exception as exc:
+                    st.error("Could not answer this question. Check the API key and model access.")
+                    st.caption(f"Technical details: {exc}")
+        for message in chats:
+            if message.get("role") == "user":
+                st.chat_message("user").write(message.get("text", ""))
+            else:
+                st.chat_message("assistant").write(message.get("text", ""))
+
+
 def render_explanation_cards(explanation):
     """Display each AI response section as a separate, colorful card."""
     parts = re.split(r"(?m)^##\s+", explanation.strip())
@@ -1162,6 +1400,13 @@ AI_ACTIVITY_HTML = """
   <div class="ai-activity-caption">Reading key details · organizing dates · preparing your summary</div>
 </div>
 """
+
+
+# All history is scoped to the user's active Streamlit session.
+st.session_state.setdefault("notice_history", [])
+st.session_state.setdefault("manual_deadlines", [])
+st.session_state.setdefault("notice_chats", {})
+st.session_state.setdefault("latest_notice_id", None)
 
 
 # ---------- APP NAVIGATION ----------
