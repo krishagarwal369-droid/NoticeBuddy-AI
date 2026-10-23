@@ -3917,6 +3917,133 @@ div[data-testid="stDataFrame"],div[data-testid="stTable"] { border-color: rgba(1
     }
 }
 
+
+/* =========================================================
+   FULL-PAGE 4D CINEMATIC BACKDROP
+   Two fixed, multi-depth layers behind all page content:
+   drifting aurora, moving star field, and a perspective ribbon.
+   ========================================================= */
+div[data-testid="stMain"] {
+    position: relative !important;
+    isolation: isolate !important;
+}
+div[data-testid="stMain"]::before,
+div[data-testid="stMain"]::after {
+    content: "";
+    position: fixed;
+    inset: -12vh -9vw;
+    pointer-events: none;
+    overflow: hidden;
+}
+div[data-testid="stMain"]::before {
+    z-index: 0;
+    opacity: .56;
+    mix-blend-mode: screen;
+    background-image:
+        radial-gradient(ellipse at 18% 28%, rgba(96,57,255,.25), transparent 31%),
+        radial-gradient(ellipse at 82% 24%, rgba(0,183,255,.20), transparent 29%),
+        radial-gradient(ellipse at 58% 82%, rgba(128,61,255,.19), transparent 34%),
+        radial-gradient(circle, rgba(185,202,255,.68) 0 1px, transparent 1.8px),
+        radial-gradient(circle, rgba(88,228,255,.54) 0 1.1px, transparent 1.9px),
+        radial-gradient(circle, rgba(155,126,255,.48) 0 1px, transparent 2px);
+    background-size:
+        135% 130%, 125% 145%, 140% 130%,
+        73px 81px, 119px 131px, 167px 153px;
+    background-position:
+        0% 0%, 100% 0%, 50% 100%,
+        0 0, 38px 57px, 81px 29px;
+    background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat, repeat;
+    transform: perspective(1150px) rotateX(5deg) translateZ(0);
+    transform-origin: center center;
+    filter: drop-shadow(0 0 24px rgba(82,108,255,.12));
+    animation: noticeBuddy4DAurora 34s ease-in-out infinite alternate;
+}
+@keyframes noticeBuddy4DAurora {
+    0% {
+        background-position: 0% 0%, 100% 0%, 50% 100%, 0 0, 38px 57px, 81px 29px;
+        transform: perspective(1150px) rotateX(5deg) rotateY(-1deg) scale(1);
+        filter: hue-rotate(0deg) drop-shadow(0 0 24px rgba(82,108,255,.12));
+    }
+    50% {
+        background-position: 24% 18%, 72% 34%, 28% 68%, 0 95px, 92px 0, 0 76px;
+        transform: perspective(1150px) rotateX(1deg) rotateY(2deg) scale(1.035);
+        filter: hue-rotate(12deg) drop-shadow(0 0 35px rgba(82,108,255,.18));
+    }
+    100% {
+        background-position: 100% 70%, 0% 100%, 75% 10%, 0 190px, 145px 0, 0 152px;
+        transform: perspective(1150px) rotateX(7deg) rotateY(-2deg) scale(1.015);
+        filter: hue-rotate(-8deg) drop-shadow(0 0 27px rgba(82,108,255,.14));
+    }
+}
+
+/* A broad holographic ribbon moves on a different 3D plane and speed. */
+div[data-testid="stMain"]::after {
+    z-index: 1;
+    inset: -28vh -25vw;
+    opacity: .31;
+    mix-blend-mode: screen;
+    background:
+        conic-gradient(from 12deg at 48% 48%,
+            transparent 0deg,
+            rgba(94,79,255,.04) 32deg,
+            rgba(92,220,255,.22) 48deg,
+            transparent 67deg,
+            transparent 122deg,
+            rgba(152,85,255,.18) 143deg,
+            transparent 161deg,
+            transparent 235deg,
+            rgba(50,150,255,.14) 255deg,
+            transparent 280deg,
+            transparent 360deg),
+        radial-gradient(ellipse at 50% 50%,
+            transparent 22%,
+            rgba(92,136,255,.12) 35%,
+            transparent 48%,
+            rgba(87,222,255,.07) 53%,
+            transparent 64%);
+    background-size: 100% 100%, 100% 100%;
+    mask-image: radial-gradient(ellipse at 50% 48%, #000 5%, rgba(0,0,0,.78) 43%, transparent 76%);
+    transform: perspective(950px) rotateX(58deg) rotateZ(-12deg) scale(1.35);
+    transform-origin: center center;
+    animation: noticeBuddy4DRibbon 27s ease-in-out infinite alternate;
+}
+@keyframes noticeBuddy4DRibbon {
+    0% {
+        transform: perspective(950px) rotateX(58deg) rotateZ(-12deg) scale(1.28) translate3d(-2%, 1%, 0);
+        background-position: 0% 0%, 15% 20%;
+        filter: hue-rotate(0deg);
+    }
+    50% {
+        transform: perspective(950px) rotateX(49deg) rotateZ(4deg) scale(1.48) translate3d(2%, -2%, 0);
+        background-position: 65% 35%, 55% 40%;
+        filter: hue-rotate(18deg);
+    }
+    100% {
+        transform: perspective(950px) rotateX(62deg) rotateZ(15deg) scale(1.36) translate3d(-1%, 3%, 0);
+        background-position: 100% 100%, 85% 75%;
+        filter: hue-rotate(-12deg);
+    }
+}
+
+/* Explicit stacking: moving art stays behind text, forms, and buttons. */
+div[data-testid="stMainBlockContainer"] {
+    position: relative !important;
+    z-index: 2 !important;
+}
+@media (max-width: 760px) {
+    div[data-testid="stMain"]::before {
+        opacity: .34;
+        background-size: 145% 140%, 140% 145%, 150% 140%, 91px 99px, 137px 151px, 187px 173px;
+    }
+    div[data-testid="stMain"]::after { opacity: .16; }
+}
+@media (prefers-reduced-motion: reduce) {
+    div[data-testid="stMain"]::before,
+    div[data-testid="stMain"]::after {
+        animation: none !important;
+    }
+}
+
 </style>  
 
 """, unsafe_allow_html=True)
