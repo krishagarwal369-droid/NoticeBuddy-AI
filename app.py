@@ -142,7 +142,99 @@ hr { border-color: #293557; }
 @media (prefers-reduced-motion: reduce) {
     .hero::after { animation: none; }
 }
-</style>
+
+/* 3D FUTURISTIC BACKGROUND */
+.stApp {
+    position: relative;
+    overflow-x: hidden;
+    background:
+        radial-gradient(circle at 80% 20%,
+            rgba(100, 65, 255, 0.20), transparent 30%),
+        linear-gradient(135deg, #080D1C, #111631, #101D39);
+}
+
+/* Animated 3D grid */
+.stApp::before {
+    content: "";
+    position: fixed;
+    left: -10%;
+    bottom: -30%;
+    width: 120%;
+    height: 70%;
+    pointer-events: none;
+    z-index: 0;
+    background:
+        repeating-linear-gradient(
+            0deg, transparent 0 38px,
+            rgba(91, 112, 255, 0.16) 39px 40px
+        ),
+        repeating-linear-gradient(
+            90deg, transparent 0 38px,
+            rgba(91, 112, 255, 0.16) 39px 40px
+        );
+    transform: perspective(500px) rotateX(58deg);
+    transform-origin: center bottom;
+    mask-image: linear-gradient(to bottom, transparent, black);
+    animation: gridDrift 10s ease-in-out infinite alternate;
+}
+
+/* Floating neon glow */
+.stApp::after {
+    content: "";
+    position: fixed;
+    top: 15%;
+    right: -100px;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle, rgba(126, 76, 255, 0.35), transparent 70%
+    );
+    filter: blur(35px);
+    pointer-events: none;
+    z-index: 0;
+    animation: glowDrift 8s ease-in-out infinite alternate;
+}
+
+/* Keep app content above background effects */
+.stAppViewContainer,
+section[data-testid="stSidebar"],
+header[data-testid="stHeader"] {
+    position: relative;
+    z-index: 1;
+}
+
+/* 3D cards */
+.metric {
+    transform-style: preserve-3d;
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.metric:hover {
+    transform: perspective(900px) rotateY(-5deg)
+               rotateX(3deg) translateY(-7px);
+    box-shadow: 0 18px 40px rgba(77, 69, 255, 0.25);
+}
+
+@keyframes gridDrift {
+    from { transform: perspective(500px) rotateX(58deg) translateY(0); }
+    to   { transform: perspective(500px) rotateX(58deg) translateY(18px); }
+}
+
+@keyframes glowDrift {
+    from { transform: translate(-20px, -10px) scale(0.9); }
+    to   { transform: translate(-100px, 60px) scale(1.2); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .stApp::before,
+    .stApp::after {
+        animation: none;
+    }
+}
+
+</style>  
+
 """, unsafe_allow_html=True)
 
 
