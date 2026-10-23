@@ -5802,13 +5802,12 @@ hr {
         width:244px;
         height:280px;
         scale:.90;
-        scale-origin:center center;
         transform-origin:center center;
     }
     .nb-mascot-hotspot { width:164px;height:242px; }
     .nb-activity-mascot { padding:7px;gap:0; }
     .nb-activity-mascot-visual { width:82px;height:96px;flex-basis:82px; }
-    .nb-mascot-compact { scale:.31; }
+    .nb-mascot-compact { transform:scale(.31); }
     .nb-activity-mascot-copy b { font-size:11px; }
 }
 @media (prefers-reduced-motion:reduce) {
@@ -6371,12 +6370,21 @@ def render_explanation_cards(explanation):
                 st.markdown(body)
 
 
-AI_ACTIVITY_HTML = """
+AI_ACTIVITY_HTML = f"""
 <div class="ai-activity-card">
   <div class="ai-activity-header">
     <span class="activity-pulse"></span>
     <strong>NoticeBuddy AI is working</strong>
     <span class="activity-live">LIVE SCAN</span>
+  </div>
+  <div class="nb-activity-mascot" role="status" aria-label="NoticeBuddy is analyzing your notice">
+    <div class="nb-activity-mascot-visual">
+      {build_mascot_markup(ROBOT_IMAGE_URL, compact=True, state="thinking")}
+    </div>
+    <div class="nb-activity-mascot-copy">
+      <b>I'm reading the fine print.</b>
+      <span>Extracting details and preparing a clear explanation. This animation appears only while the real analysis request is running.</span>
+    </div>
   </div>
   <div class="scanner-stage" aria-hidden="true">
     <div class="scanner-doc">
@@ -7650,6 +7658,11 @@ components.html(r"""
       "--nb-orbit-inner-x","--nb-orbit-inner-y","--nb-core-x","--nb-core-y",
       "--nb-hud-top-x","--nb-hud-top-y","--nb-hud-bottom-x","--nb-hud-bottom-y"
     ].forEach(name => hero.style.removeProperty(name));
+    const mascot = hero.querySelector(".nb-mascot-model:not(.nb-mascot-compact)");
+    if (mascot) {
+      ["--nb-head-yaw","--nb-head-pitch","--nb-pupil-x","--nb-pupil-y"].forEach(name => mascot.style.removeProperty(name));
+      if (mascot.dataset.state !== "greeting") mascot.dataset.state = "idle";
+    }
   }
   function resetCard(card) {
     if (!card) return;
@@ -7703,6 +7716,15 @@ components.html(r"""
         hero.style.setProperty("--nb-hud-top-y", (y * -3).toFixed(2) + "px");
         hero.style.setProperty("--nb-hud-bottom-x", (x * -5).toFixed(2) + "px");
         hero.style.setProperty("--nb-hud-bottom-y", (y * 4).toFixed(2) + "px");
+
+        const mascot = hero.querySelector(".nb-mascot-model:not(.nb-mascot-compact)");
+        if (mascot && mascot.dataset.state !== "greeting") {
+          mascot.dataset.state = "looking";
+          mascot.style.setProperty("--nb-head-yaw", (x * 8).toFixed(2) + "deg");
+          mascot.style.setProperty("--nb-head-pitch", (-y * 5).toFixed(2) + "deg");
+          mascot.style.setProperty("--nb-pupil-x", (x * 4.0).toFixed(2) + "px");
+          mascot.style.setProperty("--nb-pupil-y", (y * 2.4).toFixed(2) + "px");
+        }
       } else if (activeHero) {
         resetHero(activeHero);
         activeHero = null;
@@ -7796,6 +7818,26 @@ components.html(r"""
       }
     });
   }
+  /* The mascot's own accessible button triggers a one-shot, local greeting. */
+  doc.addEventListener("click", (event) => {
+    const hotspot = event.target && event.target.closest
+      ? event.target.closest(".nb-mascot-hotspot")
+      : null;
+    if (!hotspot) return;
+    const hero = hotspot.closest(".hero.hero-ultimate");
+    const mascot = hero ? hero.querySelector(".nb-mascot-model:not(.nb-mascot-compact)") : null;
+    if (!mascot) return;
+    mascot.dataset.state = "greeting";
+    mascot.style.setProperty("--nb-head-pitch", "-3deg");
+    if (mascot._nbGreetingTimer) view.clearTimeout(mascot._nbGreetingTimer);
+    mascot._nbGreetingTimer = view.setTimeout(() => {
+      if (!mascot.isConnected) return;
+      if (mascot.dataset.state === "greeting") mascot.dataset.state = "idle";
+      mascot.style.removeProperty("--nb-head-pitch");
+      mascot._nbGreetingTimer = null;
+    }, reduceMotion ? 0 : 1050);
+  });
+
   if (!reduceMotion && "IntersectionObserver" in view) {
     revealObserver = new view.IntersectionObserver((entries) => {
       entries.forEach(entry => {
