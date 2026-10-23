@@ -7024,11 +7024,32 @@ components.html(r"""
         activeProcess = null;
       }
     }, { passive: true });
-    doc.addEventListener("pointerleave", () => {
+    const clearActiveEffects = () => {
       resetHero(activeHero);
       resetCard(activeCard);
       resetProcess(activeProcess);
       activeHero = activeCard = activeProcess = null;
+    };
+    view.addEventListener("blur", clearActiveEffects);
+    doc.addEventListener("pointerout", (event) => {
+      const from = event.target && event.target.closest ? event.target : null;
+      const destination = event.relatedTarget;
+      if (!destination) {
+        clearActiveEffects();
+        return;
+      }
+      if (activeHero && from && from.closest(".hero.hero-ultimate") === activeHero && !activeHero.contains(destination)) {
+        resetHero(activeHero);
+        activeHero = null;
+      }
+      if (activeCard && from && from.closest(cardSelector) === activeCard && !activeCard.contains(destination)) {
+        resetCard(activeCard);
+        activeCard = null;
+      }
+      if (activeProcess && from && from.closest(".process-node") === activeProcess && !activeProcess.contains(destination)) {
+        resetProcess(activeProcess);
+        activeProcess = null;
+      }
     }, true);
   }
 
