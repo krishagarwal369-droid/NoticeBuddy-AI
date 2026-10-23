@@ -7279,7 +7279,10 @@ if page == "🏠 Home":
       <div class="process-node"><div class="process-node-top"><span>04</span><i>✓</i></div><b>Act</b><p>Verify official requirements, then plan the next step.</p></div>
     </div>
     """
-    st.markdown(radar_home_markup.replace("__DEADLINE_RADAR_HOLO_CALENDAR__", radar_calendar_html), unsafe_allow_html=True)
+    # Remove template indentation from the inserted HTML; otherwise Markdown renders it as a code block.
+    radar_calendar_markup = "\n".join(line.lstrip() for line in radar_calendar_html.splitlines()).strip()
+    radar_home_markup = radar_home_markup.replace("        __DEADLINE_RADAR_HOLO_CALENDAR__", radar_calendar_markup)
+    st.markdown(radar_home_markup, unsafe_allow_html=True)
 
     # ---------- DEADLINE RADAR HOLOGRAPHIC 3D CALENDAR ----------
     components.html(r"""
