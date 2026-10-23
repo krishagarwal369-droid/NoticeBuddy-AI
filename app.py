@@ -5849,6 +5849,19 @@ hr {
 @media(max-width:650px) { .nb-energy-ring-fallback .nb-ring-assembly { width:min(104%,330px); top:49%; } .nb-energy-ring-fallback .nb-ring-metal { border-width:13px; } .nb-energy-ring-fallback .nb-ring-cyan { border-width:4px; } }
 @media(prefers-reduced-motion:reduce) { .nb-energy-ring-fallback .nb-ring-metal,.nb-energy-ring-fallback .nb-ring-cyan,.nb-energy-ring-fallback .nb-ring-violet,.nb-energy-ring-fallback .nb-ring-energy { animation:none!important; } .nb-energy-ring-fallback { transition:none!important; } }
 
+/* Holographic hand fallback shown while WebGL initializes or when WebGL is unavailable. */
+.hero-ultimate .nb-hand-fallback{position:absolute;z-index:5;right:-1%;top:2%;width:min(82%,360px);height:96%;overflow:visible;pointer-events:none;opacity:.80;filter:drop-shadow(0 0 13px rgba(59,219,255,.26));transition:opacity .45s ease;animation:nbHandFallbackFloat 6s ease-in-out infinite}
+.nb-hand-fallback .nb-hand-fill{fill:rgba(39,187,232,.12);stroke:#67efff;stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round}
+.nb-hand-fallback .nb-hand-contour{fill:none;stroke:rgba(106,224,255,.65);stroke-width:1.2;stroke-linecap:round}
+.nb-hand-fallback .nb-hand-bone{fill:none;stroke:rgba(135,223,255,.68);stroke-width:1.1;stroke-linecap:round}
+.nb-hand-fallback .nb-hand-glow{fill:none;stroke:#7deeff;stroke-width:2;filter:url(#nbHandGlow)}
+.nb-hand-fallback .nb-hand-palm-core{fill:rgba(84,230,255,.32);stroke:#7ff5ff;stroke-width:1.5}
+.nb-hand-fallback .nb-hand-pulse{fill:none;stroke:rgba(97,225,255,.6);stroke-width:1.2;transform-origin:145px 294px;animation:nbHandPulseFallback 2.4s ease-out infinite}
+@keyframes nbHandFallbackFloat{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-7px) rotate(1deg)}}
+@keyframes nbHandPulseFallback{0%{transform:scale(.5);opacity:.65}90%,100%{transform:scale(1.7);opacity:0}}
+@media(max-width:900px){.hero-ultimate .nb-hand-fallback{width:min(84%,315px);right:-2%}}
+@media(max-width:650px){.hero-ultimate .nb-hand-fallback{width:min(72%,248px);height:78%;top:23%;right:0;opacity:.58}}
+@media(prefers-reduced-motion:reduce){.hero-ultimate .nb-hand-fallback,.nb-hand-fallback .nb-hand-pulse{animation:none!important;transition:none!important}}
 /* Always-visible document-universe fallback; Three.js replaces this after first successful frame. */
 .hero-ultimate .nb-docs-static-scene {
     position:absolute; inset:0; z-index:2; overflow:hidden; pointer-events:none;
@@ -6613,6 +6626,16 @@ if page == "🏠 Home":
           <div class="hero-orbit-node node-one" aria-hidden="true">✦</div>
           <div class="hero-orbit-node node-two" aria-hidden="true">◷</div>
           <div class="hero-orbit-node node-three" aria-hidden="true">⌁</div>
+          <svg class="nb-hand-fallback" viewBox="0 0 280 430" aria-hidden="true" focusable="false">
+            <defs><filter id="nbHandGlow" x="-45%" y="-45%" width="190%" height="190%"><feGaussianBlur stdDeviation="3.2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter><linearGradient id="nbHandShell" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#65f1ff" stop-opacity=".24"/><stop offset="1" stop-color="#7c6dff" stop-opacity=".12"/></linearGradient></defs>
+            <path class="nb-hand-fill" fill="url(#nbHandShell)" d="M101 397 L99 324 Q89 306 72 292 L48 266 Q37 250 49 239 Q61 228 75 241 L99 262 L101 190 Q102 172 116 172 Q131 172 132 190 L134 150 Q136 132 150 133 Q166 134 166 152 L165 189 L168 166 Q172 149 185 152 Q200 155 198 173 L194 213 L202 203 Q215 193 227 203 Q239 214 233 229 L216 274 Q210 291 199 302 L190 398 Z"/>
+            <path class="nb-hand-glow" d="M101 397 L99 324 Q89 306 72 292 L48 266 Q37 250 49 239 Q61 228 75 241 L99 262 L101 190 Q102 172 116 172 Q131 172 132 190 L134 150 Q136 132 150 133 Q166 134 166 152 L165 189 L168 166 Q172 149 185 152 Q200 155 198 173 L194 213 L202 203 Q215 193 227 203 Q239 214 233 229 L216 274 Q210 291 199 302 L190 398"/>
+            <path class="nb-hand-bone" d="M112 177 L115 235 L124 271 M146 138 L150 209 L150 264 M181 156 L178 216 L174 265 M216 208 L202 250 L191 277 M73 246 L105 285 L125 313"/>
+            <path class="nb-hand-contour" d="M104 286 Q134 266 174 282 M105 301 Q141 286 190 297 M117 318 Q148 308 183 318 M119 338 Q149 326 182 337 M124 356 Q152 348 178 356"/>
+            <circle class="nb-hand-palm-core" cx="145" cy="294" r="9"/><circle class="nb-hand-pulse" cx="145" cy="294" r="21"/>
+            <path class="nb-hand-contour" d="M79 251 L89 263 M104 194 L110 194 M137 153 L143 154 M174 169 L179 169 M207 218 L214 221"/>
+            <circle cx="101" cy="190" r="3" fill="#9ef8ff"/><circle cx="134" cy="151" r="3" fill="#9ef8ff"/><circle cx="168" cy="166" r="3" fill="#bca7ff"/><circle cx="202" cy="205" r="3" fill="#bca7ff"/>
+          </svg>
           <div class="nb-energy-ring-fallback" aria-hidden="true">
             <div class="nb-ring-assembly">
               <div class="nb-ring-halo"></div><div class="nb-ring-layer nb-ring-violet"></div>
@@ -6675,8 +6698,8 @@ if page == "🏠 Home":
 
   const style = doc.createElement("style");
   style.textContent = `
-    .nb-document-universe{position:absolute;inset:0;z-index:3;pointer-events:none;isolation:isolate;overflow:visible}.hero-ultimate .nb-mascot-model,.hero-ultimate .nb-mascot-fallback{position:relative;z-index:4}
-    .nb-document-universe canvas{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:auto;outline:none}.nb-document-universe canvas:focus-visible{outline:2px solid #6ce8ff;outline-offset:-6px;border-radius:10px}
+    .nb-document-universe{position:absolute;inset:0;z-index:6!important;pointer-events:none;isolation:isolate;overflow:visible}.hero-ultimate .nb-mascot-model,.hero-ultimate .nb-mascot-fallback{position:relative;z-index:4}
+    .nb-document-universe canvas{position:absolute;inset:0;z-index:1;width:100%;height:100%;display:block;pointer-events:auto;outline:none}.nb-document-universe canvas:focus-visible{outline:2px solid #6ce8ff;outline-offset:-6px;border-radius:10px}
     .nb-universe-hint{position:absolute;z-index:7;right:6px;bottom:9px;padding:7px 9px;border:1px solid rgba(116,225,255,.25);border-radius:999px;background:rgba(7,16,39,.68);backdrop-filter:blur(9px);color:#a8ddff;font:800 8px/1.2 Inter, sans-serif;letter-spacing:1px;white-space:nowrap;pointer-events:none}
     .nb-doc-preview{position:absolute;z-index:9;left:8px;bottom:27px;width:min(235px,72%);padding:14px;border:1px solid rgba(112,220,255,.45);border-radius:15px;background:linear-gradient(145deg,rgba(17,28,61,.97),rgba(8,18,42,.97));box-shadow:0 16px 45px rgba(0,0,0,.38),0 0 26px rgba(65,142,255,.16);color:#eef5ff;font-family:Inter,sans-serif;backdrop-filter:blur(14px)}
     .nb-doc-preview[hidden]{display:none}
@@ -6821,8 +6844,97 @@ if page == "🏠 Home":
     const fieldMaterial=new THREE.PointsMaterial({color:0x7bdeff,size:.023,transparent:true,opacity:.56,depthWrite:false});
     const energyField=new THREE.Points(fieldGeometry,fieldMaterial);energyField.position.z=.18;ringTilt.add(energyField);
 
-    let energyPulseUntil=0;
-    const activateEnergy=()=>{energyPulseUntil=view.performance.now()+1050;requestRender();};
+    // Articulated procedural 3D hand: beveled palm, flexible phalanges, thumb,
+    // palm contour tubes, moving scan, pulse rings and pooled fingertip particles.
+    const handRoot=new THREE.Group();
+    handRoot.position.set(1.58,-.20,1.34);handRoot.scale.setScalar(1.12);scene.add(handRoot);
+    const handShellMaterial=new THREE.MeshPhysicalMaterial({color:0x49d9f5,metalness:.32,roughness:.28,transparent:true,opacity:.28,emissive:0x07314f,emissiveIntensity:.85,side:THREE.DoubleSide,clearcoat:.42,clearcoatRoughness:.24,depthWrite:false});
+    const handBoneMaterial=new THREE.MeshPhysicalMaterial({color:0x4edff7,metalness:.42,roughness:.22,transparent:true,opacity:.67,emissive:0x08739b,emissiveIntensity:.95,side:THREE.DoubleSide,depthWrite:false,clearcoat:.35});
+    const handJointMaterial=new THREE.MeshStandardMaterial({color:0x8feeff,metalness:.32,roughness:.2,emissive:0x1b9bc9,emissiveIntensity:1.2});
+    const handTipMaterial=new THREE.MeshStandardMaterial({color:0xc3fbff,metalness:.22,roughness:.16,emissive:0x2cdcff,emissiveIntensity:1.65});
+    const handVioletMaterial=new THREE.MeshStandardMaterial({color:0xb7a7ff,metalness:.28,roughness:.2,emissive:0x633fff,emissiveIntensity:1.35});
+    const handContourMaterial=new THREE.LineBasicMaterial({color:0x6befff,transparent:true,opacity:.72,depthWrite:false});
+    const handFineMaterial=new THREE.LineBasicMaterial({color:0x9b8fff,transparent:true,opacity:.48,depthWrite:false});
+
+    const palmShape=new THREE.Shape();
+    palmShape.moveTo(-.34,-1.08);palmShape.quadraticCurveTo(-.38,-.58,-.39,-.25);
+    palmShape.quadraticCurveTo(-.54,-.04,-.48,.18);palmShape.quadraticCurveTo(-.43,.40,-.18,.45);
+    palmShape.quadraticCurveTo(.13,.51,.43,.43);palmShape.quadraticCurveTo(.77,.39,.91,.21);
+    palmShape.quadraticCurveTo(.98,.04,.83,-.18);palmShape.quadraticCurveTo(.64,-.38,.42,-.49);
+    palmShape.lineTo(.34,-1.08);palmShape.quadraticCurveTo(0,-1.20,-.34,-1.08);palmShape.closePath();
+    const palmGeometry=new THREE.ExtrudeGeometry(palmShape,{depth:.18,bevelEnabled:true,bevelThickness:.045,bevelSize:.035,bevelSegments:3,steps:1,curveSegments:14});
+    const palmMesh=new THREE.Mesh(palmGeometry,handShellMaterial);palmMesh.position.z=-.01;handRoot.add(palmMesh);
+    const palmOutline=new THREE.LineSegments(new THREE.EdgesGeometry(palmGeometry,22),handContourMaterial);palmOutline.position.z=.02;handRoot.add(palmOutline);
+    const wristMesh=new THREE.Mesh(new THREE.CylinderGeometry(.245,.285,.68,22,1,true),handBoneMaterial);wristMesh.position.set(0,-1.28,.07);wristMesh.rotation.z=-.025;handRoot.add(wristMesh);
+    const wristRim=new THREE.Mesh(new THREE.TorusGeometry(.255,.022,8,36),handFineMaterial);wristRim.position.set(0,-.99,.10);wristRim.rotation.x=Math.PI/2;handRoot.add(wristRim);
+
+    const yAxis=new THREE.Vector3(0,1,0),linkGeometry=new THREE.CylinderGeometry(.82,1,1,14,1,true);
+    const handFingerTips=[],animatedDigits=[];
+    function buildDigit(spec){
+      const links=[],joints=[];
+      for(let i=0;i<spec.lengths.length;i++){const mesh=new THREE.Mesh(linkGeometry,handBoneMaterial);handRoot.add(mesh);links.push(mesh);}
+      for(let i=0;i<=spec.lengths.length;i++){
+        const tip=i===spec.lengths.length;
+        const joint=new THREE.Mesh(new THREE.SphereGeometry(tip?.066:.082,14,12),tip?handTipMaterial:(spec.thumb?handVioletMaterial:handJointMaterial));
+        handRoot.add(joint);joints.push(joint);
+      }
+      const item={spec,links,joints,tip:new THREE.Vector3()};animatedDigits.push(item);handFingerTips.push(item.tip);return item;
+    }
+    const fingers=[
+      buildDigit({name:"index",root:[-.22,.37,.12],lengths:[.41,.35,.29],spread:.075,phase:.1,bend:.02}),
+      buildDigit({name:"middle",root:[.00,.42,.12],lengths:[.48,.42,.34],spread:.012,phase:1.2,bend:.01}),
+      buildDigit({name:"ring",root:[.25,.39,.12],lengths:[.44,.39,.31],spread:-.035,phase:2.0,bend:.02}),
+      buildDigit({name:"pinky",root:[.49,.28,.10],lengths:[.34,.29,.24],spread:-.14,phase:2.8,bend:.035}),
+      buildDigit({name:"thumb",thumb:true,root:[-.34,.08,.14],lengths:[.28,.24,.19],angles:[2.72,2.22,1.72],phase:2.4,bend:.02})
+    ];
+
+    const palmLines=[
+      [[-.28,.17,.223],[-.19,.02,.23],[-.06,-.10,.232],[.18,-.13,.23],[.53,-.10,.222]],
+      [[-.13,.32,.227],[-.03,.20,.231],[.04,.02,.233],[.09,-.18,.233],[.17,-.44,.228]],
+      [[-.25,-.24,.228],[-.08,-.30,.23],[.16,-.31,.23],[.39,-.40,.226]],
+      [[-.23,-.54,.226],[-.07,-.58,.23],[.10,-.60,.23],[.28,-.66,.225]]
+    ];
+    palmLines.forEach((pts,i)=>{const curve=new THREE.CatmullRomCurve3(pts.map(p=>new THREE.Vector3(p[0],p[1],p[2])));handRoot.add(new THREE.Mesh(new THREE.TubeGeometry(curve,24,.008,6,false),i===2?handFineMaterial:handContourMaterial));});
+
+    const palmCore=new THREE.Mesh(new THREE.SphereGeometry(.092,18,14),new THREE.MeshStandardMaterial({color:0xbafaff,emissive:0x20dfff,emissiveIntensity:2.1,metalness:.1,roughness:.18}));
+    palmCore.position.set(.13,-.03,.285);handRoot.add(palmCore);
+    const palmLight=new THREE.PointLight(0x29dfff,2.0,2.1);palmLight.position.copy(palmCore.position);handRoot.add(palmLight);
+    const palmPulseMaterialA=new THREE.MeshBasicMaterial({color:0x53efff,transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false});
+    const palmPulseMaterialB=new THREE.MeshBasicMaterial({color:0x9a83ff,transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false});
+    const palmPulseA=new THREE.Mesh(new THREE.TorusGeometry(.19,.012,8,48),palmPulseMaterialA),palmPulseB=new THREE.Mesh(new THREE.TorusGeometry(.27,.010,8,48),palmPulseMaterialB);
+    [palmPulseA,palmPulseB].forEach(m=>{m.position.set(.13,-.03,.30);handRoot.add(m);});
+    const scanBeam=new THREE.Mesh(new THREE.PlaneGeometry(1.42,.048),new THREE.MeshBasicMaterial({color:0x79f0ff,transparent:true,opacity:.21,side:THREE.DoubleSide,depthWrite:false}));
+    scanBeam.position.set(.08,-.65,.255);handRoot.add(scanBeam);
+    const scanLine=new THREE.Mesh(new THREE.PlaneGeometry(1.52,.012),new THREE.MeshBasicMaterial({color:0xc1faff,transparent:true,opacity:.7,side:THREE.DoubleSide,depthWrite:false}));
+    scanLine.position.set(.08,-.65,.26);handRoot.add(scanLine);
+
+    const handParticleCount=view.matchMedia("(max-width: 650px)").matches?22:42,handParticlePositions=new Float32Array(handParticleCount*3),handParticleColors=new Float32Array(handParticleCount*3);
+    const handParticleRecords=Array.from({length:handParticleCount},()=>({age:99,life:1,velocity:new THREE.Vector3(),violet:false}));
+    for(let i=0;i<handParticleCount;i++)handParticleColors.set([.2,.8,1],i*3);
+    const handParticleGeometry=new THREE.BufferGeometry();
+    handParticleGeometry.setAttribute("position",new THREE.BufferAttribute(handParticlePositions,3));handParticleGeometry.setAttribute("color",new THREE.BufferAttribute(handParticleColors,3));
+    const handParticleMaterial=new THREE.PointsMaterial({color:0xffffff,vertexColors:true,size:.033,transparent:true,opacity:.82,blending:THREE.AdditiveBlending,depthWrite:false,sizeAttenuation:true});
+    const handParticles=new THREE.Points(handParticleGeometry,handParticleMaterial);handRoot.add(handParticles);
+
+    let handHover=false,handPulseUntil=0;
+    const activateHand=()=>{handPulseUntil=view.performance.now()+1080;activateEnergy();};
+    function setBetween(mesh,a,b,radius){
+      const delta=b.clone().sub(a),length=Math.max(.001,delta.length());
+      mesh.position.copy(a).add(b).multiplyScalar(.5);mesh.quaternion.setFromUnitVectors(yAxis,delta.normalize());mesh.scale.set(radius,length,radius);
+    }
+    function updateDigit(digit,time){
+      const spec=digit.spec;let point=new THREE.Vector3(spec.root[0],spec.root[1],spec.root[2]);const bendWave=(Math.sin(time*.78+spec.phase)+1)*.5;
+      for(let i=0;i<spec.lengths.length;i++){
+        let angle;
+        if(spec.thumb)angle=spec.angles[i]+Math.sin(time*.53+spec.phase+i*.7)*.035-bendWave*[.025,.13,.18][i];
+        else angle=Math.PI/2+spec.spread+Math.sin(time*.68+spec.phase)*.018-spec.bend-bendWave*[.015,.12,.22][i];
+        const next=point.clone().add(new THREE.Vector3(Math.cos(angle)*spec.lengths[i],Math.sin(angle)*spec.lengths[i],i===0?-.006:.008));
+        setBetween(digit.links[i],point,next,i===0?.082:i===1?.067:.055);
+        digit.joints[i].position.copy(point);digit.joints[i].position.z+=.012;
+        point=next;
+      }
+      digit.joints[digit.joints.length-1].position.copy(point);digit.joints[digit.joints.length-1].position.z+=.02;digit.tip.copy(point);
+    }
 
     const makeTexture = (spec, idx) => {
       const c = doc.createElement("canvas"); c.width=512; c.height=680;
@@ -6913,15 +7025,20 @@ if page == "🏠 Home":
       preview.hidden=false;
     };
     canvas.addEventListener("pointermove",e=>{
-      if(finePointer){const r=canvas.getBoundingClientRect();targetX=((e.clientX-r.left)/r.width-.5)*.18;targetY=((e.clientY-r.top)/r.height-.5)*-.14;const p=docFromHit(e);if(p!==hovered){hovered=p;canvas.style.cursor=p?"pointer":"grab";hint.textContent=p?"SAMPLE: "+p.spec.label+" · CLICK TO PREVIEW":"SAMPLE DOCUMENTS · MOVE TO EXPLORE";}papers.forEach(x=>x.hover=x===hovered);requestRender();}
+      if(finePointer){
+        const r=canvas.getBoundingClientRect();targetX=((e.clientX-r.left)/r.width-.5)*.18;targetY=((e.clientY-r.top)/r.height-.5)*-.14;
+        const p=docFromHit(e),hitHand=raycaster.intersectObjects([handRoot],true).length>0;
+        handHover=hitHand;if(p!==hovered)hovered=p;
+        canvas.style.cursor=(p||hitHand)?"pointer":"grab";
+        hint.textContent=p?"SAMPLE: "+p.spec.label+" · CLICK TO PREVIEW":(hitHand?"HOLOGRAM HAND · CLICK PALM TO PULSE":"SAMPLE DOCUMENTS · EXPLORE THE 3D SCENE");
+        papers.forEach(x=>x.hover=x===hovered);requestRender();
+      }
     });
-    canvas.addEventListener("pointerleave",()=>{targetX=0;targetY=0;hovered=null;papers.forEach(x=>x.hover=false);canvas.style.cursor="default";hint.textContent="SAMPLE DOCUMENTS · MOVE TO EXPLORE";requestRender();});
+    canvas.addEventListener("pointerleave",()=>{targetX=0;targetY=0;hovered=null;handHover=false;papers.forEach(x=>x.hover=false);canvas.style.cursor="default";hint.textContent="SAMPLE DOCUMENTS · EXPLORE THE 3D SCENE";requestRender();});
     canvas.addEventListener("click",e=>{
-      const p=docFromHit(e);
-      if(p){openPreview(p);return;}
-      const rect=canvas.getBoundingClientRect();
-      pointer.set(((e.clientX-rect.left)/rect.width)*2-1,-((e.clientY-rect.top)/rect.height)*2+1);
-      raycaster.setFromCamera(pointer,camera);
+      const p=docFromHit(e);if(p){openPreview(p);return;}
+      const rect=canvas.getBoundingClientRect();pointer.set(((e.clientX-rect.left)/rect.width)*2-1,-((e.clientY-rect.top)/rect.height)*2+1);raycaster.setFromCamera(pointer,camera);
+      if(raycaster.intersectObjects([handRoot],true).length){activateHand();hint.textContent="PALM ENERGY PULSE · VISUAL EFFECT";return;}
       if(raycaster.intersectObjects([energyRoot],true).length){activateEnergy();hint.textContent="ENERGY CORE ACTIVATED · VISUAL EFFECT";}
     });
     canvas.addEventListener("keydown",e=>{
@@ -6946,6 +7063,28 @@ if page == "🏠 Home":
         pointerX+=(targetX-pointerX)*Math.min(1,dt*4.5);pointerY+=(targetY-pointerY)*Math.min(1,dt*4.5);
         camera.position.x=pointerX*1.8;camera.position.y=pointerY*1.8;camera.lookAt(0,0,0);
         const t=now*.001;
+        handRoot.position.x=1.58+pointerX*.22;handRoot.position.y=-.20+Math.sin(t*.78)*.055;
+        handRoot.rotation.x=pointerY*1.25+Math.sin(t*.35)*.025;handRoot.rotation.y=.08-pointerX*1.75+Math.sin(t*.26)*.035;
+        handRoot.rotation.z=-.045+Math.sin(t*.44)*.018;
+        animatedDigits.forEach(d=>updateDigit(d,t));
+        const scanPhase=(t*.31)%1;scanBeam.position.y=-.78+scanPhase*1.18;scanLine.position.y=scanBeam.position.y;
+        scanBeam.material.opacity=.10+Math.sin(t*1.7)*.06;handTipMaterial.emissiveIntensity=handHover?2.7:1.65;handJointMaterial.emissiveIntensity=handHover?1.5:1.2;
+        const handPulseProgress=handPulseUntil>now?1-(handPulseUntil-now)/1080:0;
+        palmCore.material.emissiveIntensity=2.0+(handHover?.75:0)+Math.sin(t*2.2)*.28+(handPulseProgress>0?1.5*(1-handPulseProgress):0);
+        palmLight.intensity=1.7+Math.sin(t*2.0)*.35+(handPulseProgress>0?2.0*(1-handPulseProgress):0);
+        palmPulseA.scale.setScalar(handPulseProgress>0?.38+handPulseProgress*2.5:.001);palmPulseB.scale.setScalar(handPulseProgress>0?.28+Math.max(0,handPulseProgress-.18)*2.2:.001);
+        palmPulseMaterialA.opacity=handPulseProgress>0?.82*(1-handPulseProgress):0;palmPulseMaterialB.opacity=handPulseProgress>.18?.62*(1-handPulseProgress):0;
+        palmPulseA.rotation.z=t*.18;palmPulseB.rotation.z=-t*.12;
+        for(let i=0;i<handParticleCount;i++){
+          const rec=handParticleRecords[i],k=i*3;rec.age+=dt;
+          if(rec.age>=rec.life){
+            const tip=handFingerTips[i%handFingerTips.length];handParticlePositions[k]=tip.x+(Math.random()-.5)*.055;
+            handParticlePositions[k+1]=tip.y+(Math.random()-.5)*.045;handParticlePositions[k+2]=tip.z+.025;
+            rec.age=0;rec.life=.62+Math.random()*1.18;rec.violet=Math.random()<.24;rec.velocity.set((Math.random()-.5)*.22,.10+Math.random()*.30,(Math.random()-.5)*.18);
+          }else{handParticlePositions[k]+=rec.velocity.x*dt;handParticlePositions[k+1]+=rec.velocity.y*dt+Math.sin(t+i)*.006;handParticlePositions[k+2]+=rec.velocity.z*dt;}
+          const fade=Math.max(0,1-rec.age/rec.life);handParticleColors[k]=(rec.violet?.63:.16)*fade;handParticleColors[k+1]=(rec.violet?.43:.79)*fade;handParticleColors[k+2]=fade;
+        }
+        handParticleGeometry.attributes.position.needsUpdate=true;handParticleGeometry.attributes.color.needsUpdate=true;
         energyRoot.rotation.set(pointerY*.10,pointerX*.16+scrollProgress*.08,Math.sin(t*.28)*.025);
         energyRoot.position.y=-scrollProgress*.16;
         energyRoot.scale.setScalar(1+Math.sin(t*.65)*.008+scrollProgress*.025);
@@ -6989,8 +7128,10 @@ if page == "🏠 Home":
         layer.dataset.nbFirstFrame = "1";
         const staticScene = host.querySelector(".nb-docs-static-scene");
         const ringFallback = host.querySelector(".nb-energy-ring-fallback");
+        const handFallback = host.querySelector(".nb-hand-fallback");
         if (staticScene) staticScene.style.opacity = "0";
         if (ringFallback) ringFallback.style.opacity = "0";
+        if (handFallback) handFallback.style.opacity = "0";
       }
       if(!reduceMotion)raf=view.requestAnimationFrame(renderFrame);
     }
