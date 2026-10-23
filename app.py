@@ -6568,8 +6568,8 @@ if page == "🏠 Home":
 
   const style = doc.createElement("style");
   style.textContent = `
-    .nb-document-universe{position:absolute;inset:0;z-index:4;pointer-events:none;isolation:isolate;overflow:visible}
-    .nb-document-universe canvas{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:auto;outline:none}
+    .nb-document-universe{position:absolute;inset:0;z-index:3;pointer-events:none;isolation:isolate;overflow:visible}
+    .nb-document-universe canvas{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:auto;outline:none}.nb-document-universe canvas:focus-visible{outline:2px solid #6ce8ff;outline-offset:-6px;border-radius:10px}
     .nb-universe-hint{position:absolute;z-index:7;right:6px;bottom:9px;padding:7px 9px;border:1px solid rgba(116,225,255,.25);border-radius:999px;background:rgba(7,16,39,.68);backdrop-filter:blur(9px);color:#a8ddff;font:800 8px/1.2 Inter, sans-serif;letter-spacing:1px;white-space:nowrap;pointer-events:none}
     .nb-doc-preview{position:absolute;z-index:9;left:8px;bottom:27px;width:min(235px,72%);padding:14px;border:1px solid rgba(112,220,255,.45);border-radius:15px;background:linear-gradient(145deg,rgba(17,28,61,.97),rgba(8,18,42,.97));box-shadow:0 16px 45px rgba(0,0,0,.38),0 0 26px rgba(65,142,255,.16);color:#eef5ff;font-family:Inter,sans-serif;backdrop-filter:blur(14px)}
     .nb-doc-preview[hidden]{display:none}
@@ -6588,7 +6588,8 @@ if page == "🏠 Home":
     @media(max-width:650px){.nb-universe-hint{font-size:7px;right:3px;bottom:3px}.nb-doc-preview{left:3px;bottom:22px;width:min(218px,78%)}}
     @media(prefers-reduced-motion:reduce){.nb-fallback-paper{animation:none!important;transition:none!important}}
   `;
-  doc.head.appendChild(style);
+  style.id = "nb-document-universe-style";
+  if (!doc.getElementById(style.id)) doc.head.appendChild(style);
 
   const layer = doc.createElement("div");
   layer.className = "nb-document-universe";
@@ -6642,8 +6643,9 @@ if page == "🏠 Home":
     const THREE = await import("https://cdn.jsdelivr.net/npm/three@0.166.1/build/three.module.js");
     const width = Math.max(1, host.clientWidth), height = Math.max(1, host.clientHeight);
     const canvas = doc.createElement("canvas");
-    canvas.setAttribute("aria-label", "Interactive three-dimensional universe of sample documents");
-    canvas.setAttribute("role", "img");
+    canvas.setAttribute("aria-label", "Interactive 3D sample documents. Use left and right arrow keys to choose a document, Enter to preview it, and Escape to close the preview.");
+    canvas.setAttribute("role", "group");
+    canvas.setAttribute("tabindex", "0");
     layer.insertBefore(canvas, layer.firstChild);
     renderer = new THREE.WebGLRenderer({canvas, alpha:true, antialias: !view.matchMedia("(max-width: 650px)").matches, powerPreference:"low-power"});
     renderer.setPixelRatio(Math.min(view.devicePixelRatio || 1, 1.5));
@@ -6686,9 +6688,10 @@ if page == "🏠 Home":
     };
 
     const papers=[];
+    const activeSamples = view.matchMedia("(max-width: 650px)").matches ? samples.slice(0,6) : samples;
     const paperGeometry=new THREE.PlaneGeometry(1.36,1.78);
     const backingGeometry=new THREE.BoxGeometry(1.38,1.80,.035);
-    samples.forEach((spec,i)=>{
+    activeSamples.forEach((spec,i)=>{
       const group=new THREE.Group();
       const back=new THREE.Mesh(backingGeometry,new THREE.MeshStandardMaterial({color:0x7289b8,metalness:.18,roughness:.46}));
       back.position.z=-.026; group.add(back);
@@ -6704,7 +6707,9 @@ if page == "🏠 Home":
       group.scale.setScalar(spec.s);
       group.rotation.set((i%3-1)*.09,(i%2?-.16:.15),(i%2?-.15:.12));
       scene.add(group);
-      papers.push({group,spec,idx:i,phase:i*1.19,speed:.24+(i%4)*.055,home:new THREE.Vector3(spec.x,spec.y,spec.z),target:new THREE.Vector3((i%4-1.5)*1.03,1.12-Math.floor(i/4)*2.15,-1.8-(i%3)*.62),edge,hover:false});
+      const columns=activeSamples.length===6?3:4, row=Math.floor(i/columns), col=i%columns;
+      const target=new THREE.Vector3((col-(columns-1)/2)*1.42,row===0?1.1:-1.1,-1.8-(i%3)*.5);
+      papers.push({group,spec,idx:i,phase:i*1.19,speed:.24+(i%4)*.055,home:new THREE.Vector3(spec.x,spec.y,spec.z),target,edge,hover:false});
     });
 
     const particleN = view.matchMedia("(max-width: 650px)").matches ? 55 : 105;
@@ -6722,7 +6727,8 @@ if page == "🏠 Home":
     });
 
     const raycaster=new THREE.Raycaster(), pointer=new THREE.Vector2(5,5);
-    let pointerX=0,pointerY=0,targetX=0,targetY=0,scrollProgress=0,hovered=null,lastFrame=0;
+    let pointerX=0,pointerY=0,targetX=0,targetY=0,scrollProgress=0,hovered=null,lastFrame=0,keyboardIndex=0;
+    const hint=layer.querySelector(".nb-universe-hint");
     const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
     const pick=(event)=>{
       const r=canvas.getBoundingClientRect();
@@ -6746,10 +6752,17 @@ if page == "🏠 Home":
       preview.hidden=false;
     };
     canvas.addEventListener("pointermove",e=>{
-      if(finePointer){const r=canvas.getBoundingClientRect();targetX=((e.clientX-r.left)/r.width-.5)*.18;targetY=((e.clientY-r.top)/r.height-.5)*-.14;const p=docFromHit(e);if(p!==hovered){hovered=p;canvas.style.cursor=p?"pointer":"grab";}papers.forEach(x=>x.hover=x===hovered);requestRender();}
+      if(finePointer){const r=canvas.getBoundingClientRect();targetX=((e.clientX-r.left)/r.width-.5)*.18;targetY=((e.clientY-r.top)/r.height-.5)*-.14;const p=docFromHit(e);if(p!==hovered){hovered=p;canvas.style.cursor=p?"pointer":"grab";hint.textContent=p?"SAMPLE: "+p.spec.label+" · CLICK TO PREVIEW":"SAMPLE DOCUMENTS · MOVE TO EXPLORE";}papers.forEach(x=>x.hover=x===hovered);requestRender();}
     });
-    canvas.addEventListener("pointerleave",()=>{targetX=0;targetY=0;hovered=null;papers.forEach(x=>x.hover=false);canvas.style.cursor="default";requestRender();});
+    canvas.addEventListener("pointerleave",()=>{targetX=0;targetY=0;hovered=null;papers.forEach(x=>x.hover=false);canvas.style.cursor="default";hint.textContent="SAMPLE DOCUMENTS · MOVE TO EXPLORE";requestRender();});
     canvas.addEventListener("click",e=>{const p=docFromHit(e);if(p)openPreview(p);});
+    canvas.addEventListener("keydown",e=>{
+      if(e.key==="ArrowRight"||e.key==="ArrowDown"||e.key==="ArrowLeft"||e.key==="ArrowUp"){
+        e.preventDefault();keyboardIndex=(keyboardIndex+(e.key==="ArrowRight"||e.key==="ArrowDown"?1:-1)+papers.length)%papers.length;
+        hovered=papers[keyboardIndex];papers.forEach(x=>x.hover=x===hovered);hint.textContent="SAMPLE: "+hovered.spec.label+" · PRESS ENTER TO PREVIEW";requestRender();
+      } else if(e.key==="Enter"){e.preventDefault();openPreview(hovered||papers[keyboardIndex]);}
+      else if(e.key==="Escape"){preview.hidden=true;}
+    });
     const updateScroll=()=>{
       const r=host.getBoundingClientRect();
       scrollProgress=clamp((-r.top)/(Math.max(1,r.height)*.82),0,1);
