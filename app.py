@@ -5824,6 +5824,7 @@ hr {
 }
 
 
+.hero-ultimate .nb-mascot-model,.hero-ultimate .nb-mascot-fallback { position:relative; z-index:4; }
 /* Cinematic 3D energy reactor fallback; real Three.js geometry fades in over it. */
 .hero-ultimate .nb-energy-ring-fallback { position:absolute; inset:0; z-index:1; pointer-events:none; overflow:hidden; perspective:1100px; opacity:1; transition:opacity .6s ease; }
 .nb-energy-ring-fallback .nb-ring-assembly { position:absolute; left:50%; top:50%; width:min(108%,448px); aspect-ratio:1; transform:translate(-50%,-50%) rotateX(58deg) rotateY(-10deg) rotateZ(-18deg); transform-style:preserve-3d; filter:drop-shadow(0 0 15px rgba(66,182,255,.16)); }
