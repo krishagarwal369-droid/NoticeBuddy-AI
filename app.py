@@ -5000,6 +5000,9 @@ hr {
 }
 .hero-robot-wrap {
     transform-style: preserve-3d;
+    transform: translate3d(var(--nb-hero-shift-x, 0px), var(--nb-hero-shift-y, 0px), 0)
+               rotateX(var(--nb-hero-rotate-x, 0deg))
+               rotateY(var(--nb-hero-rotate-y, 0deg));
     will-change: transform;
     transition: transform .26s cubic-bezier(.2,.7,.2,1);
 }
