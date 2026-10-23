@@ -484,6 +484,29 @@ h2 {
     .hero h1 { font-size: clamp(30px, 8vw, 42px); }
 }
 
+
+/* Creator credit */
+.creator-byline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    padding: 8px 13px;
+    border: 1px solid rgba(150, 137, 255, 0.50);
+    border-radius: 999px;
+    background: linear-gradient(100deg, rgba(121, 78, 255, 0.20), rgba(37, 160, 255, 0.12));
+    color: #E7E7FF;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.25px;
+    box-shadow: 0 0 20px rgba(113, 90, 255, 0.16), inset 0 1px 0 rgba(255,255,255,0.08);
+}
+.creator-byline .creator-star {
+    color: #64D9FF;
+    text-shadow: 0 0 12px rgba(100, 217, 255, 0.7);
+    font-size: 15px;
+}
+
 </style>  
 
 """, unsafe_allow_html=True)
@@ -554,6 +577,7 @@ st.markdown(f"""
       <h1>Confusing notices?<br>We've got you. ✨</h1>
       <p>Turn college, scholarship and government notices into
       simple explanations and clear next steps.</p>
+      <div class="creator-byline"><span class="creator-star">✦</span> Built by Kushagra Agarwal</div>
     </div>
     <div class="hero-robot-wrap">
       <img class="hero-robot" src="{robot_image_url}" alt="NoticeBuddy AI robot assistant">
