@@ -7,6 +7,7 @@ import numpy as np
 import re
 import json
 from html import escape as html_escape
+import time
 import uuid
 import calendar as calendar_module
 from datetime import date, datetime, timedelta
@@ -1141,15 +1142,16 @@ def get_reader():
 
 # ---------- AI ----------
 def generate_notice_response(client, prompt):
-    """Try the current stable Gemini model first, then supported Gemma fallbacks."""
+    """Try several currently documented Gemini text models if one is overloaded."""
     model_order = [
         "gemini-3.8-flash",
-        "gemma-4-26b-a4b-it",
-        "gemma-4-31b-it",
+        "gemini-3.7-flash",
+        "gemini-3.6-flash",
+        "gemini-3.5-flash-lite",
     ]
     failures = []
 
-    for model_name in model_order:
+    for index, model_name in enumerate(model_order):
         try:
             response = client.models.generate_content(
                 model=model_name,
@@ -1161,15 +1163,132 @@ def generate_notice_response(client, prompt):
                 return response_text
             failures.append(f"{model_name}: empty response")
         except Exception as exc:
-            # Try the next provider model instead of failing the whole feature.
             failures.append(f"{model_name}: {str(exc)[:220]}")
+            # A short pause can help with transient service overloads.
+            if index < len(model_order) - 1:
+                time.sleep(0.8)
 
     failure_summary = " | ".join(failures)
     raise RuntimeError(
-        "All NoticeBuddy AI models failed. Check the Google AI Studio API key, "
-        "model availability/quota, or retry after a short wait. Attempts: "
-        + failure_summary
+        "Google AI could not answer with any configured model. "
+        "If errors are 503/UNAVAILABLE or 500/INTERNAL, the provider may be "
+        "temporarily overloaded; if errors are 401/403, check the API key/access. "
+        "Attempts: " + failure_summary
     )
+
+
+def matching_notice_lines(notice_text, keywords, limit=7):
+    """Return original notice lines containing any requested keyword."""
+    results = []
+    seen = set()
+    for raw_line in notice_text.splitlines():
+        line = re.sub(r"\s+", " ", raw_line).strip().lstrip("•*- \t")
+        if not line:
+            continue
+        lowered = line.lower()
+        if any(keyword in lowered for keyword in keywords) and lowered not in seen:
+            seen.add(lowered)
+            results.append(line)
+            if len(results) >= limit:
+                break
+    return results
+
+
+def build_offline_explanation(notice_text, language):
+    """Provide transparent rule-based extraction when the AI provider is down."""
+    lines = [re.sub(r"\s+", " ", line).strip() for line in notice_text.splitlines()]
+    lines = [line for line in lines if line]
+    summary = lines[:4]
+
+    dates_found = extract_notice_dates(notice_text)
+    date_lines = [f'{item["date"]} — {item["label"]}' for item in dates_found]
+
+    eligibility = matching_notice_lines(notice_text, [
+        "eligib", "eligible", "qualif", "enrolled", "student must",
+        "must be", "who have", "who can", "year ", "class ", " पात्र", "पात्र"
+    ])
+    documents = matching_notice_lines(notice_text, [
+        "document", "certificate", "marksheet", "mark sheet", "passbook",
+        "identity card", " id card", "aadhaar", "passport", "proof", "photograph"
+    ])
+    actions = matching_notice_lines(notice_text, [
+        "submit", "upload", "complete", "apply", "attend", "visit",
+        "report", "register", "carry", "clear", "contact", "before",
+        "last date", "deadline", "verify", "verification", " जमा", "करें"
+    ])
+    notes = matching_notice_lines(notice_text, [
+        "important note", "note:", "must ", "should ", "otherwise",
+        "provisional", "late", "subject to", "not mentioned", "fictional"
+    ])
+
+    if language == "Hindi":
+        title_summary = "✨ सरल सारांश"
+        title_dates = "📅 महत्वपूर्ण तिथियाँ"
+        title_eligibility = "🎯 पात्रता से जुड़ी पंक्तियाँ"
+        title_docs = "📑 दस्तावेज़ों से जुड़ी पंक्तियाँ"
+        title_actions = "✅ अगले कदमों से जुड़ी पंक्तियाँ"
+        title_notes = "⚠️ ज़रूरी नोट्स"
+        empty = "इस हिस्से से जुड़ी कोई स्पष्ट पंक्ति नहीं मिली।"
+    else:
+        title_summary = "✨ Simple Summary"
+        title_dates = "📅 Important Dates"
+        title_eligibility = "🎯 Eligibility"
+        title_docs = "📑 Required Documents"
+        title_actions = "✅ What To Do Next"
+        title_notes = "⚠️ Important Notes"
+        empty = "No clearly matching line was found in the notice."
+
+    def section(title, values):
+        value_lines = values if values else [empty]
+        return "## " + title + "\n" + "\n".join("- " + value for value in value_lines)
+
+    return "\n\n".join([
+        section(title_summary, summary),
+        section(title_dates, date_lines),
+        section(title_eligibility, eligibility),
+        section(title_docs, documents),
+        section(title_actions, actions),
+        section(title_notes, notes)
+    ])
+
+
+def offline_answer_notice_question(notice_text, question, language):
+    """Return source lines rather than inventing an AI answer during an outage."""
+    q = question.lower()
+    if any(word in q for word in ["date", "deadline", "when", "last day", "last date", "kab", "tithi", "तारीख", "कब", "अंतिम तिथि"]):
+        dates_found = extract_notice_dates(notice_text)
+        lines = [f'{item["date"]} — {item["label"]}' for item in dates_found]
+    elif any(word in q for word in ["document", "certificate", "marksheet", "passbook", "required", "दस्तावेज़", "कागज"]):
+        lines = matching_notice_lines(notice_text, [
+            "document", "certificate", "marksheet", "mark sheet", "passbook",
+            "identity card", "aadhaar", "proof", "required documents"
+        ])
+    elif any(word in q for word in ["eligib", "eligible", "qualif", "who can", "पात्र"]):
+        lines = matching_notice_lines(notice_text, [
+            "eligib", "eligible", "qualif", "enrolled", "student must",
+            "must be", "who have", "who can", "year ", "class "
+        ])
+    elif any(word in q for word in ["next step", "what to do", "submit", "upload", "action", "karna", "कैसे करें", "क्या करना"]):
+        lines = matching_notice_lines(notice_text, [
+            "submit", "upload", "complete", "apply", "attend",
+            "report", "register", "carry", "clear", "contact", "before", "verify"
+        ])
+    else:
+        terms = [
+            word for word in re.findall(r"[a-zA-Z]{4,}", q)
+            if word not in {"what", "which", "when", "where", "does", "this", "that", "from", "with", "about", "have", "will", "your", "notice", "tell", "please"}
+        ]
+        lines = matching_notice_lines(notice_text, terms) if terms else []
+
+    if language == "Hindi":
+        heading = "AI सेवा अभी उपलब्ध नहीं है, इसलिए नीचे मूल नोटिस की मिलती-जुलती पंक्तियाँ दी गई हैं—यह AI-जनरेटेड उत्तर नहीं है।"
+        fallback = "नोटिस में इस सवाल से जुड़ी कोई स्पष्ट पंक्ति नहीं मिली। कृपया मूल नोटिस देखें।"
+    else:
+        heading = "The AI service is temporarily unavailable, so these are matching lines from the original notice—not an AI-generated answer."
+        fallback = "I couldn't find a clearly matching line. Please check the original notice."
+
+    body = "\n".join("- " + line for line in lines) if lines else fallback
+    return heading + "\n\n" + body
 
 
 def explain_notice(text, language):
@@ -1428,9 +1547,15 @@ def render_saved_analysis(record):
                     chats.append({"role": "user", "text": question.strip()})
                     chats.append({"role": "assistant", "text": answer})
                 except Exception as exc:
-                    st.error("NoticeBuddy could not answer after trying its available AI models.")
-                    st.info("Retry in a moment. If the problem continues, check GEMMA_API_KEY in Streamlit Secrets and the Google AI Studio quota.")
-                    st.caption(f"Technical details: {exc}")
+                    st.warning("AI chat is temporarily unavailable. Showing matching lines from the notice instead.")
+                    answer = offline_answer_notice_question(
+                        record.get("source_text", ""),
+                        question.strip(),
+                        record.get("language", "English")
+                    )
+                    chats.append({"role": "user", "text": question.strip()})
+                    chats.append({"role": "assistant", "text": answer})
+                    st.caption(f"AI service details: {exc}")
         for message in chats:
             if message.get("role") == "user":
                 st.chat_message("user").write(message.get("text", ""))
@@ -1973,13 +2098,19 @@ elif page == "✨ Analyzer":
 
             except Exception as e:
                 activity_slot.empty()
-                st.error("NoticeBuddy could not get an AI response after trying its available models.")
-                st.info("Wait a few seconds and retry. If this keeps happening, check that GEMMA_API_KEY in Streamlit Secrets is a valid Google AI Studio API key and that its quota is available.")
-                st.caption(f"Technical details: {e}")
+                st.warning("Google AI is temporarily unavailable. Showing a basic rule-based breakdown of the original notice so you can continue testing dates, history, saving and the calendar.")
+                st.caption(f"AI service details: {e}")
+                explanation = build_offline_explanation(text, language)
+                record = add_analysis_record(text, explanation, language)
+                st.info("This is a limited offline breakdown, not an AI-generated interpretation. Verify every detail against the original notice.")
+                render_saved_analysis(record)
 
             else:
                 activity_slot.empty()
                 record = add_analysis_record(text, explanation, language)
+                used_model = st.session_state.get("last_ai_model")
+                if used_model:
+                    st.caption(f"Answered by {used_model}")
                 st.success("Notice analyzed and added to this session's history. Use ☆ Save notice to bookmark it.")
                 render_saved_analysis(record)
 
