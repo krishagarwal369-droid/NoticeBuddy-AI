@@ -6568,7 +6568,7 @@ if page == "🏠 Home":
 
   const style = doc.createElement("style");
   style.textContent = `
-    .nb-document-universe{position:absolute;inset:0;z-index:3;pointer-events:none;isolation:isolate;overflow:visible}
+    .nb-document-universe{position:absolute;inset:0;z-index:3;pointer-events:none;isolation:isolate;overflow:visible}.hero-ultimate .nb-mascot-model,.hero-ultimate .nb-mascot-fallback{position:relative;z-index:4}
     .nb-document-universe canvas{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:auto;outline:none}.nb-document-universe canvas:focus-visible{outline:2px solid #6ce8ff;outline-offset:-6px;border-radius:10px}
     .nb-universe-hint{position:absolute;z-index:7;right:6px;bottom:9px;padding:7px 9px;border:1px solid rgba(116,225,255,.25);border-radius:999px;background:rgba(7,16,39,.68);backdrop-filter:blur(9px);color:#a8ddff;font:800 8px/1.2 Inter, sans-serif;letter-spacing:1px;white-space:nowrap;pointer-events:none}
     .nb-doc-preview{position:absolute;z-index:9;left:8px;bottom:27px;width:min(235px,72%);padding:14px;border:1px solid rgba(112,220,255,.45);border-radius:15px;background:linear-gradient(145deg,rgba(17,28,61,.97),rgba(8,18,42,.97));box-shadow:0 16px 45px rgba(0,0,0,.38),0 0 26px rgba(65,142,255,.16);color:#eef5ff;font-family:Inter,sans-serif;backdrop-filter:blur(14px)}
