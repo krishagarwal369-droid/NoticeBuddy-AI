@@ -1232,9 +1232,12 @@ if page == "🏠 Home":
             '<div class="page-chip"><i></i> NOTICE CLARITY, REIMAGINED</div>',
             unsafe_allow_html=True
         )
-        if st.button("✨ Start Analyzing a Notice", key="home_start_analyzer", use_container_width=True):
-            go_to_analyzer()
-            st.rerun()
+        st.button(
+            "✨ Start Analyzing a Notice",
+            key="home_start_analyzer",
+            use_container_width=True,
+            on_click=go_to_analyzer
+        )
     with home_right:
         st.markdown(
             '<div style="padding:12px 2px;color:#9FB0DB;font-size:12px;line-height:1.7">'
@@ -1430,9 +1433,12 @@ elif page == "📘 How it works":
       <div class="workspace-copy">The current version extracts selectable text from PDFs. If a PDF is just scanned pages, upload the page as an image for OCR.</div>
     </div>
     """, unsafe_allow_html=True)
-    if st.button("✨ Open the Analyzer", key="how_to_analyzer", use_container_width=True):
-        go_to_analyzer()
-        st.rerun()
+    st.button(
+        "✨ Open the Analyzer",
+        key="how_to_analyzer",
+        use_container_width=True,
+        on_click=go_to_analyzer
+    )
 
 
 # ---------- ABOUT ----------
@@ -1462,9 +1468,12 @@ elif page == "ℹ️ About":
     </div>
     """, unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
-    if st.button("✨ Start analyzing", key="about_to_analyzer", use_container_width=True):
-        go_to_analyzer()
-        st.rerun()
+    st.button(
+        "✨ Start analyzing",
+        key="about_to_analyzer",
+        use_container_width=True,
+        on_click=go_to_analyzer
+    )
 
 
 st.markdown("""
