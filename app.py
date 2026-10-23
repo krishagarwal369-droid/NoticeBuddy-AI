@@ -6553,6 +6553,261 @@ if page == "🏠 Home":
     </div>
     """, unsafe_allow_html=True)
 
+    # ---------- FLYING DOCUMENTS UNIVERSE (progressive Three.js enhancement) ----------
+    components.html(r"""
+<script type="module">
+(async () => {
+  let host, view, doc;
+  try {
+    view = window.parent;
+    doc = view.document;
+    host = doc.querySelector(".hero-ultimate .hero-robot-wrap");
+    if (!host || host.dataset.nbDocumentsUniverse === "ready") return;
+    host.dataset.nbDocumentsUniverse = "ready";
+  } catch (_) { return; }
+
+  const style = doc.createElement("style");
+  style.textContent = `
+    .nb-document-universe{position:absolute;inset:0;z-index:4;pointer-events:none;isolation:isolate;overflow:visible}
+    .nb-document-universe canvas{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:auto;outline:none}
+    .nb-universe-hint{position:absolute;z-index:7;right:6px;bottom:9px;padding:7px 9px;border:1px solid rgba(116,225,255,.25);border-radius:999px;background:rgba(7,16,39,.68);backdrop-filter:blur(9px);color:#a8ddff;font:800 8px/1.2 Inter, sans-serif;letter-spacing:1px;white-space:nowrap;pointer-events:none}
+    .nb-doc-preview{position:absolute;z-index:9;left:8px;bottom:27px;width:min(235px,72%);padding:14px;border:1px solid rgba(112,220,255,.45);border-radius:15px;background:linear-gradient(145deg,rgba(17,28,61,.97),rgba(8,18,42,.97));box-shadow:0 16px 45px rgba(0,0,0,.38),0 0 26px rgba(65,142,255,.16);color:#eef5ff;font-family:Inter,sans-serif;backdrop-filter:blur(14px)}
+    .nb-doc-preview[hidden]{display:none}
+    .nb-doc-preview .nb-preview-kicker{color:#72e7ff;font-size:8px;font-weight:900;letter-spacing:1.4px;margin-bottom:7px}
+    .nb-doc-preview h4{color:#f5f7ff;font-size:14px;margin:0 22px 6px 0;line-height:1.3}
+    .nb-doc-preview p{color:#b8c9ee!important;font-size:11px;line-height:1.55;margin:0 0 11px}
+    .nb-doc-preview .nb-preview-close{position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:8px;border:1px solid rgba(180,202,255,.25);background:rgba(255,255,255,.06);color:#dce8ff;cursor:pointer}
+    .nb-doc-preview .nb-preview-analyze{width:100%;border:0;border-radius:9px;padding:9px 10px;background:linear-gradient(100deg,#765cff,#148fd7);color:white;font-size:10px;font-weight:800;cursor:pointer}
+    .nb-universe-fallback{position:absolute;inset:0;z-index:4;pointer-events:none;perspective:800px}
+    .nb-fallback-paper{position:absolute;width:82px;height:108px;padding:10px 8px;border:1px solid rgba(95,218,255,.72);border-radius:4px;background:linear-gradient(150deg,#f5f8ff,#dfeaff);box-shadow:0 12px 27px rgba(0,0,0,.24),0 0 22px rgba(62,180,255,.18);color:#243b66;font:800 7px/1.3 Inter,sans-serif}
+    .nb-fallback-paper:after{content:"";display:block;height:42px;margin-top:10px;background:repeating-linear-gradient(to bottom,rgba(36,68,130,.28) 0 1px,transparent 1px 8px)}
+    .nb-fallback-paper:nth-child(1){left:0;top:12%;transform:rotateY(20deg) rotateZ(-10deg)}
+    .nb-fallback-paper:nth-child(2){right:0;top:20%;transform:rotateY(-20deg) rotateZ(11deg)}
+    .nb-fallback-paper:nth-child(3){left:7%;bottom:12%;transform:rotateY(14deg) rotateZ(8deg)}
+    .nb-fallback-paper:nth-child(4){right:8%;bottom:13%;transform:rotateY(-16deg) rotateZ(-8deg)}
+    @media(max-width:650px){.nb-universe-hint{font-size:7px;right:3px;bottom:3px}.nb-doc-preview{left:3px;bottom:22px;width:min(218px,78%)}}
+    @media(prefers-reduced-motion:reduce){.nb-fallback-paper{animation:none!important;transition:none!important}}
+  `;
+  doc.head.appendChild(style);
+
+  const layer = doc.createElement("div");
+  layer.className = "nb-document-universe";
+  layer.setAttribute("aria-label", "Decorative floating sample documents");
+  layer.innerHTML = '<div class="nb-universe-hint">SAMPLE DOCUMENTS · MOVE TO EXPLORE</div>';
+  host.appendChild(layer);
+
+  const preview = doc.createElement("section");
+  preview.className = "nb-doc-preview";
+  preview.hidden = true;
+  preview.setAttribute("role", "dialog");
+  preview.setAttribute("aria-label", "Sample document preview");
+  preview.innerHTML = '<button class="nb-preview-close" type="button" aria-label="Close preview">×</button><div class="nb-preview-kicker">DECORATIVE SAMPLE · NOT OFFICIAL</div><h4></h4><p></p><button class="nb-preview-analyze" type="button">✨ Analyze your own notice</button>';
+  layer.appendChild(preview);
+  preview.querySelector(".nb-preview-close").addEventListener("click", () => { preview.hidden = true; });
+  preview.querySelector(".nb-preview-analyze").addEventListener("click", () => {
+    const btn = Array.from(doc.querySelectorAll("button")).find(b => /Start Analyzing a Notice/i.test(b.innerText || ""));
+    if (btn) btn.click();
+    else preview.querySelector("p").textContent = "Use the Start Analyzing a Notice button below the hero to open the real analyzer.";
+  });
+
+  const samples = [
+    {title:"College Notice", copy:"A decorative example of a college circular with a heading, announcement details and a date marker.", label:"COLLEGE NOTICE", x:-2.08,y:1.25,z:-1.9,s:.87},
+    {title:"Scholarship Update", copy:"A sample scholarship-style card. It contains no real scholarship, eligibility rule or deadline.",label:"SCHOLARSHIP",x:2.08,y:1.3,z:-1.4,s:.9},
+    {title:"Exam Circular", copy:"A mock academic circular showing how an exam notice may be visually organized.",label:"EXAM CIRCULAR",x:-2.05,y:-.85,z:-1.1,s:.82},
+    {title:"Application Form",copy:"A decorative form layout with sample fields only. It is not a usable or official application.",label:"APPLICATION FORM",x:2.05,y:-.9,z:-2.2,s:.82},
+    {title:"Important Deadline",copy:"An illustrative deadline panel. The date is deliberately marked as a sample, not a real deadline.",label:"SAMPLE DEADLINE",x:-.9,y:2.05,z:-3.1,s:.65},
+    {title:"Student Circular",copy:"A sample information sheet with organized lines and a fictional document reference.",label:"STUDENT CIRCULAR",x:1.05,y:-2,z:-2.8,s:.68},
+    {title:"Notice Brief",copy:"An example of information being arranged into a clearer visual brief.",label:"NOTICE BRIEF",x:-2.55,y:.05,z:-3.8,s:.58},
+    {title:"Action Checklist",copy:"A decorative checklist concept illustrating how a long notice can become next steps.",label:"ACTION CHECKLIST",x:2.55,y:.2,z:-3.5,s:.58}
+  ];
+
+  const fallback = () => {
+    layer.querySelectorAll("canvas").forEach(el => el.remove());
+    const fb = doc.createElement("div");
+    fb.className = "nb-universe-fallback";
+    ["SAMPLE · COLLEGE NOTICE","SAMPLE · SCHOLARSHIP UPDATE","SAMPLE · EXAM CIRCULAR","SAMPLE · DEADLINE"].forEach(label => {
+      const item = doc.createElement("div");
+      item.className = "nb-fallback-paper";
+      item.textContent = label;
+      fb.appendChild(item);
+    });
+    layer.appendChild(fb);
+    layer.querySelector(".nb-universe-hint").textContent = "SAMPLE DOCUMENTS · LIGHTWEIGHT MODE";
+  };
+
+  let renderer, scene, camera, raf=0, visible=true, initialized=false, reduceMotion=false, finePointer=false;
+  try {
+    reduceMotion = !!view.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    finePointer = !!view.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    const THREE = await import("https://cdn.jsdelivr.net/npm/three@0.166.1/build/three.module.js");
+    const width = Math.max(1, host.clientWidth), height = Math.max(1, host.clientHeight);
+    const canvas = doc.createElement("canvas");
+    canvas.setAttribute("aria-label", "Interactive three-dimensional universe of sample documents");
+    canvas.setAttribute("role", "img");
+    layer.insertBefore(canvas, layer.firstChild);
+    renderer = new THREE.WebGLRenderer({canvas, alpha:true, antialias: !view.matchMedia("(max-width: 650px)").matches, powerPreference:"low-power"});
+    renderer.setPixelRatio(Math.min(view.devicePixelRatio || 1, 1.5));
+    renderer.setSize(width,height,false);
+    renderer.setClearColor(0x000000,0);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.08;
+
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(38,width/height,.1,60);
+    camera.position.set(0,0,11.7);
+    scene.add(new THREE.AmbientLight(0xb9d7ff,1.7));
+    const key = new THREE.DirectionalLight(0xd8edff,2.2); key.position.set(-3,5,7); scene.add(key);
+    const cyan = new THREE.PointLight(0x2ddfff,12,12); cyan.position.set(3,1,3); scene.add(cyan);
+    const violet = new THREE.PointLight(0x8757ff,10,12); violet.position.set(-3,-2,1); scene.add(violet);
+
+    const makeTexture = (spec, idx) => {
+      const c = doc.createElement("canvas"); c.width=512; c.height=680;
+      const g=c.getContext("2d");
+      const grad=g.createLinearGradient(0,0,512,680); grad.addColorStop(0,"#fbfdff"); grad.addColorStop(1,"#e4edff"); g.fillStyle=grad; g.fillRect(0,0,512,680);
+      g.fillStyle="#18284f"; g.fillRect(0,0,512,85);
+      g.fillStyle="#67e8f9"; g.fillRect(0,82,512,4);
+      g.fillStyle="#7af0ff"; g.font="bold 19px Arial"; g.fillText("NB / NOTICEBUDDY",28,32);
+      g.fillStyle="#c8d8ff"; g.font="bold 12px Arial"; g.fillText("ILLUSTRATIVE DOCUMENT SERIES",28,57);
+      g.fillStyle="#6075aa"; g.font="bold 13px Arial"; g.fillText("SAMPLE ONLY  ·  NOT AN OFFICIAL NOTICE",28,116);
+      g.fillStyle="#192b55"; g.font="bold 28px Arial";
+      const words=spec.label.split(" "); let line="", y=166;
+      words.forEach(w=>{const test=line?line+" "+w:w;if(g.measureText(test).width>445&&line){g.fillText(line,28,y);y+=35;line=w;}else line=test;});
+      if(line) g.fillText(line,28,y);
+      g.fillStyle="#6981b5"; g.font="15px Arial"; g.fillText("Reference: DEMO-"+String(idx+1).padStart(3,"0"),28,y+33);
+      g.fillStyle="#25a9d4"; g.fillRect(28,y+62,74,4);
+      const rows=[.91,.76,.86,.62,.82,.54];
+      rows.forEach((w,j)=>{g.fillStyle=j===0?"#aab9d8":"#c6d2e8";g.fillRect(28,y+91+j*31,445*w,7);});
+      g.fillStyle="#eef3ff";g.fillRect(28,555,456,78);
+      g.strokeStyle="#b4c7ed";g.lineWidth=2;g.strokeRect(28,555,456,78);
+      g.fillStyle="#304979";g.font="bold 15px Arial";g.fillText("DEMO CONTENT · VERIFY ORIGINAL SOURCES",42,585);
+      g.fillStyle="#697ba1";g.font="13px Arial";g.fillText("No real dates, conditions or eligibility details",42,610);
+      const texture=new THREE.CanvasTexture(c); texture.colorSpace=THREE.SRGBColorSpace; texture.anisotropy=Math.min(4,renderer.capabilities.getMaxAnisotropy()); return texture;
+    };
+
+    const papers=[];
+    const paperGeometry=new THREE.PlaneGeometry(1.36,1.78);
+    const backingGeometry=new THREE.BoxGeometry(1.38,1.80,.035);
+    samples.forEach((spec,i)=>{
+      const group=new THREE.Group();
+      const back=new THREE.Mesh(backingGeometry,new THREE.MeshStandardMaterial({color:0x7289b8,metalness:.18,roughness:.46}));
+      back.position.z=-.026; group.add(back);
+      const tex=makeTexture(spec,i);
+      const face=new THREE.Mesh(paperGeometry,new THREE.MeshStandardMaterial({map:tex,roughness:.78,metalness:.03}));
+      face.position.z=0; group.add(face);
+      const edgePoints=[new THREE.Vector3(-.68,-.89,.015),new THREE.Vector3(.68,-.89,.015),new THREE.Vector3(.68,.89,.015),new THREE.Vector3(-.68,.89,.015),new THREE.Vector3(-.68,-.89,.015)];
+      const edge=new THREE.Line(new THREE.BufferGeometry().setFromPoints(edgePoints),new THREE.LineBasicMaterial({color:i%2?0x8e80ff:0x55eaff,transparent:true,opacity:.82}));
+      group.add(edge);
+      const badge=new THREE.Mesh(new THREE.PlaneGeometry(.48,.13),new THREE.MeshBasicMaterial({color:i%2?0x8e80ff:0x37cdee,transparent:true,opacity:.75}));
+      badge.position.set(-.35,.68,.018); group.add(badge);
+      group.position.set(spec.x,spec.y,spec.z);
+      group.scale.setScalar(spec.s);
+      group.rotation.set((i%3-1)*.09,(i%2?-.16:.15),(i%2?-.15:.12));
+      scene.add(group);
+      papers.push({group,spec,idx:i,phase:i*1.19,speed:.24+(i%4)*.055,home:new THREE.Vector3(spec.x,spec.y,spec.z),target:new THREE.Vector3((i%4-1.5)*1.03,1.12-Math.floor(i/4)*2.15,-1.8-(i%3)*.62),edge,hover:false});
+    });
+
+    const particleN = view.matchMedia("(max-width: 650px)").matches ? 55 : 105;
+    const pos=new Float32Array(particleN*3);
+    for(let i=0;i<particleN;i++){pos[i*3]=(Math.random()-.5)*7.5;pos[i*3+1]=(Math.random()-.5)*5.7;pos[i*3+2]=-4+Math.random()*1.5;}
+    const pgeo=new THREE.BufferGeometry();pgeo.setAttribute("position",new THREE.BufferAttribute(pos,3));
+    const pmat=new THREE.PointsMaterial({color:0x70dfff,size:.025,transparent:true,opacity:.62,depthWrite:false,sizeAttenuation:true});
+    const particles=new THREE.Points(pgeo,pmat);scene.add(particles);
+
+    const trails=[];
+    [[-3.1,-1.8,-3.6,2.9,1.9,-3.8],[3.0,-1.1,-4.2,-2.8,1.4,-4.3]].forEach((v,i)=>{
+      const curve=new THREE.QuadraticBezierCurve3(new THREE.Vector3(v[0],v[1],v[2]),new THREE.Vector3((v[0]+v[3])*.5,(v[1]+v[4])*.5+.4,-2.9),new THREE.Vector3(v[3],v[4],v[5]));
+      const geo=new THREE.BufferGeometry().setFromPoints(curve.getPoints(45));
+      const line=new THREE.Line(geo,new THREE.LineBasicMaterial({color:i?0x9f83ff:0x55dfff,transparent:true,opacity:.16,depthWrite:false}));scene.add(line);trails.push(line);
+    });
+
+    const raycaster=new THREE.Raycaster(), pointer=new THREE.Vector2(5,5);
+    let pointerX=0,pointerY=0,targetX=0,targetY=0,scrollProgress=0,hovered=null,lastFrame=0;
+    const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+    const pick=(event)=>{
+      const r=canvas.getBoundingClientRect();
+      pointer.x=((event.clientX-r.left)/r.width)*2-1;
+      pointer.y=-((event.clientY-r.top)/r.height)*2+1;
+      raycaster.setFromCamera(pointer,camera);
+      const hit=raycaster.intersectObjects(papers.map(p=>p.group),true)[0];
+      return hit ? papers.find(p=>{let n=hit.object;while(n&&n.parent!==p.group&&n.parent!==scene)n=n.parent;return n===p.group||hit.object.parent===p.group;}) || null : null;
+    };
+    const docFromHit=(event)=>{
+      const r=canvas.getBoundingClientRect();pointer.set(((event.clientX-r.left)/r.width)*2-1,-((event.clientY-r.top)/r.height)*2+1);raycaster.setFromCamera(pointer,camera);
+      const hits=raycaster.intersectObjects(papers.map(p=>p.group),true);
+      if(!hits.length)return null;
+      let n=hits[0].object;while(n.parent && !papers.some(p=>p.group===n))n=n.parent;
+      return papers.find(p=>p.group===n)||null;
+    };
+    const openPreview=(paper)=>{
+      if(!paper)return;
+      preview.querySelector("h4").textContent=paper.spec.title;
+      preview.querySelector("p").textContent=paper.spec.copy;
+      preview.hidden=false;
+    };
+    canvas.addEventListener("pointermove",e=>{
+      if(finePointer){const r=canvas.getBoundingClientRect();targetX=((e.clientX-r.left)/r.width-.5)*.18;targetY=((e.clientY-r.top)/r.height-.5)*-.14;const p=docFromHit(e);if(p!==hovered){hovered=p;canvas.style.cursor=p?"pointer":"grab";}papers.forEach(x=>x.hover=x===hovered);requestRender();}
+    });
+    canvas.addEventListener("pointerleave",()=>{targetX=0;targetY=0;hovered=null;papers.forEach(x=>x.hover=false);canvas.style.cursor="default";requestRender();});
+    canvas.addEventListener("click",e=>{const p=docFromHit(e);if(p)openPreview(p);});
+    const updateScroll=()=>{
+      const r=host.getBoundingClientRect();
+      scrollProgress=clamp((-r.top)/(Math.max(1,r.height)*.82),0,1);
+      requestRender();
+    };
+    view.addEventListener("scroll",updateScroll,{passive:true});
+    view.addEventListener("resize",resize,{passive:true});
+    function resize(){if(!renderer)return;const w=Math.max(1,host.clientWidth),h=Math.max(1,host.clientHeight);renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();requestRender();}
+    function renderFrame(now){
+      raf=0;if(!visible||!renderer)return;
+      const dt=lastFrame?Math.min(.05,(now-lastFrame)/1000):.016;lastFrame=now;
+      if(!reduceMotion){
+        pointerX+=(targetX-pointerX)*Math.min(1,dt*4.5);pointerY+=(targetY-pointerY)*Math.min(1,dt*4.5);
+        camera.position.x=pointerX*1.8;camera.position.y=pointerY*1.8;camera.lookAt(0,0,0);
+        const t=now*.001;
+        papers.forEach(p=>{
+          const g=p.group,pr=scrollProgress;
+          const drift=1-pr*.78;
+          g.position.x=p.home.x*(1-pr)+p.target.x*pr+Math.sin(t*p.speed+p.phase)*.13*drift;
+          g.position.y=p.home.y*(1-pr)+p.target.y*pr+Math.sin(t*(p.speed+.17)+p.phase)*.16*drift;
+          g.position.z=p.home.z*(1-pr)+p.target.z*pr+Math.sin(t*.35+p.phase)*.11;
+          g.rotation.x=(p.idx%3-1)*.09+Math.sin(t*.29+p.phase)*.045*drift;
+          g.rotation.y=(p.idx%2?-.16:.15)+Math.sin(t*.23+p.phase)*.12*drift-pointerX*.12;
+          g.rotation.z=(p.idx%2?-.15:.12)+Math.sin(t*.31+p.phase)*.055*drift+pointerY*.08;
+          const hoverScale=p.hover?1.075:1;
+          const orderedScale=1-pr*.06;
+          const sc=p.spec.s*hoverScale*orderedScale;g.scale.setScalar(sc);
+          p.edge.material.opacity=p.hover?.99:.72+Math.sin(t*.7+p.phase)*.12;
+        });
+        particles.rotation.y=Math.sin(t*.13)*.08+pointerX*.4;
+        particles.position.y=Math.sin(t*.18)*.05;
+        trails.forEach((line,i)=>line.material.opacity=(.12+Math.sin(t*.55+i*2)*.035)*(1-pr*.35));
+      } else {
+        camera.position.set(0,0,11.7);camera.lookAt(0,0,0);
+        papers.forEach(p=>{const pr=1; p.group.position.lerp(p.target,0.045);p.group.rotation.x*=.96;p.group.rotation.y*=.96;p.group.rotation.z*=.96;});
+      }
+      renderer.render(scene,camera);
+      if(!reduceMotion)raf=view.requestAnimationFrame(renderFrame);
+    }
+    function requestRender(){if(visible&&!raf){if(reduceMotion){renderFrame(view.performance.now());}else raf=view.requestAnimationFrame(renderFrame);}}
+    const observer=new view.IntersectionObserver(entries=>{
+      visible=entries.some(e=>e.isIntersecting);
+      if(!visible&&raf){view.cancelAnimationFrame(raf);raf=0;}
+      if(visible)requestRender();
+    },{threshold:.01});
+    observer.observe(host);
+    initialized=true;
+    updateScroll();
+    if(visible)requestRender();
+  } catch (error) {
+    try { if(renderer)renderer.dispose(); } catch (_) {}
+    fallback();
+    // Keep the rest of NoticeBuddy fully usable when WebGL/CDN support is unavailable.
+  }
+})();
+</script>
+""", height=1, scrolling=False)
+
     home_left, home_right = st.columns([1.0, 1.0], gap="large")
     with home_left:
         st.markdown(
