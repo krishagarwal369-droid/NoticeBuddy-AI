@@ -5044,6 +5044,8 @@ hr {
 
 /* Perspective glass cards. JS supplies per-card tilt and spotlight coordinates. */
 .nb-3d-card {
+    position: relative;
+    isolation: isolate;
     transform-style: preserve-3d;
     backface-visibility: hidden;
     will-change: transform;
@@ -5052,6 +5054,23 @@ hr {
         box-shadow .24s ease,
         border-color .24s ease !important;
 }
+.nb-card-glint {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    display: block;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    background: radial-gradient(
+        360px circle at var(--nb-card-glow-x, 50%) var(--nb-card-glow-y, 50%),
+        rgba(111,218,255,.18),
+        rgba(142,105,255,.09) 28%,
+        transparent 62%
+    );
+    transition: opacity .18s ease;
+}
+.nb-3d-card.is-nb-3d-active .nb-card-glint { opacity: 1; }
 .nb-3d-card.is-nb-3d-active {
     transform:
         perspective(1000px)
@@ -6941,7 +6960,7 @@ components.html(r"""
     if (!card) return;
     card.classList.remove("is-nb-3d-active");
     [
-      "--nb-card-tilt-x","--nb-card-tilt-y"
+      "--nb-card-tilt-x","--nb-card-tilt-y","--nb-card-glow-x","--nb-card-glow-y"
     ].forEach(name => card.style.removeProperty(name));
     card.style.removeProperty("transform-origin");
   }
@@ -7000,7 +7019,16 @@ components.html(r"""
         if (activeCard && activeCard !== card) resetCard(activeCard);
         activeCard = card;
         card.classList.add("nb-3d-card", "is-nb-3d-active");
+        let glint = card.querySelector(".nb-card-glint");
+        if (!glint) {
+          glint = doc.createElement("span");
+          glint.className = "nb-card-glint";
+          glint.setAttribute("aria-hidden", "true");
+          card.prepend(glint);
+        }
         const p = pointIn(card, event);
+        card.style.setProperty("--nb-card-glow-x", (p.x * 100).toFixed(1) + "%");
+        card.style.setProperty("--nb-card-glow-y", (p.y * 100).toFixed(1) + "%");
         const x = (p.x - 0.5) * 2;
         const y = (p.y - 0.5) * 2;
         card.style.setProperty("--nb-card-tilt-x", (-y * 5.2).toFixed(2) + "deg");
