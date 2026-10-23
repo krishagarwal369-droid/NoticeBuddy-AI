@@ -5824,6 +5824,30 @@ hr {
 }
 
 
+/* Cinematic 3D energy reactor fallback; real Three.js geometry fades in over it. */
+.hero-ultimate .nb-energy-ring-fallback { position:absolute; inset:0; z-index:1; pointer-events:none; overflow:hidden; perspective:1100px; opacity:1; transition:opacity .6s ease; }
+.nb-energy-ring-fallback .nb-ring-assembly { position:absolute; left:50%; top:50%; width:min(108%,448px); aspect-ratio:1; transform:translate(-50%,-50%) rotateX(58deg) rotateY(-10deg) rotateZ(-18deg); transform-style:preserve-3d; filter:drop-shadow(0 0 15px rgba(66,182,255,.16)); }
+.nb-energy-ring-fallback .nb-ring-halo { position:absolute; inset:-12%; border-radius:50%; background:radial-gradient(circle,rgba(60,146,255,.15),rgba(103,54,255,.10) 39%,transparent 70%); filter:blur(16px); transform:translateZ(-45px); }
+.nb-energy-ring-fallback .nb-ring-layer { position:absolute; border-radius:50%; transform-style:preserve-3d; backface-visibility:hidden; }
+.nb-energy-ring-fallback .nb-ring-metal { inset:10%; border:19px solid transparent; background:linear-gradient(#101a30,#101a30) padding-box,conic-gradient(from 10deg,#0c1425,#8e9eaf 7%,#2b3950 17%,#bbc9d8 25%,#24324b 38%,#657f9b 47%,#111a2c 59%,#8a9db5 70%,#26334c 84%,#b1c2d2 93%,#0c1425) border-box; box-shadow:inset 0 0 0 2px rgba(6,12,25,.8),inset 0 0 18px rgba(92,167,220,.22),0 0 0 2px rgba(167,193,224,.16),0 7px 12px rgba(0,0,0,.55); animation:nbEnergyMetalSpin 36s linear infinite; }
+.nb-energy-ring-fallback .nb-ring-metal:before { content:""; position:absolute; inset:-13px; border-radius:50%; border:2px solid rgba(177,212,239,.52); box-shadow:0 0 8px rgba(103,198,255,.33),inset 0 0 8px rgba(95,164,255,.18); }
+.nb-energy-ring-fallback .nb-ring-metal:after { content:""; position:absolute; inset:4px; border-radius:50%; border:3px dotted rgba(21,35,57,.95); box-shadow:inset 0 0 0 1px rgba(156,185,213,.18); }
+.nb-energy-ring-fallback .nb-ring-cyan { inset:20%; border:5px solid rgba(63,218,255,.88); box-shadow:0 0 7px rgba(40,218,255,.85),0 0 17px rgba(40,218,255,.42),inset 0 0 12px rgba(40,218,255,.6); animation:nbEnergyCyanSpin 13s linear infinite reverse; }
+.nb-energy-ring-fallback .nb-ring-violet { inset:3%; border:4px dashed rgba(149,108,255,.84); box-shadow:0 0 10px rgba(133,77,255,.47); animation:nbEnergyVioletSpin 27s linear infinite; }
+.nb-energy-ring-fallback .nb-ring-energy { inset:15%; border-radius:50%; background:conic-gradient(from 4deg,transparent 0 14%,rgba(50,227,255,.98) 18%,rgba(93,160,255,.16) 23%,transparent 28% 47%,rgba(165,94,255,.9) 52%,rgba(165,94,255,.10) 57%,transparent 62% 100%); -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 8px),#000 calc(100% - 6px)); mask:radial-gradient(farthest-side,transparent calc(100% - 8px),#000 calc(100% - 6px)); filter:drop-shadow(0 0 7px rgba(83,221,255,.9)); animation:nbEnergyFlow 5.4s linear infinite; }
+.nb-energy-ring-fallback .nb-ring-node { position:absolute; width:10px; height:10px; border-radius:50%; background:radial-gradient(circle at 34% 30%,#fff,#64f0ff 36%,#2587e8 75%); box-shadow:0 0 8px #48dfff,0 0 18px rgba(55,182,255,.8); }
+.nb-energy-ring-fallback .ring-node-one { left:48%; top:7%; }
+.nb-energy-ring-fallback .ring-node-two { right:7%; top:46%; width:7px;height:7px;background:radial-gradient(circle at 34% 30%,#fff,#b99dff 37%,#7750dd 78%);box-shadow:0 0 9px #9c7bff,0 0 18px rgba(137,84,255,.72); }
+.nb-energy-ring-fallback .ring-node-three { left:19%; bottom:12%; width:6px;height:6px; }
+.nb-energy-ring-fallback .ring-node-four { left:8%; top:31%; width:6px;height:6px;background:radial-gradient(circle at 34% 30%,#fff,#bea4ff 37%,#7750dd 78%);box-shadow:0 0 9px #9c7bff; }
+@keyframes nbEnergyMetalSpin { to { transform:rotateZ(360deg); } }
+@keyframes nbEnergyCyanSpin { to { transform:rotateZ(360deg); } }
+@keyframes nbEnergyVioletSpin { to { transform:rotateZ(360deg); } }
+@keyframes nbEnergyFlow { to { transform:rotateZ(360deg); } }
+@media(max-width:900px) { .nb-energy-ring-fallback .nb-ring-assembly { width:min(108%,380px); } .nb-energy-ring-fallback .nb-ring-metal { border-width:15px; } }
+@media(max-width:650px) { .nb-energy-ring-fallback .nb-ring-assembly { width:min(104%,330px); top:49%; } .nb-energy-ring-fallback .nb-ring-metal { border-width:13px; } .nb-energy-ring-fallback .nb-ring-cyan { border-width:4px; } }
+@media(prefers-reduced-motion:reduce) { .nb-energy-ring-fallback .nb-ring-metal,.nb-energy-ring-fallback .nb-ring-cyan,.nb-energy-ring-fallback .nb-ring-violet,.nb-energy-ring-fallback .nb-ring-energy { animation:none!important; } .nb-energy-ring-fallback { transition:none!important; } }
+
 /* Always-visible document-universe fallback; Three.js replaces this after first successful frame. */
 .hero-ultimate .nb-docs-static-scene {
     position:absolute; inset:0; z-index:2; overflow:hidden; pointer-events:none;
@@ -6588,6 +6612,15 @@ if page == "🏠 Home":
           <div class="hero-orbit-node node-one" aria-hidden="true">✦</div>
           <div class="hero-orbit-node node-two" aria-hidden="true">◷</div>
           <div class="hero-orbit-node node-three" aria-hidden="true">⌁</div>
+          <div class="nb-energy-ring-fallback" aria-hidden="true">
+            <div class="nb-ring-assembly">
+              <div class="nb-ring-halo"></div><div class="nb-ring-layer nb-ring-violet"></div>
+              <div class="nb-ring-layer nb-ring-metal"></div><div class="nb-ring-layer nb-ring-cyan"></div>
+              <div class="nb-ring-layer nb-ring-energy"></div>
+              <span class="nb-ring-node ring-node-one"></span><span class="nb-ring-node ring-node-two"></span>
+              <span class="nb-ring-node ring-node-three"></span><span class="nb-ring-node ring-node-four"></span>
+            </div>
+          </div>
           <div class="nb-docs-static-scene" aria-hidden="true">
             <div class="nb-doc-orbit"></div>
             <article class="nb-static-paper paper-college"><small>SAMPLE · NOT OFFICIAL</small><b>College Notice</b><i></i><i></i><i></i><i></i><em>DEMO CIRCULAR</em></article>
@@ -6730,11 +6763,65 @@ if page == "🏠 Home":
 
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(38,width/height,.1,60);
-    camera.position.set(0,0,11.7);
+    camera.position.set(0,0,10.35);
     scene.add(new THREE.AmbientLight(0xb9d7ff,1.7));
     const key = new THREE.DirectionalLight(0xd8edff,2.2); key.position.set(-3,5,7); scene.add(key);
     const cyan = new THREE.PointLight(0x2ddfff,12,12); cyan.position.set(3,1,3); scene.add(cyan);
     const violet = new THREE.PointLight(0x8757ff,10,12); violet.position.set(-3,-2,1); scene.add(violet);
+
+    // Genuine 3D energy reactor: metallic torus shell, independently moving emissive rails,
+    // instanced segmented armor, energy arcs, orbital hardware, and an inner particle field.
+    const energyRoot = new THREE.Group(); scene.add(energyRoot);
+    const ringTilt = new THREE.Group(); ringTilt.rotation.set(.62,-.12,.035); energyRoot.add(ringTilt);
+    const metalGroup = new THREE.Group(); ringTilt.add(metalGroup);
+    const metalMaterial = new THREE.MeshStandardMaterial({color:0x4c5d73,metalness:.92,roughness:.27});
+    const darkMetalMaterial = new THREE.MeshStandardMaterial({color:0x1b2940,metalness:.88,roughness:.31});
+    const silverMaterial = new THREE.MeshStandardMaterial({color:0x9eb8cc,metalness:.94,roughness:.22});
+    const cyanMaterial = new THREE.MeshStandardMaterial({color:0x51e8ff,metalness:.6,roughness:.24,emissive:0x0786ad,emissiveIntensity:1.35});
+    const violetMaterial = new THREE.MeshStandardMaterial({color:0xa18bff,metalness:.55,roughness:.3,emissive:0x5223bf,emissiveIntensity:1.05});
+
+    const mainRing = new THREE.Mesh(new THREE.TorusGeometry(2.34,.17,28,180),metalMaterial); metalGroup.add(mainRing);
+    const bevelRailA = new THREE.Mesh(new THREE.TorusGeometry(2.34,.035,10,180),silverMaterial); bevelRailA.position.z=.13; metalGroup.add(bevelRailA);
+    const bevelRailB = new THREE.Mesh(new THREE.TorusGeometry(2.34,.032,10,180),darkMetalMaterial); bevelRailB.position.z=-.13; metalGroup.add(bevelRailB);
+    const insetRail = new THREE.Mesh(new THREE.TorusGeometry(2.10,.045,10,150),darkMetalMaterial); insetRail.position.z=.08; metalGroup.add(insetRail);
+
+    const segmentGroup = new THREE.Group(); ringTilt.add(segmentGroup);
+    const segmentCount=30, segmentGeometry=new THREE.TorusGeometry(2.53,.073,9,16,(Math.PI*2/segmentCount)*.73);
+    const segmentMesh=new THREE.InstancedMesh(segmentGeometry,silverMaterial,segmentCount), segmentDummy=new THREE.Object3D();
+    for(let i=0;i<segmentCount;i++){segmentDummy.rotation.set(0,0,i*Math.PI*2/segmentCount);segmentDummy.updateMatrix();segmentMesh.setMatrixAt(i,segmentDummy.matrix);}
+    segmentMesh.instanceMatrix.needsUpdate=true; segmentGroup.add(segmentMesh);
+
+    const violetGroup = new THREE.Group(); ringTilt.add(violetGroup);
+    const violetRing = new THREE.Mesh(new THREE.TorusGeometry(2.79,.043,10,180),violetMaterial); violetRing.position.z=-.065; violetGroup.add(violetRing);
+    const violetFineRail = new THREE.Mesh(new THREE.TorusGeometry(2.67,.018,7,160),new THREE.MeshBasicMaterial({color:0x9e79ff,transparent:true,opacity:.8})); violetFineRail.position.z=.015; violetGroup.add(violetFineRail);
+
+    const cyanGroup = new THREE.Group(); ringTilt.add(cyanGroup);
+    const cyanRing = new THREE.Mesh(new THREE.TorusGeometry(1.92,.055,12,160),cyanMaterial); cyanRing.position.z=.11; cyanGroup.add(cyanRing);
+    const cyanFineRail = new THREE.Mesh(new THREE.TorusGeometry(1.76,.018,8,150),new THREE.MeshBasicMaterial({color:0x59ecff,transparent:true,opacity:.82})); cyanFineRail.position.z=.16; cyanGroup.add(cyanFineRail);
+
+    const energyGroup = new THREE.Group(); ringTilt.add(energyGroup);
+    const energyArcMaterials=[];
+    [{radius:2.03,tube:.034,arc:Math.PI*.47,color:0x55edff,emissive:0x13b9ff},{radius:2.03,tube:.026,arc:Math.PI*.28,color:0xc1a4ff,emissive:0x8753ff},{radius:1.62,tube:.022,arc:Math.PI*.39,color:0x8aeaff,emissive:0x30bbff}].forEach((cfg,i)=>{
+      const mat=new THREE.MeshStandardMaterial({color:cfg.color,metalness:.35,roughness:.24,emissive:cfg.emissive,emissiveIntensity:1.8,transparent:true,opacity:.96});
+      const arc=new THREE.Mesh(new THREE.TorusGeometry(cfg.radius,cfg.tube,9,60,cfg.arc),mat);
+      arc.rotation.z=[.4,2.45,4.2][i]; arc.rotation.x=[0,.06,-.08][i]; energyGroup.add(arc); energyArcMaterials.push(mat);
+    });
+
+    const boltGeometry=new THREE.SphereGeometry(.045,10,8), boltMesh=new THREE.InstancedMesh(boltGeometry,silverMaterial,24), boltDummy=new THREE.Object3D();
+    for(let i=0;i<24;i++){const a=i*Math.PI*2/24;boltDummy.position.set(Math.cos(a)*2.34,Math.sin(a)*2.34,.155);boltDummy.scale.setScalar(i%3===0?1.18:.78);boltDummy.updateMatrix();boltMesh.setMatrixAt(i,boltDummy.matrix);}
+    boltMesh.instanceMatrix.needsUpdate=true; metalGroup.add(boltMesh);
+
+    const orbitalGroup=new THREE.Group(); ringTilt.add(orbitalGroup); const orbiterData=[];
+    for(let i=0;i<7;i++){const nodeMat=i%3===0?violetMaterial:cyanMaterial;const node=new THREE.Mesh(new THREE.SphereGeometry(i%3===0?.064:.045,12,10),nodeMat);const orbitRadius=2.94+(i%3)*.12;node.position.set(Math.cos(i*2*Math.PI/7)*orbitRadius,Math.sin(i*2*Math.PI/7)*orbitRadius,(i%2?-.16:.17));orbitalGroup.add(node);orbiterData.push({node,phase:i*2*Math.PI/7,radius:orbitRadius,depth:(i%2?-.16:.17)});}
+
+    const fieldCount=view.matchMedia("(max-width: 650px)").matches?45:80, fieldPos=new Float32Array(fieldCount*3);
+    for(let i=0;i<fieldCount;i++){const a=Math.random()*Math.PI*2,r=.2+Math.random()*1.34;fieldPos[i*3]=Math.cos(a)*r;fieldPos[i*3+1]=Math.sin(a)*r;fieldPos[i*3+2]=(Math.random()-.5)*.30;}
+    const fieldGeometry=new THREE.BufferGeometry();fieldGeometry.setAttribute("position",new THREE.BufferAttribute(fieldPos,3));
+    const fieldMaterial=new THREE.PointsMaterial({color:0x7bdeff,size:.023,transparent:true,opacity:.56,depthWrite:false});
+    const energyField=new THREE.Points(fieldGeometry,fieldMaterial);energyField.position.z=.18;ringTilt.add(energyField);
+
+    let energyPulseUntil=0;
+    const activateEnergy=()=>{energyPulseUntil=view.performance.now()+1050;requestRender();};
 
     const makeTexture = (spec, idx) => {
       const c = doc.createElement("canvas"); c.width=512; c.height=680;
@@ -6828,7 +6915,14 @@ if page == "🏠 Home":
       if(finePointer){const r=canvas.getBoundingClientRect();targetX=((e.clientX-r.left)/r.width-.5)*.18;targetY=((e.clientY-r.top)/r.height-.5)*-.14;const p=docFromHit(e);if(p!==hovered){hovered=p;canvas.style.cursor=p?"pointer":"grab";hint.textContent=p?"SAMPLE: "+p.spec.label+" · CLICK TO PREVIEW":"SAMPLE DOCUMENTS · MOVE TO EXPLORE";}papers.forEach(x=>x.hover=x===hovered);requestRender();}
     });
     canvas.addEventListener("pointerleave",()=>{targetX=0;targetY=0;hovered=null;papers.forEach(x=>x.hover=false);canvas.style.cursor="default";hint.textContent="SAMPLE DOCUMENTS · MOVE TO EXPLORE";requestRender();});
-    canvas.addEventListener("click",e=>{const p=docFromHit(e);if(p)openPreview(p);});
+    canvas.addEventListener("click",e=>{
+      const p=docFromHit(e);
+      if(p){openPreview(p);return;}
+      const rect=canvas.getBoundingClientRect();
+      pointer.set(((e.clientX-rect.left)/rect.width)*2-1,-((e.clientY-rect.top)/rect.height)*2+1);
+      raycaster.setFromCamera(pointer,camera);
+      if(raycaster.intersectObjects([energyRoot],true).length){activateEnergy();hint.textContent="ENERGY CORE ACTIVATED · VISUAL EFFECT";}
+    });
     canvas.addEventListener("keydown",e=>{
       if(e.key==="ArrowRight"||e.key==="ArrowDown"||e.key==="ArrowLeft"||e.key==="ArrowUp"){
         e.preventDefault();keyboardIndex=(keyboardIndex+(e.key==="ArrowRight"||e.key==="ArrowDown"?1:-1)+papers.length)%papers.length;
@@ -6851,6 +6945,20 @@ if page == "🏠 Home":
         pointerX+=(targetX-pointerX)*Math.min(1,dt*4.5);pointerY+=(targetY-pointerY)*Math.min(1,dt*4.5);
         camera.position.x=pointerX*1.8;camera.position.y=pointerY*1.8;camera.lookAt(0,0,0);
         const t=now*.001;
+        energyRoot.rotation.set(pointerY*.10,pointerX*.16+scrollProgress*.08,Math.sin(t*.28)*.025);
+        energyRoot.position.y=-scrollProgress*.16;
+        energyRoot.scale.setScalar(1+Math.sin(t*.65)*.008+scrollProgress*.025);
+        ringTilt.rotation.x=.62+pointerY*.24+scrollProgress*.12;
+        ringTilt.rotation.y=-.12+pointerX*.30;
+        metalGroup.rotation.z=t*.055;segmentGroup.rotation.z=-t*.085;
+        violetGroup.rotation.z=-t*.095;cyanGroup.rotation.z=-t*.23;
+        energyGroup.rotation.z=t*(energyPulseUntil>now?.98:.58);
+        orbitalGroup.rotation.z=-t*.105;
+        orbiterData.forEach((item,i)=>{const a=item.phase+t*(.10+(i%3)*.025)*(i%2?-1:1);item.node.position.set(Math.cos(a)*item.radius,Math.sin(a)*item.radius,item.depth+Math.sin(t*.7+i)*.08);});
+        const isPulsing=energyPulseUntil>now;
+        cyanMaterial.emissiveIntensity=isPulsing?2.7:1.35;violetMaterial.emissiveIntensity=isPulsing?1.75:1.05;
+        energyArcMaterials.forEach((mat,i)=>{mat.emissiveIntensity=isPulsing?3.0:1.8;mat.opacity=isPulsing?.99:.88+Math.sin(t*1.1+i)*.08;});
+        fieldMaterial.opacity=.36+Math.sin(t*.9)*.12;
         papers.forEach(p=>{
           const g=p.group,pr=scrollProgress;
           const drift=1-pr*.78;
@@ -6869,14 +6977,19 @@ if page == "🏠 Home":
         particles.position.y=Math.sin(t*.18)*.05;
         trails.forEach((line,i)=>line.material.opacity=(.12+Math.sin(t*.55+i*2)*.035)*(1-pr*.35));
       } else {
-        camera.position.set(0,0,11.7);camera.lookAt(0,0,0);
+        camera.position.set(0,0,10.35);camera.lookAt(0,0,0);
+        energyRoot.rotation.set(0,0,0);energyRoot.position.y=0;energyRoot.scale.setScalar(1);
+        ringTilt.rotation.set(.62,-.12,.035);
+        metalGroup.rotation.z=0;segmentGroup.rotation.z=0;violetGroup.rotation.z=0;cyanGroup.rotation.z=0;energyGroup.rotation.z=0;orbitalGroup.rotation.z=0;
         papers.forEach(p=>{const pr=1; p.group.position.lerp(p.target,0.045);p.group.rotation.x*=.96;p.group.rotation.y*=.96;p.group.rotation.z*=.96;});
       }
       renderer.render(scene,camera);
       if (!layer.dataset.nbFirstFrame) {
         layer.dataset.nbFirstFrame = "1";
         const staticScene = host.querySelector(".nb-docs-static-scene");
+        const ringFallback = host.querySelector(".nb-energy-ring-fallback");
         if (staticScene) staticScene.style.opacity = "0";
+        if (ringFallback) ringFallback.style.opacity = "0";
       }
       if(!reduceMotion)raf=view.requestAnimationFrame(renderFrame);
     }
