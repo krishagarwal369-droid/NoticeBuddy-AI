@@ -420,6 +420,70 @@ h2 {
     }
 }
 
+
+/* Robot art in the hero panel */
+.hero-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(220px, 0.92fr);
+    align-items: center;
+    gap: 1.15rem;
+    position: relative;
+    z-index: 1;
+}
+.hero-copy {
+    min-width: 0;
+    position: relative;
+    z-index: 2;
+}
+.hero-robot-wrap {
+    min-width: 0;
+    min-height: 265px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+}
+.hero-robot-wrap::before {
+    content: "";
+    position: absolute;
+    width: 86%;
+    aspect-ratio: 1;
+    max-width: 340px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(59, 126, 255, 0.30), rgba(121, 67, 255, 0.15) 45%, transparent 72%);
+    filter: blur(14px);
+    animation: neonDrift 7s ease-in-out infinite alternate;
+}
+.hero-robot {
+    position: relative;
+    display: block;
+    width: 100%;
+    max-width: 330px;
+    max-height: 345px;
+    height: auto;
+    object-fit: contain;
+    border: 0;
+    border-radius: 18px;
+    mix-blend-mode: screen;
+    filter: drop-shadow(0 0 24px rgba(72, 96, 255, 0.34));
+    animation: robotFloat 5s ease-in-out infinite;
+}
+@keyframes robotFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-9px) rotate(1deg); }
+}
+@media (max-width: 760px) {
+    .hero-content {
+        grid-template-columns: 1fr;
+        gap: 0.35rem;
+    }
+    .hero { padding: 28px 22px; }
+    .hero-robot-wrap { min-height: 160px; margin-top: 0.25rem; }
+    .hero-robot { max-height: 225px; max-width: 245px; }
+    .hero h1 { font-size: clamp(30px, 8vw, 42px); }
+}
+
 </style>  
 
 """, unsafe_allow_html=True)
@@ -480,12 +544,21 @@ with st.sidebar:
 
 
 # ---------- HERO ----------
-st.markdown("""
+robot_image_url = "https://raw.githubusercontent.com/krishagarwal369-droid/NoticeBuddy-AI/main/Neon%20AI%20Robot%20Greeting.png"
+
+st.markdown(f"""
 <div class="hero">
-  <div class="eyebrow">YOUR PERSONAL NOTICE ASSISTANT</div>
-  <h1>Confusing notices?<br>We've got you. ✨</h1>
-  <p>Turn college, scholarship and government notices into
-  simple explanations and clear next steps.</p>
+  <div class="hero-content">
+    <div class="hero-copy">
+      <div class="eyebrow">YOUR PERSONAL NOTICE ASSISTANT</div>
+      <h1>Confusing notices?<br>We've got you. ✨</h1>
+      <p>Turn college, scholarship and government notices into
+      simple explanations and clear next steps.</p>
+    </div>
+    <div class="hero-robot-wrap">
+      <img class="hero-robot" src="{robot_image_url}" alt="NoticeBuddy AI robot assistant">
+    </div>
+  </div>
 </div>
 """, unsafe_allow_html=True)
 
