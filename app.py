@@ -1598,6 +1598,55 @@ h1, h2, h3 { letter-spacing: -.045em; }
     letter-spacing: 1px;
 }
 
+/* Fine circuitry and signal sparks inside the hero backdrop. */
+.hero-circuit {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    overflow: hidden;
+    border-radius: inherit;
+    pointer-events: none;
+    background:
+        linear-gradient(90deg, transparent 0 7%, rgba(93, 130, 255, .06) 7.05% 7.12%, transparent 7.2% 100%),
+        linear-gradient(0deg, transparent 0 82%, rgba(93, 130, 255, .055) 82.05% 82.15%, transparent 82.2% 100%);
+}
+.hero-circuit span {
+    position: absolute;
+    display: block;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: #72EFFF;
+    box-shadow: 0 0 12px 2px rgba(92,235,255,.48);
+    animation: circuitSpark 5s ease-in-out infinite;
+}
+.hero-circuit span:nth-child(1) { top: 13%; left: 43%; animation-delay: -.2s; }
+.hero-circuit span:nth-child(2) { top: 24%; left: 8%; animation-delay: -1.4s; }
+.hero-circuit span:nth-child(3) { top: 72%; left: 13%; animation-delay: -2.4s; }
+.hero-circuit span:nth-child(4) { top: 18%; right: 14%; animation-delay: -3.2s; }
+.hero-circuit span:nth-child(5) { top: 79%; right: 8%; animation-delay: -1.1s; }
+.hero-circuit span:nth-child(6) { top: 45%; left: 49%; animation-delay: -2.9s; }
+.hero-circuit span:nth-child(7) { top: 90%; left: 37%; animation-delay: -4s; }
+.hero-circuit span:nth-child(8) { top: 9%; right: 37%; animation-delay: -1.8s; }
+.hero-circuit span:nth-child(9) { bottom: 24%; right: 35%; animation-delay: -3.7s; }
+.hero-circuit span:nth-child(10) { top: 55%; left: 4%; animation-delay: -.8s; }
+.hero-circuit i {
+    position: absolute;
+    display: block;
+    width: 35px;
+    height: 35px;
+    border: 1px solid rgba(103,180,255,.14);
+    transform: rotate(45deg);
+}
+.hero-circuit i:nth-of-type(1) { top: 13%; left: 47%; }
+.hero-circuit i:nth-of-type(2) { bottom: 17%; left: 6%; width: 19px; height: 19px; }
+.hero-circuit i:nth-of-type(3) { top: 15%; right: 8%; width: 22px; height: 22px; }
+.hero-circuit i:nth-of-type(4) { bottom: 18%; right: 13%; width: 26px; height: 26px; }
+@keyframes circuitSpark {
+    0%,100% { transform: translate3d(0,0,0) scale(.7); opacity: .35; }
+    50% { transform: translate3d(4px,-9px,0) scale(1.3); opacity: 1; }
+}
+
 /* The main hero is now a cinematic, layered AI cockpit. */
 .hero.hero-ultimate {
     position: relative !important;
