@@ -2363,6 +2363,171 @@ elif page == "📊 Dashboard":
                     )
 
 
+# ---------- VOICE ASSISTANT ----------
+elif page == "🎙️ Voice Assistant":
+    st.markdown("""
+    <div class="page-heading">
+      <div class="eyebrow">NOTICEBUDDY VOICE STUDIO</div>
+      <h1>Talk to your notice. 🎙️</h1>
+      <p>Ask in Hindi, English or Hinglish. Record a question, review the transcript, then hear NoticeBuddy's reply.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    voice_left, voice_right = st.columns([1, 1], gap="large")
+    with voice_left:
+        st.markdown("""
+        <div class="workspace-card voice-studio-card">
+          <div class="workspace-kicker">01 / Speak naturally</div>
+          <div class="workspace-title">Ask NoticeBuddy</div>
+          <div class="workspace-copy">Record one short question using your microphone.</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        speech_language = st.selectbox(
+            "Your speech language",
+            ["Auto detect", "Hindi", "English", "Hinglish"],
+            key="voice_speech_language"
+        )
+        reply_language = st.selectbox(
+            "Reply language",
+            ["Hindi", "English", "Hinglish"],
+            key="voice_reply_language"
+        )
+        voice_recording = st.audio_input(
+            "🎙️ Record your question",
+            sample_rate=16000,
+            key="voice_assistant_audio",
+            help="Allow microphone access in your browser. Short questions work best."
+        )
+        if voice_recording:
+            st.caption("Recording ready. You can play it back before transcribing.")
+            st.audio(voice_recording, format="audio/wav")
+
+        if st.button("🎧 Transcribe my voice", key="voice_transcribe_button", type="primary", use_container_width=True):
+            if not voice_recording:
+                st.warning("Pehle microphone se question record kar bhai.")
+            else:
+                try:
+                    with st.spinner("Listening to your recording..."):
+                        transcript = transcribe_voice_question(voice_recording.getvalue(), speech_language)
+                    if not transcript or transcript == "[unclear]":
+                        st.warning("Voice clear nahi aayi. Thoda dheere aur clearly dobara record kar.")
+                    else:
+                        st.session_state["voice_draft_transcript"] = transcript
+                        st.session_state["voice_question_editor"] = transcript
+                        st.success("Voice transcribed! Send karne se pehle text edit kar sakta hai.")
+                except Exception as exc:
+                    st.error("Voice transcription abhi complete nahi ho saki.")
+                    st.info("Google AI service busy ho sakti hai. Microphone permission aur GEMMA_API_KEY check karke retry kar.")
+                    st.caption(f"Technical details: {exc}")
+
+        question_text = st.text_area(
+            "Recognized question (you can edit or type here)",
+            key="voice_question_editor",
+            placeholder="Your transcript appears here. You can also type a question.",
+            height=105
+        )
+        send_voice_question = st.button(
+            "✨ Ask NoticeBuddy",
+            key="voice_send_button",
+            use_container_width=True
+        )
+
+    with voice_right:
+        st.markdown("""
+        <div class="workspace-card voice-context-card">
+          <div class="workspace-kicker">02 / Context aware</div>
+          <div class="workspace-title">Choose a notice</div>
+          <div class="workspace-copy">Select an analyzed notice to keep answers grounded in the original text.</div>
+          <div class="workspace-list">
+            <div><span>🎤</span><span><b>Voice input</b><br>Record a spoken question.</span></div>
+            <div><span>🧠</span><span><b>Notice-aware answers</b><br>Use the selected notice instead of guessing.</span></div>
+            <div><span>🔊</span><span><b>Spoken replies</b><br>Listen using your browser's voice engine.</span></div>
+          </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        voice_records = st.session_state.get("notice_history", [])
+        context_labels = ["No notice selected"] + [
+            f"{i + 1}. {record['title']}" for i, record in enumerate(voice_records)
+        ]
+        selected_context = st.selectbox(
+            "Answer using this notice",
+            context_labels,
+            key="voice_notice_context"
+        )
+        selected_record = None
+        if selected_context != "No notice selected":
+            selected_index = context_labels.index(selected_context) - 1
+            if 0 <= selected_index < len(voice_records):
+                selected_record = voice_records[selected_index]
+                st.markdown(
+                    f'<div class="voice-context-pill">✓ Context selected: {html_escape(selected_record["title"])}</div>',
+                    unsafe_allow_html=True
+                )
+        else:
+            st.caption("Without a selected notice, official dates or eligibility won't be guessed.")
+
+        if send_voice_question:
+            if not question_text.strip():
+                st.warning("Pehle question record ya type kar.")
+            else:
+                try:
+                    with st.spinner("NoticeBuddy is preparing your answer..."):
+                        answer = answer_voice_question(question_text.strip(), reply_language, selected_record)
+                    entry = {
+                        "id": uuid.uuid4().hex[:12],
+                        "question": question_text.strip(),
+                        "answer": answer,
+                        "language": reply_language,
+                        "context": selected_record.get("title") if selected_record else "General assistant",
+                        "created_at": datetime.now().strftime("%d %b %Y, %I:%M %p")
+                    }
+                    st.session_state.setdefault("voice_history", []).append(entry)
+                    st.session_state["voice_draft_transcript"] = ""
+                    st.session_state["voice_question_editor"] = ""
+                    st.success("Answer ready! Neeche se sun sakta hai.")
+                except Exception as exc:
+                    st.warning("AI reply service is temporarily unavailable.")
+                    if selected_record:
+                        fallback_answer = offline_answer_notice_question(
+                            selected_record.get("source_text", ""),
+                            question_text.strip(),
+                            reply_language
+                        )
+                        st.markdown("**Notice-based fallback**")
+                        st.write(fallback_answer)
+                        render_read_aloud(
+                            fallback_answer,
+                            "Hindi" if reply_language in ("Hindi", "Hinglish") else "English"
+                        )
+                    else:
+                        st.info("Select an analyzed notice for a source-based fallback, or retry when the AI service is available.")
+                    st.caption(f"Technical details: {exc}")
+
+    st.markdown('<div class="home-section-title">Recent voice conversations</div>', unsafe_allow_html=True)
+    voice_entries = st.session_state.get("voice_history", [])
+    if not voice_entries:
+        st.info("Successful voice conversations will appear here.")
+    for entry in reversed(voice_entries[-6:]):
+        with st.container(key=f"voice-entry-{entry['id']}"):
+            st.markdown(
+                f'<div class="voice-message-card">'
+                f'<div class="voice-message-meta">YOU ASKED · {html_escape(entry["created_at"])}</div>'
+                f'<div class="voice-question-text">🎙️ {html_escape(entry["question"])}</div>'
+                f'<div class="voice-context-text">Context: {html_escape(entry["context"])}</div>'
+                f'</div>',
+                unsafe_allow_html=True
+            )
+            st.markdown("**NoticeBuddy replied**")
+            st.markdown(entry["answer"])
+            render_read_aloud(
+                entry["answer"],
+                "Hindi" if entry.get("language") in ("Hindi", "Hinglish") else "English"
+            )
+            st.divider()
+
+
 # ---------- ANALYZER COMMAND CENTER ----------
 elif page == "✨ Analyzer":
     st.markdown("""
