@@ -4984,6 +4984,181 @@ hr {
     html { scroll-behavior:auto; }
 }
 
+
+
+/* =====================================================================
+   NOTICEBUDDY FOUR 3D INTERACTION SYSTEMS
+   1) Pointer-driven cinematic hero parallax
+   2) Perspective glass-card tilt + cursor light
+   3) Focused 3D process rail
+   4) Scroll-triggered depth reveal for existing content
+   ===================================================================== */
+.hero.hero-ultimate {
+    perspective: 1280px;
+    perspective-origin: 50% 45%;
+    transform-style: preserve-3d;
+}
+.hero-robot-wrap {
+    transform-style: preserve-3d;
+    will-change: transform;
+    transition: transform .26s cubic-bezier(.2,.7,.2,1);
+}
+.hero-robot {
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    translate: var(--nb-robot-x, 0px) var(--nb-robot-y, 0px) 28px;
+}
+.hero-orbit-outer {
+    transform-style: preserve-3d;
+    translate: var(--nb-orbit-outer-x, 0px) var(--nb-orbit-outer-y, 0px) 4px;
+}
+.hero-orbit-inner {
+    transform-style: preserve-3d;
+    translate: var(--nb-orbit-inner-x, 0px) var(--nb-orbit-inner-y, 0px) 20px;
+}
+.hero-orbit-core {
+    transform-style: preserve-3d;
+    translate: var(--nb-core-x, 0px) var(--nb-core-y, 0px) 48px;
+}
+.hero-hud-top {
+    translate: var(--nb-hud-top-x, 0px) var(--nb-hud-top-y, 0px) 24px;
+}
+.hero-hud-bottom {
+    translate: var(--nb-hud-bottom-x, 0px) var(--nb-hud-bottom-y, 0px) 18px;
+}
+.hero-ultimate .hero-copy,
+.hero-ultimate .hero-bottom-ribbon {
+    transform: translateZ(8px);
+}
+.hero-robot-wrap,
+.hero-robot,
+.hero-orbit,
+.hero-orbit-core,
+.hero-orbit-node,
+.hero-hud {
+    backface-visibility: hidden;
+}
+
+/* Perspective glass cards. JS supplies per-card tilt and spotlight coordinates. */
+.nb-3d-card {
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    will-change: transform;
+    transition:
+        transform .20s cubic-bezier(.2,.8,.2,1),
+        box-shadow .24s ease,
+        border-color .24s ease !important;
+}
+.nb-3d-card.is-nb-3d-active {
+    transform:
+        perspective(1000px)
+        rotateX(var(--nb-card-tilt-x, 0deg))
+        rotateY(var(--nb-card-tilt-y, 0deg))
+        translate3d(0, -4px, 7px) !important;
+    box-shadow:
+        0 24px 54px rgba(0,0,0,.27),
+        0 0 0 1px rgba(116,210,255,.20),
+        0 0 28px rgba(91,112,255,.12),
+        inset 0 1px 0 rgba(255,255,255,.10) !important;
+    border-color: rgba(116,210,255,.53) !important;
+    filter: saturate(1.06);
+}
+
+/* 3D process rail: the hovered step rises forward, the rest visually recede. */
+.nexus-process-rail {
+    perspective: 1160px;
+    transform-style: preserve-3d;
+}
+.process-node {
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    will-change: transform;
+}
+.process-node.nb-process-active {
+    transform:
+        perspective(760px)
+        rotateX(var(--nb-process-tilt-x, 0deg))
+        rotateY(var(--nb-process-tilt-y, 0deg))
+        translate3d(0, -5px, 20px) !important;
+    border-color: rgba(103,229,255,.62) !important;
+    box-shadow:
+        0 18px 36px rgba(0,0,0,.26),
+        0 0 0 1px rgba(103,229,255,.12),
+        0 0 24px rgba(81,151,255,.14),
+        inset 0 1px 0 rgba(255,255,255,.09) !important;
+}
+.process-node.nb-process-active .process-node-top i {
+    transform: translateZ(24px) scale(1.06);
+    box-shadow: 0 0 18px rgba(104,225,255,.16);
+}
+.nexus-process-rail:has(.process-node.nb-process-active) .process-connector {
+    background: linear-gradient(90deg,rgba(102,133,255,.18),rgba(94,222,255,.48),rgba(126,104,255,.24));
+    transition: background .22s ease;
+}
+
+/* 3D reveal on the existing cards/steps as they enter the viewport. */
+.nb-reveal-ready {
+    opacity: 0;
+    transform: translate3d(0, 19px, 0) rotateX(4deg);
+    transform-origin: 50% 100%;
+    transition:
+        opacity .60s ease,
+        transform .68s cubic-bezier(.2,.75,.2,1);
+}
+.nb-reveal-ready.nb-revealed {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotateX(0deg);
+}
+.nb-revealed {
+    opacity: 1;
+}
+.nb-3d-card.is-nb-3d-active.nb-revealed {
+    transform:
+        perspective(1000px)
+        rotateX(var(--nb-card-tilt-x, 0deg))
+        rotateY(var(--nb-card-tilt-y, 0deg))
+        translate3d(0, -4px, 7px) !important;
+}
+
+/* Touch layouts get the same layered visual without precision pointer tracking. */
+@media (max-width: 760px), (hover: none), (pointer: coarse) {
+    .hero-robot-wrap { transition-duration: .45s; }
+    .hero-robot,
+    .hero-orbit-outer,
+    .hero-orbit-inner,
+    .hero-orbit-core,
+    .hero-hud-top,
+    .hero-hud-bottom {
+        translate: none !important;
+    }
+    .nb-3d-card.is-nb-3d-active,
+    .process-node.nb-process-active {
+        transform: none !important;
+        filter: none;
+    }
+    .nb-3d-card { will-change: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .hero-robot-wrap,
+    .nb-3d-card,
+    .process-node,
+    .nb-reveal-ready {
+        transition: none !important;
+        animation: none !important;
+        will-change: auto !important;
+    }
+    .hero-robot-wrap,
+    .nb-3d-card.is-nb-3d-active,
+    .process-node.nb-process-active,
+    .nb-reveal-ready,
+    .nb-reveal-ready.nb-revealed {
+        transform: none !important;
+        translate: none !important;
+        opacity: 1 !important;
+        filter: none !important;
+    }
+}
+
 </style>  
 
 """, unsafe_allow_html=True)
@@ -6710,3 +6885,189 @@ st.markdown("""
   <div class="footer-legal">NoticeBuddy AI supports understanding, not official decision-making. Always confirm deadlines and requirements against the original official notice.</div>
 </footer>
 """, unsafe_allow_html=True)
+
+
+# ---------- PREMIUM 3D INTERACTIONS (VISUAL ONLY) ----------
+components.html(r"""
+<script>
+(() => {
+  let doc;
+  let view;
+  try {
+    view = window.parent;
+    doc = view.document;
+  } catch (error) {
+    return;
+  }
+  if (!doc || !doc.documentElement || doc.documentElement.dataset.nbPremium3dBound === "1") return;
+
+  const root = doc.documentElement;
+  root.dataset.nbPremium3dBound = "1";
+  let reduceMotion = false;
+  let finePointer = false;
+  try {
+    reduceMotion = !!(view.matchMedia && view.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    finePointer = !!(view.matchMedia && view.matchMedia("(hover: hover) and (pointer: fine)").matches);
+  } catch (error) {
+    reduceMotion = false;
+    finePointer = false;
+  }
+  const cardSelector = ".nexus-bento-card, .home-feature-card, .workspace-card, .panel, .metric, .action-kpi, .action-task-card, .deadline-row, .voice-message-card, .voice-studio-card, .voice-context-card";
+  const revealSelector = ".nexus-bento-card, .home-feature-card, .workflow-home-step, .process-node, .workspace-card, .panel, .metric, .action-kpi, .action-task-card, .deadline-row, .voice-message-card";
+  const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+  let activeHero = null;
+  let activeCard = null;
+  let activeProcess = null;
+  let revealObserver = null;
+
+  function setOrRemove(element, property, value) {
+    if (!element) return;
+    if (value === null) element.style.removeProperty(property);
+    else element.style.setProperty(property, value);
+  }
+  function resetHero(hero) {
+    if (!hero) return;
+    [
+      "--nb-hero-shift-x","--nb-hero-shift-y","--nb-hero-rotate-x","--nb-hero-rotate-y",
+      "--nb-robot-x","--nb-robot-y","--nb-orbit-outer-x","--nb-orbit-outer-y",
+      "--nb-orbit-inner-x","--nb-orbit-inner-y","--nb-core-x","--nb-core-y",
+      "--nb-hud-top-x","--nb-hud-top-y","--nb-hud-bottom-x","--nb-hud-bottom-y"
+    ].forEach(name => hero.style.removeProperty(name));
+  }
+  function resetCard(card) {
+    if (!card) return;
+    card.classList.remove("is-nb-3d-active");
+    [
+      "--nb-card-tilt-x","--nb-card-tilt-y"
+    ].forEach(name => card.style.removeProperty(name));
+    card.style.removeProperty("transform-origin");
+  }
+  function resetProcess(node) {
+    if (!node) return;
+    node.classList.remove("nb-process-active");
+    node.style.removeProperty("--nb-process-tilt-x");
+    node.style.removeProperty("--nb-process-tilt-y");
+  }
+  function pointIn(element, event) {
+    const rect = element.getBoundingClientRect();
+    const width = Math.max(1, rect.width);
+    const height = Math.max(1, rect.height);
+    return {
+      rect,
+      x: clamp((event.clientX - rect.left) / width, 0, 1),
+      y: clamp((event.clientY - rect.top) / height, 0, 1)
+    };
+  }
+
+  if (!reduceMotion && finePointer) {
+    doc.addEventListener("pointermove", (event) => {
+      const target = event.target && event.target.closest ? event.target : null;
+
+      /* Effect 1: pointer-responsive, layered cinematic hero. */
+      const hero = target ? target.closest(".hero.hero-ultimate") : null;
+      if (hero) {
+        activeHero = hero;
+        const p = pointIn(hero, event);
+        const x = (p.x - 0.5) * 2;
+        const y = (p.y - 0.5) * 2;
+        hero.style.setProperty("--nb-hero-shift-x", (x * 7).toFixed(2) + "px");
+        hero.style.setProperty("--nb-hero-shift-y", (y * 5).toFixed(2) + "px");
+        hero.style.setProperty("--nb-hero-rotate-x", (-y * 2.5).toFixed(2) + "deg");
+        hero.style.setProperty("--nb-hero-rotate-y", (x * 4).toFixed(2) + "deg");
+        hero.style.setProperty("--nb-robot-x", (x * 8).toFixed(2) + "px");
+        hero.style.setProperty("--nb-robot-y", (y * 6).toFixed(2) + "px");
+        hero.style.setProperty("--nb-orbit-outer-x", (x * -4).toFixed(2) + "px");
+        hero.style.setProperty("--nb-orbit-outer-y", (y * -3).toFixed(2) + "px");
+        hero.style.setProperty("--nb-orbit-inner-x", (x * 7).toFixed(2) + "px");
+        hero.style.setProperty("--nb-orbit-inner-y", (y * 5).toFixed(2) + "px");
+        hero.style.setProperty("--nb-core-x", (x * 10).toFixed(2) + "px");
+        hero.style.setProperty("--nb-core-y", (y * 7).toFixed(2) + "px");
+        hero.style.setProperty("--nb-hud-top-x", (x * 5).toFixed(2) + "px");
+        hero.style.setProperty("--nb-hud-top-y", (y * -3).toFixed(2) + "px");
+        hero.style.setProperty("--nb-hud-bottom-x", (x * -5).toFixed(2) + "px");
+        hero.style.setProperty("--nb-hud-bottom-y", (y * 4).toFixed(2) + "px");
+      } else if (activeHero) {
+        resetHero(activeHero);
+        activeHero = null;
+      }
+
+      /* Effect 2: magnetic 3D glass-card tilt, tied to the real cursor position. */
+      const card = target ? target.closest(cardSelector) : null;
+      if (card) {
+        if (activeCard && activeCard !== card) resetCard(activeCard);
+        activeCard = card;
+        card.classList.add("nb-3d-card", "is-nb-3d-active");
+        const p = pointIn(card, event);
+        const x = (p.x - 0.5) * 2;
+        const y = (p.y - 0.5) * 2;
+        card.style.setProperty("--nb-card-tilt-x", (-y * 5.2).toFixed(2) + "deg");
+        card.style.setProperty("--nb-card-tilt-y", (x * 7.2).toFixed(2) + "deg");
+        card.style.transformOrigin = (p.x * 100).toFixed(1) + "% " + (p.y * 100).toFixed(1) + "%";
+      } else if (activeCard) {
+        resetCard(activeCard);
+        activeCard = null;
+      }
+
+      /* Effect 3: raised process step with a subtle 3D orientation. */
+      const node = target ? target.closest(".process-node") : null;
+      if (node) {
+        if (activeProcess && activeProcess !== node) resetProcess(activeProcess);
+        activeProcess = node;
+        node.classList.add("nb-process-active");
+        const p = pointIn(node, event);
+        const x = (p.x - 0.5) * 2;
+        const y = (p.y - 0.5) * 2;
+        node.style.setProperty("--nb-process-tilt-x", (-y * 3.2).toFixed(2) + "deg");
+        node.style.setProperty("--nb-process-tilt-y", (x * 4.5).toFixed(2) + "deg");
+      } else if (activeProcess) {
+        resetProcess(activeProcess);
+        activeProcess = null;
+      }
+    }, { passive: true });
+    doc.addEventListener("pointerleave", () => {
+      resetHero(activeHero);
+      resetCard(activeCard);
+      resetProcess(activeProcess);
+      activeHero = activeCard = activeProcess = null;
+    }, true);
+  }
+
+  /* Effect 4: existing content settles into view with perspective, not a new section. */
+  function prepareReveal(scope) {
+    if (!scope || !scope.querySelectorAll) return;
+    const found = [];
+    if (scope.matches && scope.matches(revealSelector)) found.push(scope);
+    scope.querySelectorAll(revealSelector).forEach(element => found.push(element));
+    found.forEach(element => {
+      if (element.dataset.nbRevealReady === "1") return;
+      element.dataset.nbRevealReady = "1";
+      element.classList.add("nb-reveal-ready");
+      if (reduceMotion || !revealObserver) {
+        element.classList.add("nb-revealed");
+      } else {
+        revealObserver.observe(element);
+      }
+    });
+  }
+  if (!reduceMotion && "IntersectionObserver" in view) {
+    revealObserver = new view.IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("nb-revealed");
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -4% 0px" });
+  }
+  prepareReveal(doc);
+  if ("MutationObserver" in view && doc.body) {
+    const mutationObserver = new view.MutationObserver((records) => {
+      records.forEach(record => record.addedNodes.forEach(node => {
+        if (node && node.nodeType === 1) prepareReveal(node);
+      }));
+    });
+    mutationObserver.observe(doc.body, { childList: true, subtree: true });
+  }
+})();
+</script>
+""", height=1, scrolling=False)
