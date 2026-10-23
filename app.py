@@ -5823,6 +5823,71 @@ hr {
     .nb-mascot-model[data-state="greeting"] .nb-mascot-arm-right { animation:none !important; }
 }
 
+
+/* Always-visible document-universe fallback; Three.js replaces this after first successful frame. */
+.hero-ultimate .nb-docs-static-scene {
+    position:absolute; inset:0; z-index:2; overflow:hidden; pointer-events:none;
+    perspective:1000px; transform-style:preserve-3d; opacity:1;
+    transition:opacity .45s ease;
+}
+.nb-docs-static-scene .nb-static-paper {
+    position:absolute; width:clamp(72px,8.5vw,108px); height:clamp(100px,12vw,145px);
+    padding:9px 8px; overflow:hidden; border:1px solid rgba(106,220,255,.82);
+    border-radius:5px; color:#203357;
+    background:linear-gradient(145deg,rgba(255,255,255,.99),rgba(220,235,255,.96));
+    box-shadow:0 15px 30px rgba(0,0,0,.25),0 0 20px rgba(43,193,255,.20),inset 0 0 0 3px rgba(102,160,255,.05);
+    transform-style:preserve-3d; backface-visibility:hidden;
+    font:700 7px/1.35 Inter,Arial,sans-serif; letter-spacing:.4px;
+    animation:nbDocDrift 7.4s ease-in-out infinite;
+}
+.nb-docs-static-scene .nb-static-paper:before {
+    content:"NB / SAMPLE"; display:block; margin:-9px -8px 9px; padding:8px 7px 6px;
+    background:linear-gradient(100deg,#1b2851,#214e83); color:#9df3ff;
+    border-bottom:2px solid #56dcff; font:800 7px/1 Inter,Arial,sans-serif; letter-spacing:1px;
+}
+.nb-docs-static-scene .nb-static-paper b { display:block; margin:0 0 7px; font-size:9px; line-height:1.25; color:#17294f; }
+.nb-docs-static-scene .nb-static-paper small { display:block; font-size:5.5px; color:#4a6c9f; line-height:1.3; }
+.nb-docs-static-scene .nb-static-paper i { display:block; height:3px; margin-top:6px; border-radius:4px; background:linear-gradient(90deg,#9baed0 0 82%,transparent 82%); }
+.nb-docs-static-scene .nb-static-paper i:nth-of-type(2) { width:82%; }
+.nb-docs-static-scene .nb-static-paper i:nth-of-type(3) { width:66%; }
+.nb-docs-static-scene .nb-static-paper i:nth-of-type(4) { width:90%; }
+.nb-docs-static-scene .nb-static-paper em { display:block; margin-top:9px; padding:4px 3px; border-radius:3px; background:#dcf9ff; color:#12618b; font-size:6px; font-style:normal; }
+.nb-docs-static-scene .paper-college { left:2%; top:24%; transform:rotateY(19deg) rotateZ(-9deg); animation-delay:-1.7s; }
+.nb-docs-static-scene .paper-scholarship { right:0.5%; top:15%; transform:rotateY(-22deg) rotateZ(8deg); animation-delay:-4.1s; }
+.nb-docs-static-scene .paper-exam { left:7%; bottom:12%; transform:rotateY(17deg) rotateZ(7deg); animation-delay:-3.2s; }
+.nb-docs-static-scene .paper-deadline { right:5%; bottom:8%; width:clamp(69px,7.5vw,93px); height:clamp(84px,9.5vw,112px); transform:rotateY(-17deg) rotateZ(-8deg); animation-delay:-2.4s; }
+.nb-docs-static-scene .paper-deadline:after { content:"DEMO DATE"; display:block; margin-top:8px; padding:5px 2px; background:#e7e6ff; color:#5145a5; font-size:7px; text-align:center; }
+.nb-docs-static-scene .nb-doc-orbit { position:absolute; left:50%; top:50%; width:78%; height:56%; border:1px solid rgba(101,203,255,.24); border-radius:50%; transform:translate(-50%,-50%) rotateX(65deg) rotateZ(-12deg); box-shadow:0 0 24px rgba(79,115,255,.12); }
+.nb-docs-static-scene .nb-doc-star { position:absolute; color:#8beaff; text-shadow:0 0 12px #4cbdff; font-size:13px; animation:nbDocSpark 4s ease-in-out infinite; }
+.nb-docs-static-scene .star-a { left:17%; top:13%; }
+.nb-docs-static-scene .star-b { right:17%; top:64%; animation-delay:-1.9s; }
+@keyframes nbDocDrift {
+    0%,100% { margin-top:0; filter:drop-shadow(0 0 0 rgba(80,210,255,0)); }
+    50% { margin-top:-12px; filter:drop-shadow(0 0 7px rgba(80,210,255,.14)); }
+}
+@keyframes nbDocSpark { 0%,100% { opacity:.28; transform:translateY(0) scale(.8); } 50% { opacity:.95; transform:translateY(-7px) scale(1.12); } }
+@media(max-width:900px) {
+    .nb-docs-static-scene .nb-static-paper { width:74px; height:103px; }
+    .nb-docs-static-scene .paper-scholarship { right:0; }
+    .nb-docs-static-scene .paper-college { left:0; }
+    .nb-docs-static-scene .paper-deadline { width:68px; height:84px; }
+}
+@media(max-width:650px) {
+    .nb-docs-static-scene { inset:0 0 2px; }
+    .nb-docs-static-scene .nb-static-paper { width:67px; height:90px; padding:7px 6px; opacity:.97; }
+    .nb-docs-static-scene .nb-static-paper:before { margin:-7px -6px 6px; padding:6px 5px 5px; font-size:6px; }
+    .nb-docs-static-scene .nb-static-paper b { font-size:7px; margin-bottom:4px; }
+    .nb-docs-static-scene .nb-static-paper i { height:2px; margin-top:5px; }
+    .nb-docs-static-scene .paper-college { left:0; top:17%; }
+    .nb-docs-static-scene .paper-scholarship { right:0; top:13%; }
+    .nb-docs-static-scene .paper-exam { left:2%; bottom:8%; }
+    .nb-docs-static-scene .paper-deadline { right:2%; bottom:7%; width:61px; height:76px; }
+}
+@media(prefers-reduced-motion:reduce) {
+    .nb-docs-static-scene .nb-static-paper,.nb-docs-static-scene .nb-doc-star { animation:none!important; }
+    .nb-docs-static-scene { transition:none!important; }
+}
+
 </style>  
 
 """, unsafe_allow_html=True)
@@ -6523,6 +6588,14 @@ if page == "🏠 Home":
           <div class="hero-orbit-node node-one" aria-hidden="true">✦</div>
           <div class="hero-orbit-node node-two" aria-hidden="true">◷</div>
           <div class="hero-orbit-node node-three" aria-hidden="true">⌁</div>
+          <div class="nb-docs-static-scene" aria-hidden="true">
+            <div class="nb-doc-orbit"></div>
+            <article class="nb-static-paper paper-college"><small>SAMPLE · NOT OFFICIAL</small><b>College Notice</b><i></i><i></i><i></i><i></i><em>DEMO CIRCULAR</em></article>
+            <article class="nb-static-paper paper-scholarship"><small>SAMPLE · NOT OFFICIAL</small><b>Scholarship Update</b><i></i><i></i><i></i><i></i><em>DEMO ONLY</em></article>
+            <article class="nb-static-paper paper-exam"><small>SAMPLE · NOT OFFICIAL</small><b>Exam Circular</b><i></i><i></i><i></i><i></i><em>MOCK NOTICE</em></article>
+            <article class="nb-static-paper paper-deadline"><small>SAMPLE</small><b>Important Deadline</b><i></i><i></i><i></i><em>DEMO DATE</em></article>
+            <span class="nb-doc-star star-a">✦</span><span class="nb-doc-star star-b">✧</span>
+          </div>
           <div class="hero-hud hero-hud-top">
             <span class="hero-hud-icon">◈</span>
             <div><small>NOTICE CORE</small><b>AI READY</b></div>
@@ -6800,6 +6873,11 @@ if page == "🏠 Home":
         papers.forEach(p=>{const pr=1; p.group.position.lerp(p.target,0.045);p.group.rotation.x*=.96;p.group.rotation.y*=.96;p.group.rotation.z*=.96;});
       }
       renderer.render(scene,camera);
+      if (!layer.dataset.nbFirstFrame) {
+        layer.dataset.nbFirstFrame = "1";
+        const staticScene = host.querySelector(".nb-docs-static-scene");
+        if (staticScene) staticScene.style.opacity = "0";
+      }
       if(!reduceMotion)raf=view.requestAnimationFrame(renderFrame);
     }
     function requestRender(){if(visible&&!raf){if(reduceMotion){renderFrame(view.performance.now());}else raf=view.requestAnimationFrame(renderFrame);}}
