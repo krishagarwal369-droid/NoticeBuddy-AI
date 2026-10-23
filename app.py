@@ -2426,15 +2426,57 @@ h1, h2, h3 { letter-spacing: -.045em; }
 .bento-wave i:nth-child(3n + 1) { --wave-height:10px; animation-delay:-.1s; }
 .bento-wave i:nth-child(3n + 2) { --wave-height:17px; animation-delay:-.55s; }
 @keyframes miniWave { from { height:5px; opacity:.55; } to { height:var(--wave-height,13px); opacity:1; } }
-.bento-calendar-preview { margin-top:15px; padding:12px; border:1px solid rgba(98,176,226,.18); border-radius:14px; background:rgba(5,15,33,.47); }
-.calendar-preview-head { display:flex; align-items:center; justify-content:space-between; color:#A5DFFF; font-family:Orbitron,sans-serif; font-size:8px; letter-spacing:1px; }
-.calendar-preview-head span { color:#708AB7; font-size:7px; }
-.calendar-preview-days,.calendar-preview-numbers { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:4px; margin-top:12px; text-align:center; }
-.calendar-preview-days span { color:#687FAE; font-size:8px; }
-.calendar-preview-numbers span { display:grid; place-items:center; min-height:27px; border-radius:7px; background:rgba(57,84,138,.10); color:#A9BBE3; font-size:9px; }
-.calendar-preview-numbers .calendar-preview-mark { color:#061826; background:linear-gradient(145deg,#82F5E0,#70CFFF); font-weight:900; box-shadow:0 0 14px rgba(95,229,232,.17); }
-.calendar-preview-foot { display:flex; align-items:center; gap:7px; margin-top:11px; color:#78BEBE; font-size:7px; font-weight:900; letter-spacing:.8px; }
-.calendar-preview-foot i { display:block; width:5px; height:5px; border-radius:50%; background:#79FBD8; box-shadow:0 0 8px #79FBD8; }
+.bento-deadline .bento-calendar-preview {
+    position:relative; isolation:isolate; overflow:visible; perspective:1100px;
+    margin-top:15px; padding:12px; border:1px solid rgba(98,176,226,.25); border-radius:15px;
+    background:linear-gradient(145deg,rgba(5,15,33,.58),rgba(13,26,53,.55));
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.055),0 14px 25px rgba(0,0,0,.12);
+}
+.bento-deadline .calendar-holo-stage { position:relative; min-width:0; transform-style:preserve-3d; isolation:isolate; }
+.bento-deadline .calendar-holo-webgl { position:absolute; z-index:0; inset:-10px -6px -6px; opacity:.82; pointer-events:none; overflow:hidden; }
+.bento-deadline .calendar-holo-canvas { display:block; width:100%; height:100%; }
+.bento-deadline .calendar-holo-stack { position:absolute; z-index:0; inset:5px 5px 2px; border:1px solid rgba(73,220,255,.28); border-radius:10px; transform:translateZ(-12px) rotateX(3deg) rotateY(-3deg); box-shadow:0 0 0 5px rgba(71,126,255,.025),0 0 22px rgba(63,198,255,.07); pointer-events:none; }
+.bento-deadline .calendar-holo-stack:before,.bento-deadline .calendar-holo-stack:after { content:""; position:absolute; inset:-5px 7px 7px -5px; border:1px solid rgba(144,112,255,.20); border-radius:11px; transform:translateZ(-9px) rotateY(2deg); }
+.bento-deadline .calendar-holo-stack:after { inset:9px -6px -5px 8px; border-color:rgba(75,213,255,.16); transform:translateZ(-16px) rotateY(-4deg); }
+.bento-deadline .calendar-holo-ui { position:relative; z-index:2; padding:11px 10px 10px; border-radius:11px; border:1px solid rgba(105,197,255,.26); background:linear-gradient(145deg,rgba(8,21,44,.48),rgba(10,22,47,.60)); box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 13px 22px rgba(0,0,0,.11); backdrop-filter:blur(2px); transform:translateZ(9px); transform-style:preserve-3d; }
+.bento-deadline .calendar-preview-head { position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; gap:8px; color:#BCEFFF; font-family:Orbitron,sans-serif; font-size:8px; letter-spacing:1px; }
+.bento-deadline .calendar-preview-head b { color:#BCEFFF; font-weight:800; }
+.bento-deadline .calendar-preview-head span { color:#80A8D8; font-size:7px; white-space:nowrap; }
+.bento-deadline .calendar-preview-days,.bento-deadline .calendar-preview-numbers { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:4px; margin-top:9px; text-align:center; }
+.bento-deadline .calendar-preview-days span { color:#8BA6CF; font-size:7px; font-weight:800; }
+.bento-deadline .calendar-preview-numbers { grid-auto-rows:minmax(23px,auto); }
+.bento-deadline .calendar-preview-numbers .calendar-holo-cell { position:relative; display:flex; align-items:center; justify-content:center; gap:2px; min-width:0; min-height:24px; border:1px solid rgba(92,139,205,.12); border-radius:6px; color:#BDCAE7; background:linear-gradient(145deg,rgba(40,66,111,.17),rgba(31,52,90,.10)); font:700 8px/1 Inter,sans-serif; outline:none; transition:transform .2s ease,border-color .2s ease,background .2s ease,box-shadow .2s ease; transform:translateZ(0); cursor:pointer; }
+.bento-deadline .calendar-preview-numbers .calendar-holo-cell.is-empty { border-color:transparent; background:transparent; cursor:default; pointer-events:none; }
+.bento-deadline .calendar-preview-numbers button.calendar-holo-date:hover,.bento-deadline .calendar-preview-numbers button.calendar-holo-date.is-hovered { transform:translateY(-2px) translateZ(7px); border-color:rgba(103,231,255,.65); background:rgba(44,163,203,.20); box-shadow:0 4px 14px rgba(46,211,255,.15),inset 0 0 10px rgba(72,199,255,.07); }
+.bento-deadline .calendar-preview-numbers button.calendar-holo-date:focus-visible { outline:2px solid #8AEFFF; outline-offset:2px; border-color:#8AEFFF; }
+.bento-deadline .calendar-preview-numbers button.calendar-holo-date.is-selected { color:#07172D; font-weight:900; border-color:rgba(154,250,255,.95); background:linear-gradient(145deg,#A5F8F2,#73CCFF); box-shadow:0 0 14px rgba(95,229,232,.29),inset 0 1px 0 rgba(255,255,255,.75); transform:translateZ(8px); }
+.bento-deadline .calendar-preview-numbers button.calendar-holo-date.is-today:not(.is-selected) { border-color:rgba(149,132,255,.6); color:#D5CFFF; }
+.bento-deadline .calendar-preview-numbers button.calendar-holo-date.has-deadline:not(.is-selected) { border-color:rgba(85,227,255,.45); box-shadow:inset 0 0 10px rgba(59,212,255,.07); }
+.bento-deadline .calendar-preview-numbers button.calendar-holo-date.is-overdue:not(.is-selected) { border-color:rgba(255,142,174,.43); color:#FFC5D5; }
+.bento-deadline .calendar-preview-numbers button.calendar-holo-date.is-soon:not(.is-selected) { box-shadow:0 0 12px rgba(78,231,255,.15); }
+.bento-deadline .calendar-holo-cell .date-dot { position:absolute; right:3px; top:3px; width:3px; height:3px; border-radius:50%; background:#75F2FF; box-shadow:0 0 6px #46DFFF; }
+.bento-deadline .calendar-holo-cell.is-overdue .date-dot { background:#FFA4C2; box-shadow:0 0 6px #FF8AAF; }
+.bento-deadline .calendar-holo-info { position:relative; z-index:2; display:grid; grid-template-columns:1fr auto; align-items:center; gap:8px; margin-top:10px; padding:9px 10px; border:1px solid rgba(103,192,239,.18); border-radius:9px; background:linear-gradient(100deg,rgba(38,82,131,.14),rgba(85,66,156,.10)); }
+.bento-deadline .calendar-holo-info-copy { min-width:0; }
+.bento-deadline .calendar-holo-info-kicker { display:block; margin-bottom:4px; color:#7BDCF2; font:800 6px/1.4 Orbitron,sans-serif; letter-spacing:1px; }
+.bento-deadline .calendar-holo-info-date { display:block; color:#E0EFFF; font-size:10px; font-weight:800; line-height:1.35; }
+.bento-deadline .calendar-holo-info-label { display:block; margin-top:3px; color:#A9C0E4; font-size:8px; line-height:1.4; overflow-wrap:anywhere; }
+.bento-deadline .calendar-holo-info-source { display:block; margin-top:2px; color:#7F98C0; font-size:7px; line-height:1.35; overflow-wrap:anywhere; }
+.bento-deadline .calendar-holo-info-status { display:inline-flex; align-items:center; gap:5px; max-width:96px; color:#7EECD9; font:800 6px/1.4 Orbitron,sans-serif; letter-spacing:.55px; text-align:right; }
+.bento-deadline .calendar-holo-info-status:before { content:""; width:5px; height:5px; flex:0 0 auto; border-radius:50%; background:#75F2D2; box-shadow:0 0 7px rgba(87,255,219,.6); }
+.bento-deadline .calendar-holo-info-status.is-overdue { color:#FFB3CA; }
+.bento-deadline .calendar-holo-info-status.is-overdue:before { background:#FF8FB2; box-shadow:0 0 7px rgba(255,143,178,.6); }
+.bento-deadline .calendar-holo-legend { display:flex; flex-wrap:wrap; gap:9px; margin-top:9px; color:#8098BD; font-size:6px; font-weight:800; letter-spacing:.45px; }
+.bento-deadline .calendar-holo-legend span { display:inline-flex; align-items:center; gap:5px; }
+.bento-deadline .calendar-holo-legend i { display:block; width:5px; height:5px; border-radius:50%; background:#74EEFF; box-shadow:0 0 7px rgba(83,226,255,.45); }
+.bento-deadline .calendar-holo-legend .legend-overdue { background:#FFA2C3; box-shadow:0 0 7px rgba(255,153,190,.35); }
+.bento-deadline .calendar-holo-legend .legend-today { background:#A898FF; box-shadow:0 0 7px rgba(165,143,255,.4); }
+.bento-deadline .calendar-preview-foot { display:flex; align-items:center; gap:7px; margin-top:10px; color:#78BEBE; font-size:7px; font-weight:900; letter-spacing:.8px; }
+.bento-deadline .calendar-preview-foot i { display:block; width:5px; height:5px; border-radius:50%; background:#79FBD8; box-shadow:0 0 8px #79FBD8; }
+@media(max-width:900px) { .bento-deadline .calendar-holo-ui{padding:10px 8px 9px}.bento-deadline .calendar-preview-numbers{gap:3px}.bento-deadline .calendar-preview-numbers .calendar-holo-cell{min-height:22px} }
+@media(max-width:650px) { .bento-deadline .bento-calendar-preview{padding:9px}.bento-deadline .calendar-preview-numbers{gap:2px;grid-auto-rows:minmax(20px,auto)}.bento-deadline .calendar-preview-numbers .calendar-holo-cell{min-height:20px;font-size:7px}.bento-deadline .calendar-holo-info{padding:8px}.bento-deadline .calendar-holo-info-date{font-size:9px} }
+@media(prefers-reduced-motion:reduce) { .bento-deadline .calendar-preview-numbers .calendar-holo-cell{transition:none!important} }
+
 .bento-stack { position:relative; width:100%; height:110px; margin-top:19px; perspective:600px; }
 .stack-sheet { position:absolute; width:190px; max-width:75%; height:88px; border-radius:12px; border:1px solid rgba(126,149,241,.26); }
 .sheet-back { left:12px; top:0; transform:rotate(-8deg); background:linear-gradient(135deg,rgba(102,87,255,.13),rgba(19,36,68,.5)); }
@@ -7030,7 +7072,107 @@ if page == "🏠 Home":
             unsafe_allow_html=True
         )
 
-    st.markdown("""
+    # Build the month grid from the real notice dates and manual reminders already in session state.
+    radar_today = date.today()
+    radar_events_by_date = {}
+    radar_valid_events = []
+    for radar_event in get_all_date_events():
+        try:
+            radar_event_date = date.fromisoformat(str(radar_event.get("date", "")))
+        except (ValueError, TypeError):
+            continue
+        clean_event = {
+            "date": radar_event_date.isoformat(),
+            "label": str(radar_event.get("label", "Date found in notice")),
+            "source": str(radar_event.get("source", "Saved notice")),
+            "kind": str(radar_event.get("kind", "From notice")),
+            "parsed_date": radar_event_date,
+        }
+        radar_valid_events.append(clean_event)
+        radar_events_by_date.setdefault(radar_event_date.isoformat(), []).append(clean_event)
+    radar_upcoming = sorted((item for item in radar_valid_events if item["parsed_date"] >= radar_today),
+                            key=lambda item: (item["parsed_date"], item["label"]))
+    radar_display_date = radar_upcoming[0]["parsed_date"] if radar_upcoming else radar_today
+    radar_month, radar_year = radar_display_date.month, radar_display_date.year
+    radar_selected_iso = radar_upcoming[0]["date"] if radar_upcoming else radar_today.isoformat()
+    radar_month_name = calendar_module.month_name[radar_month]
+    radar_month_grid = calendar_module.monthcalendar(radar_year, radar_month)
+    radar_cells = []
+    for radar_row, radar_week in enumerate(radar_month_grid):
+        for radar_col, radar_day in enumerate(radar_week):
+            if radar_day == 0:
+                radar_cells.append(f'<span class="calendar-holo-cell is-empty" data-row="{radar_row}" data-col="{radar_col}" aria-hidden="true"></span>')
+                continue
+            radar_cell_date = date(radar_year, radar_month, radar_day)
+            radar_cell_iso = radar_cell_date.isoformat()
+            radar_cell_events = radar_events_by_date.get(radar_cell_iso, [])
+            radar_classes = ["calendar-holo-cell", "calendar-holo-date"]
+            if radar_cell_date == radar_today: radar_classes.append("is-today")
+            if radar_cell_events:
+                radar_classes.append("has-deadline")
+                if radar_cell_date < radar_today: radar_classes.append("is-overdue")
+                elif (radar_cell_date - radar_today).days <= 7: radar_classes.append("is-soon")
+            if radar_cell_iso == radar_selected_iso: radar_classes.append("is-selected")
+            first_cell_event = radar_cell_events[0] if radar_cell_events else None
+            cell_label = first_cell_event["label"] if first_cell_event else "No deadline recorded"
+            cell_source = first_cell_event["source"] if first_cell_event else "No event recorded"
+            cell_kind = first_cell_event["kind"] if first_cell_event else ""
+            event_payload = html_escape(json.dumps([
+                {"label": item["label"], "source": item["source"], "kind": item["kind"]}
+                for item in radar_cell_events
+            ], ensure_ascii=False), quote=True)
+            date_title = radar_cell_date.strftime("%A, %d %B %Y")
+            if radar_cell_events: date_title += " · " + " · ".join(item["label"] for item in radar_cell_events[:3])
+            radar_marker = '<i class="date-dot" aria-hidden="true"></i>' if radar_cell_events else ""
+            radar_cells.append(
+                f'<button type="button" class="{" ".join(radar_classes)}" data-date="{html_escape(radar_cell_iso, quote=True)}" '
+                f'data-row="{radar_row}" data-col="{radar_col}" data-events="{event_payload}" '
+                f'data-label="{html_escape(cell_label, quote=True)}" data-source="{html_escape(cell_source, quote=True)}" '
+                f'data-kind="{html_escape(cell_kind, quote=True)}" aria-pressed="{str(radar_cell_iso == radar_selected_iso).lower()}" '
+                f'aria-label="{html_escape(date_title, quote=True)}" title="{html_escape(date_title, quote=True)}">'
+                f'<span>{radar_day:02d}</span>{radar_marker}</button>'
+            )
+    radar_grid_html = "".join(radar_cells)
+    radar_selected_events = radar_events_by_date.get(radar_selected_iso, [])
+    radar_selected_day = date.fromisoformat(radar_selected_iso)
+    if radar_selected_events:
+        radar_initial_label = html_escape(radar_selected_events[0]["label"])
+        radar_initial_source = html_escape(radar_selected_events[0]["kind"] + " · " + radar_selected_events[0]["source"])
+        radar_initial_status = "OVERDUE" if radar_selected_day < radar_today else ("DUE TODAY" if radar_selected_day == radar_today else "UPCOMING")
+        radar_initial_status_class = "is-overdue" if radar_selected_day < radar_today else ""
+        if len(radar_selected_events) > 1: radar_initial_source += " · +" + str(len(radar_selected_events)-1) + " more"
+        radar_footer_label = "NEXT RECORDED DEADLINE"
+    else:
+        radar_initial_label = "No deadline recorded"
+        radar_initial_source = "No saved notice date or personal reminder for this date."
+        radar_initial_status = "NO EVENT"
+        radar_initial_status_class = ""
+        radar_footer_label = "NO UPCOMING DEADLINES"
+    radar_calendar_html = f"""
+        <div class="bento-calendar-preview" data-radar-month="{radar_month}" data-radar-year="{radar_year}">
+          <div class="calendar-holo-stage">
+            <div class="calendar-holo-webgl" aria-hidden="true"><canvas class="calendar-holo-canvas"></canvas></div>
+            <div class="calendar-holo-stack" aria-hidden="true"></div>
+            <div class="calendar-holo-ui">
+              <div class="calendar-preview-head"><b>{html_escape(radar_month_name)} {radar_year}</b><span>LIVE RADAR</span></div>
+              <div class="calendar-preview-days"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+              <div class="calendar-preview-numbers">{radar_grid_html}</div>
+              <div class="calendar-holo-legend"><span><i></i> RECORDED DATE</span><span><i class="legend-overdue"></i> OVERDUE</span><span><i class="legend-today"></i> TODAY</span></div>
+            </div>
+            <div class="calendar-holo-info" aria-live="polite">
+              <div class="calendar-holo-info-copy">
+                <span class="calendar-holo-info-kicker">SELECTED DATE</span>
+                <strong class="calendar-holo-info-date">{html_escape(radar_selected_day.strftime("%a, %d %b %Y"))}</strong>
+                <span class="calendar-holo-info-label">{radar_initial_label}</span>
+                <span class="calendar-holo-info-source">{radar_initial_source}</span>
+              </div>
+              <span class="calendar-holo-info-status {radar_initial_status_class}">{radar_initial_status}</span>
+            </div>
+          </div>
+          <div class="calendar-preview-foot"><i></i> {radar_footer_label}</div>
+        </div>
+    """
+    radar_home_markup = """
     <div class="nexus-section-head">
       <div class="nexus-section-kicker"><span></span> THE NOTICE INTELLIGENCE PLATFORM <i></i> CORE CAPABILITIES</div>
       <div class="nexus-section-title">Not just read.<br><b>Understood.</b></div>
@@ -7076,12 +7218,7 @@ if page == "🏠 Home":
         <div class="bento-overline">KEEP THE NEXT DATE IN SIGHT</div>
         <h3>Dates become<br><em>decisions.</em></h3>
         <p>Spot explicit full dates in notices, review countdowns and add your own reminders.</p>
-        <div class="bento-calendar-preview">
-          <div class="calendar-preview-head"><b>DATE RADAR</b><span>PREVIEW</span></div>
-          <div class="calendar-preview-days"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
-          <div class="calendar-preview-numbers"><span>01</span><span>02</span><span>03</span><span>04</span><span>05</span><span class="calendar-preview-mark">06</span><span>07</span></div>
-          <div class="calendar-preview-foot"><i></i> DEADLINES STAND OUT</div>
-        </div>
+        __DEADLINE_RADAR_HOLO_CALENDAR__
       </article>
       <article class="nexus-bento-card bento-library">
         <div class="bento-topline"><span class="bento-icon">▤</span><span class="bento-index">04 / SESSION LIBRARY</span></div>
@@ -7105,7 +7242,151 @@ if page == "🏠 Home":
       <div class="process-connector"><span></span></div>
       <div class="process-node"><div class="process-node-top"><span>04</span><i>✓</i></div><b>Act</b><p>Verify official requirements, then plan the next step.</p></div>
     </div>
-    """, unsafe_allow_html=True)
+    """
+    st.markdown(radar_home_markup.replace("__DEADLINE_RADAR_HOLO_CALENDAR__", radar_calendar_html), unsafe_allow_html=True)
+
+    # ---------- DEADLINE RADAR HOLOGRAPHIC 3D CALENDAR ----------
+    components.html(r"""
+<script type="module">
+(async () => {
+  let doc, view;
+  try { view = window.parent; doc = view.document; } catch (_) { return; }
+  const stage = doc.querySelector(".bento-deadline .calendar-holo-stage");
+  if (!stage || stage.dataset.holoBound === "1") return;
+  stage.dataset.holoBound = "1";
+  const preview = stage.closest(".bento-calendar-preview");
+  const buttons = Array.from(stage.querySelectorAll("button.calendar-holo-date"));
+  const infoDate = preview.querySelector(".calendar-holo-info-date");
+  const infoLabel = preview.querySelector(".calendar-holo-info-label");
+  const infoSource = preview.querySelector(".calendar-holo-info-source");
+  const infoStatus = preview.querySelector(".calendar-holo-info-status");
+  const clamp = (v,a,b)=>Math.max(a,Math.min(b,v));
+  const fmtDate = iso => new Date(iso+"T12:00:00").toLocaleDateString(undefined,{weekday:"short",day:"2-digit",month:"short",year:"numeric"});
+  let selected = buttons.find(b=>b.classList.contains("is-selected")) || null;
+  function selectDate(button) {
+    if (!button) return;
+    selected = button;
+    buttons.forEach(b => {const active=b===button;b.classList.toggle("is-selected",active);b.setAttribute("aria-pressed",String(active));});
+    if (infoDate) infoDate.textContent=fmtDate(button.dataset.date);
+    let records=[];try{records=JSON.parse(button.dataset.events||"[]");}catch(_){records=[];}
+    if(records.length){
+      if(infoLabel)infoLabel.textContent=records[0].label||"Recorded deadline";
+      let source=[records[0].kind,records[0].source].filter(Boolean).join(" · ");
+      if(records.length>1)source+=" · +"+(records.length-1)+" more";
+      if(infoSource)infoSource.textContent=source;
+      const d=new Date();const todayIso=[d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-");
+      const past=button.dataset.date<todayIso,today=button.dataset.date===todayIso;
+      if(infoStatus){infoStatus.textContent=past?"OVERDUE":(today?"DUE TODAY":"UPCOMING");infoStatus.classList.toggle("is-overdue",past);}
+    } else {
+      if(infoLabel)infoLabel.textContent="No deadline recorded";
+      if(infoSource)infoSource.textContent="No saved notice date or personal reminder for this date.";
+      if(infoStatus){infoStatus.textContent="NO EVENT";infoStatus.classList.remove("is-overdue");}
+    }
+    preview.dataset.selectedDate=button.dataset.date;
+    if(typeof view.__nbCalendarSelect3D==="function")view.__nbCalendarSelect3D(button);
+  }
+  buttons.forEach((button,index)=>{
+    button.addEventListener("click",()=>selectDate(button));
+    button.addEventListener("pointerenter",()=>button.classList.add("is-hovered"));
+    button.addEventListener("pointerleave",()=>button.classList.remove("is-hovered"));
+    button.addEventListener("keydown",e=>{
+      if(!["ArrowRight","ArrowLeft","ArrowUp","ArrowDown"].includes(e.key))return;
+      e.preventDefault();const delta=e.key==="ArrowRight"?1:e.key==="ArrowLeft"?-1:e.key==="ArrowDown"?7:-7;
+      buttons[clamp(index+delta,0,buttons.length-1)].focus();
+    });
+  });
+
+  let renderer,scene,camera,cardGroup,backGroup,cellMesh,selectedPlate,scanBeam,particles,raf=0,visible=true;
+  let reduceMotion=false,finePointer=false,last=0,targetX=0,targetY=0,tiltX=0,tiltY=0,particleCount=0;
+  const canvas=stage.querySelector(".calendar-holo-canvas");
+  try {
+    reduceMotion=!!view.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    finePointer=!!view.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    const THREE=await import("https://cdn.jsdelivr.net/npm/three@0.166.1/build/three.module.js");
+    renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:!view.matchMedia("(max-width: 650px)").matches,powerPreference:"low-power"});
+    renderer.setPixelRatio(Math.min(view.devicePixelRatio||1,1.35));renderer.setClearColor(0x000000,0);
+    renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.0;
+    scene=new THREE.Scene();
+    const width=Math.max(1,stage.clientWidth),height=Math.max(1,stage.clientHeight);
+    camera=new THREE.PerspectiveCamera(34,width/height,.1,45);camera.position.set(0,0,7.6);
+    scene.add(new THREE.AmbientLight(0x9ccfff,1.45));
+    const key=new THREE.DirectionalLight(0xb8eaff,2.2);key.position.set(-3,4,5);scene.add(key);
+    const cyan=new THREE.PointLight(0x2eeaff,8,9);cyan.position.set(2,1,2);scene.add(cyan);
+    const violet=new THREE.PointLight(0x8b66ff,6,8);violet.position.set(-2,-1,-1);scene.add(violet);
+    cardGroup=new THREE.Group();scene.add(cardGroup);
+    backGroup=new THREE.Group();backGroup.position.z=-.32;backGroup.rotation.y=-.065;cardGroup.add(backGroup);
+    const backGeo=new THREE.BoxGeometry(4.55,3.0,.06);
+    const backMat=new THREE.MeshStandardMaterial({color:0x4e6fea,metalness:.62,roughness:.32,transparent:true,opacity:.22,emissive:0x372b9c,emissiveIntensity:.22});
+    backGroup.add(new THREE.Mesh(backGeo,backMat));backGroup.add(new THREE.LineSegments(new THREE.EdgesGeometry(backGeo),new THREE.LineBasicMaterial({color:0x9c8cff,transparent:true,opacity:.70})));
+    const frontGeo=new THREE.BoxGeometry(4.35,2.82,.09);
+    const frontMat=new THREE.MeshPhysicalMaterial({color:0x142d50,metalness:.33,roughness:.27,transparent:true,opacity:.17,clearcoat:.5,clearcoatRoughness:.3});
+    cardGroup.add(new THREE.Mesh(frontGeo,frontMat));
+    const frontEdge=new THREE.LineSegments(new THREE.EdgesGeometry(frontGeo),new THREE.LineBasicMaterial({color:0x55dbff,transparent:true,opacity:.74}));
+    frontEdge.position.z=.055;cardGroup.add(frontEdge);
+    const innerGeo=new THREE.BoxGeometry(4.13,2.62,.025);
+    const innerEdge=new THREE.LineSegments(new THREE.EdgesGeometry(innerGeo),new THREE.LineBasicMaterial({color:0x9c8cff,transparent:true,opacity:.27}));
+    innerEdge.position.set(.04,-.015,.10);cardGroup.add(innerEdge);
+    const slotNodes=Array.from(stage.querySelectorAll(".calendar-holo-cell"));
+    const cellGeo=new THREE.BoxGeometry(.39,.235,.035);
+    const cellMat=new THREE.MeshStandardMaterial({color:0x2c5f94,metalness:.3,roughness:.27,transparent:true,opacity:.43,emissive:0x062d49,emissiveIntensity:.22});
+    cellMesh=new THREE.InstancedMesh(cellGeo,cellMat,slotNodes.length);const dummy=new THREE.Object3D();
+    slotNodes.forEach((node,i)=>{
+      const row=Number(node.dataset.row||0),col=Number(node.dataset.col||0);
+      dummy.position.set((col-3)*.535,.59-row*.34,.105);dummy.updateMatrix();cellMesh.setMatrixAt(i,dummy.matrix);
+      const color=node.classList.contains("is-overdue")?new THREE.Color(0x663b63):(node.classList.contains("has-deadline")?new THREE.Color(0x287fa5):(node.classList.contains("is-today")?new THREE.Color(0x5c519c):new THREE.Color(0x23466a)));
+      cellMesh.setColorAt(i,color);
+    });
+    cellMesh.instanceMatrix.needsUpdate=true;if(cellMesh.instanceColor)cellMesh.instanceColor.needsUpdate=true;cardGroup.add(cellMesh);
+    selectedPlate=new THREE.Mesh(new THREE.BoxGeometry(.43,.265,.04),new THREE.MeshBasicMaterial({color:0x65f5ff,transparent:true,opacity:.15}));
+    selectedPlate.position.z=.14;cardGroup.add(selectedPlate);
+    scanBeam=new THREE.Mesh(new THREE.PlaneGeometry(4.0,.045),new THREE.MeshBasicMaterial({color:0x79efff,transparent:true,opacity:.0,depthWrite:false}));
+    scanBeam.position.set(-1.9,0,.17);cardGroup.add(scanBeam);
+    particleCount=view.matchMedia("(max-width:650px)").matches?18:32;
+    const particlePositions=new Float32Array(particleCount*3);
+    for(let i=0;i<particleCount;i++){particlePositions[i*3]=(Math.random()-.5)*5;particlePositions[i*3+1]=(Math.random()-.5)*3.4;particlePositions[i*3+2]=-.15-Math.random()*.45;}
+    const pGeo=new THREE.BufferGeometry();pGeo.setAttribute("position",new THREE.BufferAttribute(particlePositions,3));
+    particles=new THREE.Points(pGeo,new THREE.PointsMaterial({color:0x76eaff,size:.025,transparent:true,opacity:.54,depthWrite:false}));scene.add(particles);
+    function moveSelected(button){if(!selectedPlate||!button)return;const row=Number(button.dataset.row||0),col=Number(button.dataset.col||0);selectedPlate.position.x=(col-3)*.535;selectedPlate.position.y=.59-row*.34;}
+    view.__nbCalendarSelect3D=moveSelected;
+    if(selected)moveSelected(selected);
+    if(finePointer&&!reduceMotion){
+      stage.addEventListener("pointermove",e=>{const r=stage.getBoundingClientRect();targetY=clamp(((e.clientX-r.left)/Math.max(1,r.width)-.5)*-.16,-.10,.10);targetX=clamp(((e.clientY-r.top)/Math.max(1,r.height)-.5)*.13,-.08,.08);});
+      stage.addEventListener("pointerleave",()=>{targetX=0;targetY=0;});
+    }
+    function resize(){if(!renderer)return;const w=Math.max(1,stage.clientWidth),h=Math.max(1,stage.clientHeight);renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
+    const resizeObserver=new view.ResizeObserver(resize);resizeObserver.observe(stage);view.addEventListener("resize",resize,{passive:true});
+    const intersection=new view.IntersectionObserver(entries=>{
+      visible=entries.some(e=>e.isIntersecting);
+      if(!visible&&raf){view.cancelAnimationFrame(raf);raf=0;}
+      if(visible&&!reduceMotion&&!raf)raf=view.requestAnimationFrame(render);
+      if(visible&&reduceMotion)render(view.performance.now());
+    },{threshold:.05});
+    intersection.observe(stage);
+    function render(now){
+      raf=0;if(!visible||!renderer)return;
+      const dt=last?Math.min(.05,(now-last)/1000):.016;last=now;
+      if(!reduceMotion){
+        tiltX+=(targetX-tiltX)*Math.min(1,dt*3.5);tiltY+=(targetY-tiltY)*Math.min(1,dt*3.5);
+        cardGroup.rotation.x=tiltX+Math.sin(now*.00035)*.018;cardGroup.rotation.y=tiltY+Math.sin(now*.00025)*.025;
+        cardGroup.position.y=Math.sin(now*.0008)*.035;backGroup.rotation.z=Math.sin(now*.00028)*.012;
+        const scanPhase=(now*.00018)%1;scanBeam.position.x=-1.9+scanPhase*3.8;scanBeam.material.opacity=.02+.18*Math.sin(Math.PI*scanPhase);
+        particles.rotation.z=Math.sin(now*.00014)*.025;
+        const a=particles.geometry.attributes.position;
+        for(let i=0;i<particleCount;i++){const k=i*3;a.array[k+1]+=.08*dt;if(a.array[k+1]>1.9)a.array[k+1]=-1.9;}
+        a.needsUpdate=true;selectedPlate.material.opacity=.10+Math.sin(now*.003)*.045;cellMesh.rotation.z=Math.sin(now*.00022)*.004;
+      }
+      renderer.render(scene,camera);
+      if(!reduceMotion&&visible)raf=view.requestAnimationFrame(render);
+    }
+    resize();
+    if(visible){if(reduceMotion)render(view.performance.now());else raf=view.requestAnimationFrame(render);}
+  } catch (_) {
+    if(renderer){try{renderer.dispose();}catch(__){}}
+    const fallback=stage.querySelector(".calendar-holo-stack");if(fallback)fallback.classList.add("is-webgl-fallback");
+  }
+})();
+</script>
+""", height=1, scrolling=False)
 
     st.markdown("""
     <div class="workspace-card">
