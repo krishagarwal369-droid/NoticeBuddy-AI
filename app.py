@@ -6,6 +6,7 @@ import easyocr
 import numpy as np
 import re
 import json
+from html import escape as html_escape
 import uuid
 import calendar as calendar_module
 from datetime import date, datetime, timedelta
@@ -1676,8 +1677,8 @@ elif page == "📊 Dashboard":
                     st.markdown(
                         f'<div class="deadline-row">'
                         f'<div class="deadline-date">{event_date.strftime("%d")}<small>{event_date.strftime("%b").upper()}</small></div>'
-                        f'<div class="deadline-detail"><b>{event["label"]}</b>'
-                        f'<small>{event["kind"]} · {event["source"]}</small></div>'
+                        f'<div class="deadline-detail"><b>{html_escape(event["label"])}</b>'
+                        f'<small>{html_escape(event["kind"])} · {html_escape(event["source"])}</small></div>'
                         f'<span class="deadline-pill {class_name}">{countdown}</span>'
                         f'</div>',
                         unsafe_allow_html=True
@@ -1809,8 +1810,8 @@ elif page == "📊 Dashboard":
             st.markdown(
                 f'<div class="deadline-row">'
                 f'<div class="deadline-date">{date_value.strftime("%d")}<small>{date_value.strftime("%b").upper()}</small></div>'
-                f'<div class="deadline-detail"><b>{event["label"]}</b>'
-                f'<small>{event["kind"]} · {event["source"]}</small></div>'
+                f'<div class="deadline-detail"><b>{html_escape(event["label"])}</b>'
+                f'<small>{html_escape(event["kind"])} · {html_escape(event["source"])}</small></div>'
                 f'<span class="deadline-pill normal">{countdown}</span></div>',
                 unsafe_allow_html=True
             )
