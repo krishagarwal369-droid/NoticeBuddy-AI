@@ -2525,6 +2525,255 @@ div[data-testid="stSidebar"] div[role="radiogroup"] label:has(input:checked) p {
     .nexus-bento-card, .process-node { transition:none !important; }
 }
 
+
+
+/* =========================================================
+   NEXUS 3.0 — DIMENSIONAL INTERFACE / VISUAL-ONLY OVERRIDES
+   ========================================================= */
+html { scroll-behavior: smooth; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: #070C1B; }
+::-webkit-scrollbar-thumb {
+    border: 2px solid #070C1B;
+    border-radius: 99px;
+    background: linear-gradient(180deg, #7D6CFF, #34C7EA);
+}
+::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #A493FF, #70F1FF); }
+
+.stApp::after {
+    position: fixed !important;
+    inset: -12% !important;
+    z-index: -1 !important;
+    width: auto !important;
+    height: auto !important;
+    border-radius: 0 !important;
+    pointer-events: none !important;
+    opacity: .9;
+    filter: blur(34px);
+    background:
+        radial-gradient(ellipse at 18% 14%, rgba(42, 121, 255, .10), transparent 24%),
+        radial-gradient(ellipse at 85% 23%, rgba(152, 63, 255, .11), transparent 28%),
+        radial-gradient(ellipse at 64% 82%, rgba(30, 226, 220, .055), transparent 29%);
+    animation: nexusAuroraDrift 25s ease-in-out infinite alternate;
+}
+@keyframes nexusAuroraDrift {
+    0% { transform: translate3d(-1%, -1%, 0) scale(1); }
+    50% { transform: translate3d(1%, 1.5%, 0) scale(1.025); }
+    100% { transform: translate3d(-.5%, 1%, 0) scale(1.01); }
+}
+
+/* Thin technical grid overlay and quiet glass finish for all page headers. */
+.page-heading {
+    isolation: isolate;
+    box-shadow: 0 16px 42px rgba(0,0,0,.12), inset 0 1px 0 rgba(255,255,255,.055);
+}
+.page-heading::before {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    pointer-events: none;
+    opacity: .7;
+    background:
+        linear-gradient(rgba(119,143,255,.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(119,143,255,.055) 1px, transparent 1px);
+    background-size: 24px 24px;
+    mask-image: linear-gradient(90deg, transparent, #000 70%);
+}
+.page-heading::after {
+    content: "";
+    position: absolute;
+    right: -28px;
+    top: -65px;
+    width: 190px;
+    height: 190px;
+    border: 1px solid rgba(106,167,255,.17);
+    border-radius: 50%;
+    box-shadow: 0 0 0 18px rgba(103,123,255,.025), 0 0 0 37px rgba(103,123,255,.018);
+    pointer-events: none;
+}
+.page-heading > * { position: relative; z-index: 1; }
+
+/* Bento cards get a slow energy trace along the rim. */
+.nexus-bento-card {
+    transform-style: preserve-3d;
+}
+.nexus-bento-card::after {
+    top: 0;
+    left: -75%;
+    right: auto;
+    width: 55%;
+    height: 1px;
+    opacity: .8;
+    background: linear-gradient(90deg, transparent, rgba(115,237,255,.78), rgba(165,137,255,.62), transparent);
+    animation: bentoEnergyTrace 9s ease-in-out infinite;
+}
+.nexus-bento-card:nth-child(2)::after { animation-delay: -2s; }
+.nexus-bento-card:nth-child(3)::after { animation-delay: -4s; }
+.nexus-bento-card:nth-child(4)::after { animation-delay: -6s; }
+@keyframes bentoEnergyTrace {
+    0%, 15% { left: -75%; opacity: 0; }
+    30% { opacity: .8; }
+    63%, 100% { left: 125%; opacity: 0; }
+}
+.nexus-bento-card:hover .bento-icon {
+    color: #EDFDFF;
+    border-color: rgba(113,239,255,.65);
+    box-shadow: 0 0 24px rgba(88,219,255,.18);
+    transform: translateY(-2px) rotate(-3deg);
+}
+.bento-icon { transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+.nexus-mini-terminal {
+    overflow: hidden;
+}
+.nexus-mini-terminal::after {
+    content: "";
+    display: block;
+    height: 2px;
+    width: 45%;
+    margin-top: 12px;
+    border-radius: 99px;
+    background: linear-gradient(90deg, #9B8CFF, #6CEBFF, transparent);
+    box-shadow: 0 0 14px rgba(108,235,255,.27);
+    animation: terminalSignal 5.5s ease-in-out infinite;
+}
+@keyframes terminalSignal {
+    0%, 100% { transform: translateX(-10%); opacity: .5; }
+    50% { transform: translateX(125%); opacity: 1; }
+}
+
+/* Upgrade all Streamlit tab bars, including Dashboard tabs. */
+div[data-testid="stTabs"] div[role="tablist"] {
+    gap: 7px;
+    padding: 6px;
+    border-radius: 16px;
+    border: 1px solid rgba(117,142,233,.19);
+    background: rgba(7,14,32,.66);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.025);
+}
+div[data-testid="stTabs"] button[role="tab"] {
+    position: relative;
+    border-radius: 11px;
+    padding: 10px 13px;
+    color: #92A7D5;
+    font-size: 12px;
+    font-weight: 750;
+    transition: background .2s ease, color .2s ease, box-shadow .2s ease;
+}
+div[data-testid="stTabs"] button[role="tab"]:hover {
+    color: #EAF3FF;
+    background: rgba(87,111,202,.12);
+}
+div[data-testid="stTabs"] button[role="tab"][aria-selected="true"] {
+    color: #F4F7FF;
+    background: linear-gradient(105deg, rgba(116,83,255,.23), rgba(41,159,226,.13));
+    box-shadow: inset 0 0 0 1px rgba(135,162,255,.23), 0 4px 14px rgba(0,0,0,.12);
+}
+div[data-testid="stTabs"] button[role="tab"][aria-selected="true"]::after {
+    content: "";
+    position: absolute;
+    left: 22%;
+    right: 22%;
+    bottom: 0;
+    height: 2px;
+    border-radius: 99px;
+    background: linear-gradient(90deg, #A18EFF, #64EAFF);
+    box-shadow: 0 0 10px rgba(100,234,255,.3);
+}
+
+/* Expanders become layered HUD accordions rather than plain boxes. */
+div[data-testid="stExpander"] {
+    overflow: hidden;
+    border: 1px solid rgba(118,143,230,.24) !important;
+    border-radius: 15px !important;
+    background: linear-gradient(115deg, rgba(15,26,54,.67), rgba(9,18,39,.63)) !important;
+    transition: border-color .22s ease, box-shadow .22s ease;
+}
+div[data-testid="stExpander"]:hover {
+    border-color: rgba(100,206,255,.39) !important;
+    box-shadow: 0 8px 22px rgba(0,0,0,.12);
+}
+div[data-testid="stExpander"] details summary {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+div[data-testid="stExpander"] details[open] summary {
+    border-bottom: 1px solid rgba(112,139,224,.16);
+    background: rgba(63,82,154,.07);
+}
+
+/* Selects, forms and uploaded files get matching borders and focus states. */
+div[data-baseweb="select"] > div {
+    border-color: rgba(109,133,218,.35) !important;
+    border-radius: 12px !important;
+    background: rgba(8,17,38,.83) !important;
+}
+div[data-baseweb="select"] > div:focus-within {
+    border-color: rgba(96,223,255,.72) !important;
+    box-shadow: 0 0 0 3px rgba(96,223,255,.065) !important;
+}
+div[data-testid="stForm"] {
+    padding: 15px;
+    border: 1px solid rgba(113,139,228,.20);
+    border-radius: 17px;
+    background: linear-gradient(135deg, rgba(17,29,60,.50), rgba(7,15,33,.46));
+}
+div[data-testid="stFileUploader"] section {
+    border-radius: 12px;
+}
+div[data-testid="stFileUploader"] button {
+    border: 1px solid rgba(108,151,255,.30) !important;
+    border-radius: 9px !important;
+}
+
+/* Result cards are a little more editorial and high-contrast. */
+div[class*="st-key-result-card-"] {
+    position: relative;
+    overflow: hidden;
+    margin: 10px 0;
+    padding: 5px 17px 12px;
+    border: 1px solid rgba(119,145,234,.23);
+    border-radius: 15px;
+    background: linear-gradient(105deg, rgba(19,31,65,.78), rgba(8,18,39,.78));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+}
+div[class*="st-key-result-card-"]::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 14px; bottom: 14px;
+    width: 2px;
+    border-radius: 99px;
+    background: linear-gradient(180deg, #A08BFF, #63E6FF);
+    box-shadow: 0 0 12px rgba(99,230,255,.23);
+}
+div[class*="st-key-result-card-"] h4 {
+    color: #E7F0FF !important;
+    letter-spacing: -.025em;
+}
+div[class*="st-key-result-card-"] p,
+div[class*="st-key-result-card-"] li {
+    color: #B5C4E4 !important;
+    line-height: 1.75;
+}
+
+/* More intentional focus rings for keyboard users. */
+button:focus-visible, input:focus-visible, textarea:focus-visible {
+    outline: 2px solid rgba(104,226,255,.8) !important;
+    outline-offset: 3px !important;
+}
+@media (max-width: 620px) {
+    div[data-testid="stTabs"] div[role="tablist"] { gap: 3px; padding: 4px; }
+    div[data-testid="stTabs"] button[role="tab"] { padding: 8px 9px; font-size: 10px; }
+    .page-heading { padding: 19px 17px; border-radius: 18px; }
+    .page-heading::after { width: 130px; height: 130px; top: -45px; right: -35px; }
+    div[data-testid="stForm"] { padding: 11px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .stApp::after, .nexus-bento-card::after, .nexus-mini-terminal::after {
+        animation: none !important;
+    }
+}
+
 </style>  
 
 """, unsafe_allow_html=True)
