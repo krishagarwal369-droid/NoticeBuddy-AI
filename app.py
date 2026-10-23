@@ -4044,6 +4044,51 @@ div[data-testid="stMainBlockContainer"] {
     }
 }
 
+
+/* =========================================================
+   BENTO CARD HEIGHT FIX — REMOVE UNUSED EMPTY SPACE
+   The large decoder card should size to its actual content,
+   not stretch across two rows with a huge blank lower area.
+   ========================================================= */
+.nexus-bento-grid {
+    grid-template-rows: auto auto !important;
+    grid-auto-rows: min-content !important;
+    align-items: start !important;
+}
+.nexus-bento-card {
+    height: auto !important;
+    min-height: 0 !important;
+    align-self: start !important;
+}
+.bento-ai {
+    grid-row: auto !important;
+    height: fit-content !important;
+    min-height: 0 !important;
+    align-self: start !important;
+}
+.bento-ai .nexus-mini-terminal {
+    margin-bottom: 0 !important;
+}
+@media (max-width: 950px) {
+    .nexus-bento-grid {
+        grid-template-rows: auto !important;
+        grid-auto-rows: min-content !important;
+        align-items: start !important;
+    }
+    .bento-ai {
+        grid-row: auto !important;
+        height: fit-content !important;
+        min-height: 0 !important;
+    }
+}
+@media (max-width: 620px) {
+    .nexus-bento-grid { grid-template-rows: auto !important; }
+    .nexus-bento-card, .bento-ai {
+        height: fit-content !important;
+        min-height: 0 !important;
+    }
+}
+
 </style>  
 
 """, unsafe_allow_html=True)
