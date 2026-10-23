@@ -1129,6 +1129,331 @@ div[class*="st-key-result-card-5"] h4::before { content: "i"; color: #94BAFF; }
     .calendar-cell span { font-size: 7px; }
 }
 
+
+
+/* ===== NEON NEXUS UI POLISH — visual-only layer ===== */
+:root {
+    --nb-violet: #8B5CFF;
+    --nb-blue: #4D8DFF;
+    --nb-cyan: #5CEBFF;
+    --nb-mint: #76FFD3;
+    --nb-glass: rgba(17, 27, 57, 0.74);
+    --nb-border: rgba(131, 151, 255, 0.25);
+}
+
+/* Soft ambient glows; all effects stay behind the app content. */
+.stApp {
+    background-image:
+        radial-gradient(ellipse at 12% 7%, rgba(84, 110, 255, 0.17), transparent 29%),
+        radial-gradient(ellipse at 91% 23%, rgba(157, 76, 255, 0.20), transparent 31%),
+        radial-gradient(ellipse at 55% 92%, rgba(0, 218, 255, 0.09), transparent 35%),
+        linear-gradient(rgba(102, 122, 255, 0.105) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(102, 122, 255, 0.105) 1px, transparent 1px),
+        linear-gradient(135deg, #070B19 0%, #10162F 48%, #0C1832 100%) !important;
+    background-size: auto, auto, auto, 42px 42px, 42px 42px, 100% 100%;
+    background-attachment: fixed;
+}
+
+/* Sharper, premium typography and a little more breathing room. */
+.block-container {
+    max-width: 1260px;
+    padding-top: 1.6rem;
+    padding-bottom: 3.5rem;
+}
+h1, h2, h3 {
+    letter-spacing: -0.035em;
+}
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-shadow: 0 0 18px rgba(139, 92, 255, .32);
+}
+.eyebrow::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--nb-mint);
+    box-shadow: 0 0 12px rgba(118, 255, 211, .8);
+}
+
+/* Hero becomes a luminous glass cockpit. */
+.hero {
+    border: 1px solid rgba(136, 133, 255, .48);
+    background:
+        radial-gradient(ellipse at 78% 12%, rgba(128, 78, 255, .27), transparent 37%),
+        radial-gradient(ellipse at 8% 90%, rgba(39, 189, 255, .15), transparent 43%),
+        linear-gradient(118deg, rgba(30, 26, 74, .96), rgba(14, 54, 91, .96) 58%, rgba(17, 23, 54, .97));
+    box-shadow:
+        0 25px 70px rgba(0, 0, 0, .28),
+        0 0 0 1px rgba(92, 235, 255, .05) inset,
+        0 0 42px rgba(103, 80, 255, .13);
+}
+.hero::before {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(115deg, rgba(92, 235, 255, .68), transparent 28%, rgba(139, 92, 255, .55) 62%, transparent 82%, rgba(118, 255, 211, .45));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: .72;
+    z-index: -1;
+}
+.hero-robot {
+    filter: drop-shadow(0 0 24px rgba(92, 235, 255, .18));
+    transition: transform .55s cubic-bezier(.2,.8,.2,1), filter .55s ease;
+}
+.hero-robot:hover {
+    transform: translateY(-7px) scale(1.025);
+    filter: drop-shadow(0 0 35px rgba(92, 235, 255, .32));
+}
+
+/* Main content panels: glossy edge, floating hover, cleaner spacing. */
+.workspace-card,
+.home-feature-card,
+.workflow-home-step,
+.panel,
+.metric {
+    position: relative;
+    isolation: isolate;
+    background:
+        linear-gradient(145deg, rgba(24, 35, 72, .91), rgba(10, 21, 43, .90)) !important;
+    border: 1px solid var(--nb-border) !important;
+    box-shadow:
+        0 14px 32px rgba(0, 0, 0, .15),
+        inset 0 1px 0 rgba(255, 255, 255, .045);
+    transition:
+        transform .28s cubic-bezier(.2,.8,.2,1),
+        border-color .28s ease,
+        box-shadow .28s ease,
+        background .28s ease;
+}
+.workspace-card::after,
+.home-feature-card::after,
+.workflow-home-step::after,
+.panel::after,
+.metric::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(118deg, rgba(92, 235, 255, .075), transparent 33%, rgba(139, 92, 255, .065) 78%, transparent);
+    opacity: .78;
+    z-index: -1;
+}
+.workspace-card:hover,
+.home-feature-card:hover,
+.workflow-home-step:hover,
+.panel:hover,
+.metric:hover {
+    transform: translateY(-4px);
+    border-color: rgba(92, 235, 255, .48) !important;
+    box-shadow:
+        0 20px 42px rgba(0, 0, 0, .25),
+        0 0 24px rgba(93, 116, 255, .12),
+        inset 0 1px 0 rgba(255, 255, 255, .07);
+}
+.home-feature-card {
+    overflow: hidden;
+}
+.feature-icon {
+    box-shadow: 0 0 22px rgba(139, 92, 255, .16);
+    transition: transform .28s ease, box-shadow .28s ease;
+}
+.home-feature-card:hover .feature-icon {
+    transform: translateY(-3px) rotate(-3deg);
+    box-shadow: 0 0 25px rgba(92, 235, 255, .18);
+}
+.workspace-kicker,
+.metric-label,
+.workflow-home-step span {
+    text-transform: uppercase;
+    letter-spacing: 1.25px;
+}
+.workspace-title {
+    text-shadow: 0 0 22px rgba(130, 137, 255, .09);
+}
+
+/* Top nav and sidebar feel like a product, not default widgets. */
+.top-nav {
+    background: rgba(9, 16, 36, .68);
+    border: 1px solid rgba(125, 148, 255, .21);
+    box-shadow: 0 12px 38px rgba(0, 0, 0, .16), inset 0 1px 0 rgba(255, 255, 255, .045);
+    backdrop-filter: blur(18px);
+}
+.top-nav-logo {
+    box-shadow: 0 0 22px rgba(108, 98, 255, .25), inset 0 1px 0 rgba(255, 255, 255, .16);
+}
+.nav-status {
+    border-color: rgba(118, 255, 211, .25) !important;
+    background: rgba(118, 255, 211, .055) !important;
+}
+.nav-status i {
+    box-shadow: 0 0 12px rgba(118, 255, 211, .85) !important;
+}
+div[data-testid="stSidebar"] {
+    background:
+        radial-gradient(ellipse at 10% 0%, rgba(104, 83, 255, .13), transparent 36%),
+        linear-gradient(180deg, #0B1022, #090E1D) !important;
+    border-right: 1px solid rgba(114, 139, 240, .24) !important;
+}
+div[data-testid="stSidebar"] div[role="radiogroup"] label {
+    border-radius: 12px;
+    padding: 8px 10px;
+    transition: background .2s ease, border-color .2s ease, transform .2s ease;
+}
+div[data-testid="stSidebar"] div[role="radiogroup"] label:hover {
+    background: rgba(93, 116, 255, .10);
+    transform: translateX(2px);
+}
+
+/* Buttons have a moving highlight on hover, without changing their actions. */
+.stButton > button,
+.stDownloadButton > button,
+div[data-testid="stFormSubmitButton"] > button {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    border: 1px solid rgba(179, 191, 255, .28) !important;
+    background: linear-gradient(105deg, #7B4EFF 0%, #536DFF 48%, #168DDE 100%) !important;
+    box-shadow: 0 8px 22px rgba(67, 74, 212, .19), inset 0 1px 0 rgba(255,255,255,.15);
+    transition: transform .22s ease, box-shadow .22s ease, filter .22s ease;
+}
+.stButton > button::before,
+.stDownloadButton > button::before,
+div[data-testid="stFormSubmitButton"] > button::before {
+    content: "";
+    position: absolute;
+    top: -60%;
+    left: -70%;
+    width: 45%;
+    height: 220%;
+    transform: rotate(24deg);
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.24), transparent);
+    transition: left .55s ease;
+    pointer-events: none;
+    z-index: -1;
+}
+.stButton > button:hover,
+.stDownloadButton > button:hover,
+div[data-testid="stFormSubmitButton"] > button:hover {
+    transform: translateY(-2px);
+    filter: saturate(1.12) brightness(1.06);
+    box-shadow: 0 12px 28px rgba(77, 109, 255, .26), 0 0 20px rgba(92, 235, 255, .08);
+}
+.stButton > button:hover::before,
+.stDownloadButton > button:hover::before,
+div[data-testid="stFormSubmitButton"] > button:hover::before {
+    left: 135%;
+}
+.stButton > button:active,
+.stDownloadButton > button:active {
+    transform: translateY(0) scale(.99);
+}
+
+/* Inputs glow only when focused; typography stays easy to read. */
+div[data-testid="stTextArea"] textarea,
+div[data-testid="stTextInput"] input,
+div[data-testid="stDateInput"] input,
+div[data-testid="stNumberInput"] input {
+    background: rgba(8, 17, 38, .90) !important;
+    border-color: rgba(104, 129, 218, .38) !important;
+    border-radius: 13px !important;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+div[data-testid="stTextArea"] textarea:focus,
+div[data-testid="stTextInput"] input:focus,
+div[data-testid="stDateInput"] input:focus,
+div[data-testid="stNumberInput"] input:focus {
+    border-color: rgba(92, 235, 255, .78) !important;
+    box-shadow: 0 0 0 3px rgba(92, 235, 255, .075), 0 0 22px rgba(92, 235, 255, .07) !important;
+}
+div[data-testid="stFileUploader"] {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(115deg, rgba(18, 28, 57, .92), rgba(12, 24, 47, .9)) !important;
+    border-color: rgba(108, 136, 255, .62) !important;
+}
+div[data-testid="stFileUploader"]:hover {
+    border-color: rgba(92, 235, 255, .8) !important;
+    box-shadow: 0 0 24px rgba(82, 118, 255, .10);
+}
+
+/* Small details that make the dashboard feel more polished. */
+.deadline-row {
+    background:
+        linear-gradient(105deg, rgba(29, 40, 82, .91), rgba(12, 25, 48, .93)) !important;
+    border-color: rgba(111, 140, 231, .28) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.025);
+    transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease;
+}
+.deadline-row:hover {
+    transform: translateX(3px);
+    border-color: rgba(92, 235, 255, .45) !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .12);
+}
+.calendar-cell {
+    transition: transform .2s ease, border-color .2s ease, background .2s ease;
+}
+.calendar-cell:not(.empty):hover {
+    transform: translateY(-2px);
+    border-color: rgba(92, 235, 255, .56);
+    background: rgba(50, 73, 135, .34);
+}
+.page-chip {
+    border-color: rgba(92, 235, 255, .24);
+    background: linear-gradient(100deg, rgba(94, 95, 255, .12), rgba(37, 184, 232, .07));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.045);
+}
+.site-footer {
+    background:
+        radial-gradient(ellipse at 90% 0%, rgba(101, 81, 255, .10), transparent 38%),
+        linear-gradient(135deg, rgba(19, 26, 60, .96), rgba(10, 25, 47, .97)) !important;
+    border-color: rgba(120, 144, 235, .34) !important;
+    box-shadow: 0 -8px 40px rgba(0, 0, 0, .10), inset 0 1px 0 rgba(255,255,255,.04);
+}
+.footer-link-pill {
+    border-color: rgba(99, 141, 230, .32) !important;
+    background: rgba(54, 79, 137, .15) !important;
+    transition: transform .2s ease, border-color .2s ease, background .2s ease;
+}
+.footer-link-pill:hover {
+    transform: translateY(-2px);
+    border-color: rgba(92, 235, 255, .52) !important;
+    background: rgba(54, 113, 166, .22) !important;
+}
+
+/* Keep motion polished but respect accessibility and small screens. */
+@keyframes neonBreath {
+    0%, 100% { box-shadow: 0 0 0 rgba(92, 235, 255, 0), inset 0 1px 0 rgba(255,255,255,.035); }
+    50% { box-shadow: 0 0 22px rgba(91, 106, 255, .08), inset 0 1px 0 rgba(255,255,255,.07); }
+}
+.hero,
+.top-nav {
+    animation: neonBreath 7s ease-in-out infinite;
+}
+@media (max-width: 800px) {
+    .block-container { padding-top: 1rem; }
+    .hero { padding: 23px 18px; border-radius: 20px; }
+    .top-nav { gap: 10px; }
+    .nav-journey { display: none; }
+    .workspace-card, .home-feature-card, .workflow-home-step { border-radius: 15px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .hero, .top-nav { animation: none !important; }
+    .hero-robot, .workspace-card, .home-feature-card, .workflow-home-step,
+    .panel, .metric, .deadline-row, .calendar-cell, .feature-icon {
+        transition: none !important;
+        transform: none !important;
+    }
+}
+
 </style>  
 
 """, unsafe_allow_html=True)
