@@ -5877,6 +5877,23 @@ def build_mascot_markup(fallback_url="", compact=False, state="idle"):
     """.strip()
 
 
+def build_mascot_status_html(state, title, description):
+    """Show the shared mascot only for an actual application status."""
+    state = state if state in {"thinking", "listening", "success", "error"} else "idle"
+    return f"""
+    <div class="nb-activity-mascot" role="status">
+      <div class="nb-activity-mascot-visual">
+        {build_mascot_markup(ROBOT_IMAGE_URL, compact=True, state=state)}
+        <img class="nb-mascot-fallback" src="{html_escape(ROBOT_IMAGE_URL, quote=True)}" alt="" aria-hidden="true">
+      </div>
+      <div class="nb-activity-mascot-copy">
+        <b>{html_escape(title)}</b>
+        <span>{html_escape(description)}</span>
+      </div>
+    </div>
+    """
+
+
 # ---------- OCR ----------
 @st.cache_resource
 def get_reader():
@@ -6377,15 +6394,7 @@ AI_ACTIVITY_HTML = f"""
     <strong>NoticeBuddy AI is working</strong>
     <span class="activity-live">LIVE SCAN</span>
   </div>
-  <div class="nb-activity-mascot" role="status" aria-label="NoticeBuddy is analyzing your notice">
-    <div class="nb-activity-mascot-visual">
-      {build_mascot_markup(ROBOT_IMAGE_URL, compact=True, state="thinking")}
-    </div>
-    <div class="nb-activity-mascot-copy">
-      <b>I'm reading the fine print.</b>
-      <span>Extracting details and preparing a clear explanation. This animation appears only while the real analysis request is running.</span>
-    </div>
-  </div>
+  {build_mascot_status_html('thinking', 'Reading your notice', 'Preparing a clear explanation from the notice you provided.')}
   <div class="scanner-stage" aria-hidden="true">
     <div class="scanner-doc">
       <span class="doc-line long"></span>
@@ -7264,16 +7273,49 @@ elif page == "🎙️ Voice Assistant":
             if not voice_recording:
                 st.warning("Pehle microphone se question record kar bhai.")
             else:
+                voice_status_slot = st.empty()
                 try:
-                    with st.spinner("Listening to your recording..."):
+                    with st.spinner("Transcribing your recording..."):
+                        voice_status_slot.markdown(
+                            build_mascot_status_html(
+                                "thinking",
+                                "Transcribing your recording",
+                                "Turning the audio you submitted into editable text."
+                            ),
+                            unsafe_allow_html=True
+                        )
                         transcript = transcribe_voice_question(voice_recording.getvalue(), speech_language)
                     if not transcript or transcript == "[unclear]":
+                        voice_status_slot.markdown(
+                            build_mascot_status_html(
+                                "error",
+                                "Voice unclear",
+                                "The transcription did not return a clear question. You can record again or type it."
+                            ),
+                            unsafe_allow_html=True
+                        )
                         st.warning("Voice clear nahi aayi. Thoda dheere aur clearly dobara record kar.")
                     else:
+                        voice_status_slot.markdown(
+                            build_mascot_status_html(
+                                "success",
+                                "Voice transcribed",
+                                "The recognized text is ready. Review or edit it before sending."
+                            ),
+                            unsafe_allow_html=True
+                        )
                         st.session_state["voice_draft_transcript"] = transcript
                         st.session_state["voice_question_editor"] = transcript
                         st.success("Voice transcribed! Send karne se pehle text edit kar sakta hai.")
                 except Exception as exc:
+                    voice_status_slot.markdown(
+                        build_mascot_status_html(
+                            "error",
+                            "Transcription unavailable",
+                            "The speech-to-text request failed. Check the microphone recording and try again."
+                        ),
+                        unsafe_allow_html=True
+                    )
                     st.error("Voice transcription abhi complete nahi ho saki.")
                     st.info("Google AI service busy ho sakti hai. Microphone permission aur GEMMA_API_KEY check karke retry kar.")
                     st.caption(f"Technical details: {exc}")
@@ -7329,9 +7371,26 @@ elif page == "🎙️ Voice Assistant":
             if not question_text.strip():
                 st.warning("Pehle question record ya type kar.")
             else:
+                voice_answer_slot = st.empty()
                 try:
                     with st.spinner("NoticeBuddy is preparing your answer..."):
+                        voice_answer_slot.markdown(
+                            build_mascot_status_html(
+                                "thinking",
+                                "Preparing your answer",
+                                "Using your question and the selected notice context, when available."
+                            ),
+                            unsafe_allow_html=True
+                        )
                         answer = answer_voice_question(question_text.strip(), reply_language, selected_record)
+                    voice_answer_slot.markdown(
+                        build_mascot_status_html(
+                            "success",
+                            "Answer ready",
+                            "The response is ready below. Check official details against the source notice."
+                        ),
+                        unsafe_allow_html=True
+                    )
                     entry = {
                         "id": uuid.uuid4().hex[:12],
                         "question": question_text.strip(),
@@ -7344,6 +7403,14 @@ elif page == "🎙️ Voice Assistant":
                     st.session_state["voice_draft_transcript"] = ""
                     st.success("Answer ready! Neeche se sun sakta hai.")
                 except Exception as exc:
+                    voice_answer_slot.markdown(
+                        build_mascot_status_html(
+                            "error",
+                            "AI reply unavailable",
+                            "The request failed. A source-line fallback may still be available below."
+                        ),
+                        unsafe_allow_html=True
+                    )
                     st.warning("AI reply service is temporarily unavailable.")
                     if selected_record:
                         fallback_answer = offline_answer_notice_question(
@@ -7485,7 +7552,14 @@ elif page == "✨ Analyzer":
                     explanation = explain_notice(text, language)
 
             except Exception as e:
-                activity_slot.empty()
+                activity_slot.markdown(
+                    build_mascot_status_html(
+                        "error",
+                        "AI service unavailable",
+                        "A limited rule-based breakdown will be shown below instead of an AI-generated explanation."
+                    ),
+                    unsafe_allow_html=True
+                )
                 st.warning("Google AI is temporarily unavailable. Showing a basic rule-based breakdown of the original notice so you can continue testing dates, history, saving and the calendar.")
                 st.caption(f"AI service details: {e}")
                 explanation = build_offline_explanation(text, language)
@@ -7494,7 +7568,24 @@ elif page == "✨ Analyzer":
                 render_saved_analysis(record)
 
             else:
-                activity_slot.empty()
+                if explanation == "No explanation was returned.":
+                    activity_slot.markdown(
+                        build_mascot_status_html(
+                            "error",
+                            "No explanation returned",
+                            "The model request finished, but no explanation was supplied. Review the message below."
+                        ),
+                        unsafe_allow_html=True
+                    )
+                else:
+                    activity_slot.markdown(
+                        build_mascot_status_html(
+                            "success",
+                            "Explanation ready",
+                            "NoticeBuddy returned an explanation. Review the details and verify them against the original notice."
+                        ),
+                        unsafe_allow_html=True
+                    )
                 record = add_analysis_record(text, explanation, language)
                 used_model = st.session_state.get("last_ai_model")
                 if used_model:
