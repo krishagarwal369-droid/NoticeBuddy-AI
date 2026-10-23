@@ -756,6 +756,182 @@ div[class*="st-key-result-card-5"] { border-left: 4px solid #7FA8FF !important; 
     }
 }
 
+
+/* Neon section dividers */
+h2::after {
+    content: "";
+    display: block;
+    width: 74px;
+    height: 3px;
+    margin-top: 9px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #9B6BFF, #4CCEFF, transparent);
+    box-shadow: 0 0 13px rgba(90, 128, 255, 0.38);
+}
+
+/* Small glassy icon badges on stat cards */
+.metric-icon {
+    position: absolute;
+    right: 17px;
+    top: 17px;
+    min-width: 35px;
+    height: 35px;
+    display: inline-grid;
+    place-items: center;
+    border-radius: 11px;
+    border: 1px solid rgba(164, 155, 255, 0.45);
+    background: linear-gradient(135deg, rgba(119, 83, 255, 0.28), rgba(37, 157, 255, 0.16));
+    color: #DCD9FF;
+    font-size: 18px;
+    box-shadow: 0 0 18px rgba(104, 92, 255, 0.16), inset 0 1px 0 rgba(255,255,255,0.12);
+}
+.metric-label { padding-right: 44px; }
+
+/* Animated workflow timeline */
+.workflow-timeline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 7px;
+    margin: 13px 2px 3px;
+}
+.workflow-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+    color: #AEBBE1;
+    font-size: 9px;
+    letter-spacing: 0.45px;
+    text-transform: uppercase;
+    animation: workflowGlow 4.4s ease-in-out infinite;
+}
+.workflow-step span {
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 1px solid rgba(117, 145, 255, 0.55);
+    background: rgba(54, 67, 129, 0.45);
+    color: #E3E7FF;
+    font-size: 9px;
+    font-weight: 900;
+}
+.workflow-step b { font-size: 9px; font-weight: 800; }
+.workflow-timeline > i {
+    flex: 1;
+    height: 1px;
+    min-width: 8px;
+    margin-top: -14px;
+    background: linear-gradient(90deg, rgba(129, 105, 255, 0.18), rgba(86, 205, 255, 0.72), rgba(129, 105, 255, 0.18));
+    background-size: 200% 100%;
+    animation: timelineRun 2.4s linear infinite;
+}
+.workflow-step:nth-of-type(1) { animation-delay: 0s; }
+.workflow-step:nth-of-type(3) { animation-delay: 1.1s; }
+.workflow-step:nth-of-type(5) { animation-delay: 2.2s; }
+.workflow-step:nth-of-type(7) { animation-delay: 3.3s; }
+@keyframes workflowGlow {
+    0%, 18%, 100% { color: #8999C6; }
+    9% { color: #E9F9FF; }
+}
+@keyframes timelineRun {
+    from { background-position: 100% 0; }
+    to { background-position: -100% 0; }
+}
+
+/* Result-card icon badges */
+div[class*="st-key-result-card-"] h4 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    line-height: 1.3;
+}
+div[class*="st-key-result-card-0"] h4::before,
+div[class*="st-key-result-card-1"] h4::before,
+div[class*="st-key-result-card-2"] h4::before,
+div[class*="st-key-result-card-3"] h4::before,
+div[class*="st-key-result-card-4"] h4::before,
+div[class*="st-key-result-card-5"] h4::before {
+    content: "✦";
+    display: inline-grid;
+    place-items: center;
+    width: 27px;
+    height: 27px;
+    flex: 0 0 27px;
+    border-radius: 9px;
+    border: 1px solid rgba(155, 142, 255, 0.4);
+    background: linear-gradient(145deg, rgba(132, 93, 255, 0.25), rgba(35, 177, 255, 0.12));
+    color: #97E9FF;
+    font-size: 14px;
+    box-shadow: 0 0 14px rgba(108, 93, 255, 0.12);
+}
+div[class*="st-key-result-card-1"] h4::before { content: "◷"; color: #7FEAFF; }
+div[class*="st-key-result-card-2"] h4::before { content: "◎"; color: #FFB5E3; }
+div[class*="st-key-result-card-3"] h4::before { content: "▤"; color: #72F1CE; }
+div[class*="st-key-result-card-4"] h4::before { content: "✓"; color: #FFD47C; }
+div[class*="st-key-result-card-5"] h4::before { content: "i"; color: #94BAFF; }
+
+/* Premium team footer */
+.site-footer {
+    margin-top: 24px;
+    padding: 22px 24px 17px;
+    border: 1px solid rgba(104, 126, 197, 0.42);
+    border-radius: 20px;
+    background: linear-gradient(120deg, rgba(14, 24, 50, 0.96), rgba(27, 22, 63, 0.93), rgba(10, 31, 53, 0.96));
+    box-shadow: 0 14px 35px rgba(0,0,0,0.17), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+.site-footer-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 18px;
+}
+.footer-brand { color: #F5F5FF; font-size: 18px; font-weight: 900; letter-spacing: -0.4px; }
+.footer-brand b { color: #7DE4FF; }
+.footer-tagline { margin-top: 6px; color: #AAB8DE; font-size: 12px; }
+.footer-maker {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 8px 12px; margin-top: 9px;
+    border: 1px solid rgba(147, 130, 255, 0.40);
+    border-radius: 999px; color: #E5E2FF;
+    background: rgba(107, 83, 255, 0.12); font-size: 11px; font-weight: 800;
+}
+.footer-links { display: flex; gap: 9px; flex-wrap: wrap; margin-top: 12px; }
+.site-footer a {
+    color: #B8EFFF !important;
+    text-decoration: none !important;
+    font-size: 11px;
+    font-weight: 700;
+}
+.footer-link-pill {
+    display: inline-flex; align-items: center;
+    padding: 8px 10px; border-radius: 10px;
+    border: 1px solid rgba(99, 127, 198, 0.40);
+    background: rgba(21, 39, 76, 0.56);
+}
+.site-footer a:hover { color: white !important; text-shadow: 0 0 12px rgba(85, 205, 255, 0.6); }
+.footer-team {
+    margin-top: 17px; padding-top: 14px;
+    border-top: 1px solid rgba(112, 132, 197, 0.26);
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 9px; color: #AAB7D9; font-size: 11px;
+}
+.footer-team strong { color: #E5E8FF; }
+.footer-legal { color: #8698C3; font-size: 10px; line-height: 1.6; margin-top: 12px; }
+@media (max-width: 540px) {
+    .site-footer { padding: 18px 15px 15px; }
+    .workflow-step { font-size: 8px; }
+    .workflow-timeline { gap: 4px; }
+    .workflow-step span { width: 23px; height: 23px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .workflow-step, .workflow-timeline > i { animation: none; }
+}
+
 </style>  
 
 """, unsafe_allow_html=True)
@@ -858,6 +1034,15 @@ AI_ACTIVITY_HTML = """
     <span></span><span></span><span></span><span></span><span></span>
     <span></span><span></span><span></span><span></span>
   </div>
+  <div class="workflow-timeline" aria-label="Notice analysis workflow">
+    <div class="workflow-step"><span>01</span><b>Read</b></div>
+    <i></i>
+    <div class="workflow-step"><span>02</span><b>Extract</b></div>
+    <i></i>
+    <div class="workflow-step"><span>03</span><b>Analyze</b></div>
+    <i></i>
+    <div class="workflow-step"><span>04</span><b>Summarize</b></div>
+  </div>
   <div class="ai-activity-caption">Reading key details · organizing dates · preparing your summary</div>
 </div>
 """
@@ -944,16 +1129,16 @@ else:
     # ---------- DASHBOARD ----------
     c1, c2, c3 = st.columns(3)
 
-    for col, title, value in [
-        (c1, "INPUT", "Text + Image"),
-        (c2, "POWERED BY", "Generative AI"),
-        (c3, "BUILT FOR", "Students 🎓")
+    for col, title, value, icon in [
+        (c1, "INPUT", "Text + Image", "📄"),
+        (c2, "POWERED BY", "Generative AI", "✦"),
+        (c3, "BUILT FOR", "Students 🎓", "◎")
     ]:
         with col:
             st.markdown(
-                f'<div class="metric"><div class="metric-label">'
-                f'{title}</div><div class="metric-value">{value}'
-                f'</div></div>',
+                f'<div class="metric"><span class="metric-icon">{icon}</span>'
+                f'<div class="metric-label">{title}</div>'
+                f'<div class="metric-value">{value}</div></div>',
                 unsafe_allow_html=True
             )
 
@@ -1057,10 +1242,33 @@ else:
                     mime="text/plain"
                 )
 
-st.markdown("---")
-st.markdown(
-    '<p class="small-note" style="text-align:center">'
-    'NoticeBuddy AI · Making important information easier to understand.'
-    '</p>',
-    unsafe_allow_html=True
-)
+st.markdown("""
+<footer class="site-footer">
+  <div class="site-footer-top">
+    <div>
+      <div class="footer-brand">NoticeBuddy <b>AI</b></div>
+      <div class="footer-tagline">Read clearly. Understand confidently. Take action.</div>
+      <div class="footer-maker">✦ Built by Kushagra Agarwal</div>
+    </div>
+    <div>
+      <div class="footer-tagline"><strong>TEAM & CONTACT</strong></div>
+      <div class="footer-links">
+        <a class="footer-link-pill" href="mailto:krishagarwal369@gmail.com">✉ Team email</a>
+        <a class="footer-link-pill" href="tel:+917906387966">☎ +91 79063 87966</a>
+        <a class="footer-link-pill" href="tel:+917060414455">☎ 7060414455</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-team">
+    <span><strong>Team</strong> · Kushagra Agarwal · Kartik Sharma · Kanishk Shakya</span>
+    <span>
+      <a href="https://github.com/krishagarwal369-droid" target="_blank" rel="noopener noreferrer">GitHub</a>
+      &nbsp;·&nbsp;
+      <a href="https://github.com/kartik45cloud" target="_blank" rel="noopener noreferrer">Kartik</a>
+      &nbsp;·&nbsp;
+      <a href="https://github.com/Kanishk095" target="_blank" rel="noopener noreferrer">Kanishk</a>
+    </span>
+  </div>
+  <div class="footer-legal">NoticeBuddy AI supports understanding, not official decision-making. Always confirm deadlines and requirements against the original official notice.</div>
+</footer>
+""", unsafe_allow_html=True)
