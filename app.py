@@ -6895,6 +6895,20 @@ def sync_action_task_completion(task_id):
             break
 
 
+# Keep the mobile dock and desktop sidebar on the same selected screen.
+def _sync_mobile_navigation():
+    st.session_state["main_navigation"] = st.session_state.get("mobile_navigation", "🏠 Home")
+
+
+def _sync_sidebar_navigation():
+    st.session_state["mobile_navigation"] = st.session_state.get("main_navigation", "🏠 Home")
+
+
+st.session_state.setdefault("main_navigation", "🏠 Home")
+# Sync here as well so programmatic routes (for example, Analyze buttons) update the dock.
+st.session_state["mobile_navigation"] = st.session_state.get("main_navigation", "🏠 Home")
+
+
 with st.sidebar:
     st.markdown("## 📄 NoticeBuddy AI")
     st.caption("Your personal notice assistant")
@@ -6902,7 +6916,8 @@ with st.sidebar:
     page = st.radio(
         "NAVIGATION",
         ["🏠 Home", "📊 Dashboard", "✅ Action Center", "🎙️ Voice Assistant", "✨ Analyzer", "📘 How it works", "ℹ️ About"],
-        key="main_navigation"
+        key="main_navigation",
+        on_change=_sync_sidebar_navigation
     )
     st.markdown(
         '<div class="sidebar-cta"><b style="color:#EEF1FF">Understand every notice.</b><br>'
@@ -6911,6 +6926,190 @@ with st.sidebar:
     )
     st.markdown("---")
     st.caption("Built by Kushagra Agarwal")
+
+
+# A second, compact navigation control is shown only on phones. It shares state
+# with the sidebar, so every existing route and feature remains available.
+st.radio(
+    "Mobile navigation",
+    ["🏠 Home", "📊 Dashboard", "✅ Action Center", "🎙️ Voice Assistant", "✨ Analyzer", "📘 How it works", "ℹ️ About"],
+    key="mobile_navigation",
+    horizontal=True,
+    label_visibility="collapsed",
+    on_change=_sync_mobile_navigation
+)
+
+st.markdown("""
+<style>
+/* Phone-first app shell; desktop styling and existing feature layout stay intact. */
+.st-key-mobile_navigation { display: none !important; }
+
+@media (max-width: 760px) {
+    section[data-testid="stSidebar"],
+    div[data-testid="stSidebar"] {
+        display: none !important;
+    }
+    button[data-testid="collapsedControl"],
+    [data-testid="stSidebarCollapsedControl"] {
+        display: none !important;
+    }
+    .st-key-mobile_navigation {
+        display: block !important;
+        position: fixed !important;
+        left: 9px !important;
+        right: 9px !important;
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 8px) !important;
+        width: auto !important;
+        z-index: 1000000 !important;
+        padding: 8px 7px 7px !important;
+        margin: 0 !important;
+        border: 1px solid rgba(135, 154, 255, .28) !important;
+        border-radius: 18px !important;
+        background: rgba(7, 13, 31, .90) !important;
+        box-shadow: 0 12px 34px rgba(0,0,0,.38), 0 0 26px rgba(86,100,255,.15) !important;
+        backdrop-filter: blur(22px) saturate(145%) !important;
+        -webkit-backdrop-filter: blur(22px) saturate(145%) !important;
+        overflow: hidden !important;
+    }
+    .st-key-mobile_navigation [data-testid="stWidgetLabel"] {
+        display: none !important;
+    }
+    .st-key-mobile_navigation [role="radiogroup"] {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        align-items: stretch !important;
+        gap: 4px !important;
+        width: 100% !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        scrollbar-width: none !important;
+        padding: 1px !important;
+    }
+    .st-key-mobile_navigation [role="radiogroup"]::-webkit-scrollbar {
+        display: none !important;
+    }
+    .st-key-mobile_navigation [role="radiogroup"] > label {
+        flex: 0 0 auto !important;
+        min-width: 68px !important;
+        max-width: 91px !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 0 !important;
+        margin: 0 !important;
+        padding: 8px 7px !important;
+        border-radius: 12px !important;
+        border: 1px solid transparent !important;
+        background: rgba(255,255,255,.025) !important;
+        cursor: pointer !important;
+    }
+    .st-key-mobile_navigation [role="radiogroup"] > label:has(input:checked) {
+        background: linear-gradient(135deg, rgba(126,87,255,.28), rgba(31,174,232,.17)) !important;
+        border-color: rgba(115,205,255,.42) !important;
+        box-shadow: inset 0 0 0 1px rgba(255,255,255,.035), 0 0 16px rgba(81,112,255,.12) !important;
+    }
+    .st-key-mobile_navigation [role="radiogroup"] > label > div:first-child {
+        margin-right: 0 !important;
+    }
+    .st-key-mobile_navigation [role="radiogroup"] > label p {
+        font-size: 10px !important;
+        line-height: 1.15 !important;
+        text-align: center !important;
+        white-space: normal !important;
+        margin: 0 !important;
+    }
+    .block-container {
+        max-width: 100% !important;
+        padding-top: .45rem !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+        padding-bottom: calc(112px + env(safe-area-inset-bottom, 0px)) !important;
+    }
+    .top-nav {
+        min-height: 56px !important;
+        margin-bottom: 13px !important;
+        padding: 9px 12px !important;
+        border-radius: 16px !important;
+    }
+    .top-nav-logo {
+        width: 37px !important;
+        height: 37px !important;
+        flex: 0 0 37px !important;
+        border-radius: 12px !important;
+    }
+    .top-nav-wordmark {
+        font-size: 13px !important;
+    }
+    .top-nav-wordmark small {
+        font-size: 7px !important;
+        letter-spacing: 1px !important;
+    }
+    .top-nav-right {
+        display: none !important;
+    }
+    .hero {
+        padding: 21px 18px !important;
+        margin-bottom: 15px !important;
+        border-radius: 20px !important;
+    }
+    .hero h1 {
+        font-size: clamp(29px, 8vw, 38px) !important;
+        line-height: 1.08 !important;
+    }
+    .hero p {
+        font-size: 14px !important;
+        line-height: 1.6 !important;
+    }
+    .hero-robot-wrap {
+        display: none !important;
+    }
+    .nexus-bento-grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 12px !important;
+    }
+    .nexus-bento-card {
+        min-width: 0 !important;
+        border-radius: 18px !important;
+        padding: 18px !important;
+    }
+    .stButton > button,
+    .stDownloadButton > button {
+        min-height: 48px !important;
+        border-radius: 13px !important;
+        touch-action: manipulation;
+    }
+    .stTextInput input,
+    .stTextArea textarea,
+    .stNumberInput input {
+        font-size: 16px !important;
+    }
+    [data-testid="stFileUploader"] {
+        max-width: 100% !important;
+    }
+    [data-testid="stDataFrame"],
+    [data-testid="stTable"] {
+        max-width: 100% !important;
+        overflow-x: auto !important;
+    }
+}
+@media (max-width: 390px) {
+    .st-key-mobile_navigation [role="radiogroup"] > label {
+        min-width: 64px !important;
+        padding: 8px 5px !important;
+    }
+    .top-nav-wordmark small { display: none !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .st-key-mobile_navigation *,
+    .top-nav *,
+    .nexus-bento-card {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
 
 
 # ---------- PREMIUM TOP NAVBAR ----------
