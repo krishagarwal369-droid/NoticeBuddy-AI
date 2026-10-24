@@ -7284,6 +7284,218 @@ if page == "🏠 Home":
     radar_home_markup = radar_home_markup.replace("        __DEADLINE_RADAR_HOLO_CALENDAR__", radar_calendar_markup)
     st.markdown(radar_home_markup, unsafe_allow_html=True)
 
+    # ---------- HOW IT WORKS: ISOLATED LIVING 3D WORKFLOW ----------
+    # Visual-only enhancement: keep the existing four cards and their content intact.
+    components.html(r"""
+<script>
+(() => {
+  let view, doc;
+  try { view = window.parent; doc = view.document; } catch (_) { return; }
+  const rail = doc.querySelector(".nexus-process-rail");
+  if (!rail || doc.getElementById("nb-workflow-living-3d-style")) return;
+
+  const style = doc.createElement("style");
+  style.id = "nb-workflow-living-3d-style";
+  style.textContent = `
+    .nexus-process-rail {
+      perspective: 1120px;
+      transform-style: preserve-3d;
+    }
+    .nexus-process-rail .process-node {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      backface-visibility: hidden;
+      translate: 0 0;
+      animation: nbWorkflowFloat 6.4s ease-in-out infinite,
+                 nbWorkflowAura 4.8s ease-in-out infinite;
+      will-change: translate, filter;
+    }
+    .nexus-process-rail .process-node > * {
+      position: relative;
+      z-index: 2;
+    }
+    .nexus-process-rail .process-node::before {
+      content: "";
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      background: linear-gradient(112deg, transparent 18%, rgba(80,205,255,.13) 43%, rgba(135,106,255,.12) 54%, transparent 76%);
+      transform: translateX(-125%);
+      animation: nbWorkflowSheen 7.2s ease-in-out infinite;
+    }
+    .nexus-process-rail .process-node::after {
+      content: "";
+      position: absolute;
+      z-index: 1;
+      inset: 1px;
+      border: 1px solid rgba(103,205,255,.16);
+      border-radius: inherit;
+      opacity: .42;
+      pointer-events: none;
+      animation: nbWorkflowRim 4.8s ease-in-out infinite;
+    }
+    .nexus-process-rail .process-node:nth-child(1) { animation-delay: 0s, 0s; }
+    .nexus-process-rail .process-node:nth-child(3) { animation-delay: -.55s, -1.15s; }
+    .nexus-process-rail .process-node:nth-child(5) { animation-delay: -1.1s, -2.3s; }
+    .nexus-process-rail .process-node:nth-child(7) { animation-delay: -1.65s, -3.45s; }
+    .nexus-process-rail .process-node:nth-child(3)::before { animation-delay: -.9s; }
+    .nexus-process-rail .process-node:nth-child(5)::before { animation-delay: -1.8s; }
+    .nexus-process-rail .process-node:nth-child(7)::before { animation-delay: -2.7s; }
+
+    .nexus-process-rail .process-node:hover,
+    .nexus-process-rail .process-node.nb-process-active {
+      border-color: rgba(82,213,255,.72) !important;
+      filter: drop-shadow(0 9px 18px rgba(40,135,235,.13));
+    }
+    .nexus-process-rail .process-node-top i {
+      transition: color .28s ease, border-color .28s ease, background .28s ease, box-shadow .28s ease;
+    }
+    .nexus-process-rail .process-node:nth-child(1) .process-node-top i {
+      animation: nbWorkflowArrow 2.8s ease-in-out infinite;
+    }
+    .nexus-process-rail .process-node:nth-child(3) .process-node-top i {
+      animation: nbWorkflowScan 3.6s ease-in-out infinite;
+    }
+    .nexus-process-rail .process-node:nth-child(5) .process-node-top i {
+      animation: nbWorkflowPulse 3.8s ease-in-out infinite;
+    }
+    .nexus-process-rail .process-node:nth-child(7) .process-node-top i {
+      animation: nbWorkflowCheck 4.8s ease-in-out infinite;
+    }
+
+    .nexus-process-rail .process-connector {
+      position: relative;
+      height: 2px;
+      background-image: linear-gradient(90deg, rgba(112,133,214,.20), rgba(75,211,255,.86), rgba(137,105,255,.62), rgba(112,133,214,.20));
+      background-size: 220% 100%;
+      animation: nbWorkflowEnergyLine 3.2s linear infinite;
+      box-shadow: 0 0 8px rgba(65,178,255,.08);
+    }
+    .nexus-process-rail .process-connector span {
+      z-index: 2;
+      width: 5px;
+      height: 5px;
+      top: -1.5px;
+      background: #BDF8FF;
+      box-shadow: 0 0 7px rgba(80,225,255,.9), 0 0 15px rgba(109,120,255,.45);
+      animation: connectorTravel 2.4s ease-in-out infinite;
+    }
+    .nexus-process-rail .process-connector::after {
+      content: "";
+      position: absolute;
+      z-index: 1;
+      top: -1px;
+      left: 0;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #A79BFF;
+      box-shadow: 0 0 8px rgba(156,130,255,.82);
+      pointer-events: none;
+      animation: nbWorkflowTrail 3.1s ease-in-out infinite;
+    }
+    .nexus-process-rail .process-connector:nth-child(4)::after { animation-delay: -1.03s; }
+    .nexus-process-rail .process-connector:nth-child(6)::after { animation-delay: -2.06s; }
+    .nexus-process-rail .process-connector:nth-child(4) { animation-delay: -.65s; }
+    .nexus-process-rail .process-connector:nth-child(6) { animation-delay: -1.3s; }
+
+    @keyframes nbWorkflowFloat {
+      0%, 100% { translate: 0 0; }
+      50% { translate: 0 -5px; }
+    }
+    @keyframes nbWorkflowAura {
+      0%, 100% { filter: drop-shadow(0 5px 10px rgba(48,100,195,.06)); }
+      12%, 25% { filter: drop-shadow(0 8px 16px rgba(60,192,255,.19)); }
+    }
+    @keyframes nbWorkflowSheen {
+      0%, 22% { transform: translateX(-125%); opacity: .15; }
+      48% { opacity: .8; }
+      72%, 100% { transform: translateX(125%); opacity: .1; }
+    }
+    @keyframes nbWorkflowRim {
+      0%, 100% { opacity: .28; border-color: rgba(103,205,255,.13); }
+      14%, 27% { opacity: .88; border-color: rgba(103,225,255,.48); }
+    }
+    @keyframes nbWorkflowArrow {
+      0%, 100% { translate: 0 0; }
+      50% { translate: 2px -1px; }
+    }
+    @keyframes nbWorkflowScan {
+      0%, 100% { box-shadow: 0 0 0 rgba(76,204,255,0); }
+      45%, 60% { box-shadow: 0 0 13px rgba(76,204,255,.2); }
+    }
+    @keyframes nbWorkflowPulse {
+      0%, 100% { box-shadow: 0 0 0 rgba(118,105,255,0); }
+      45%, 62% { box-shadow: 0 0 15px rgba(118,105,255,.24); }
+    }
+    @keyframes nbWorkflowCheck {
+      0%, 100% { color: #A2EFFF; text-shadow: 0 0 0 rgba(90,222,255,0); }
+      12%, 25% { color: #E8FCFF; text-shadow: 0 0 10px rgba(90,222,255,.75); }
+    }
+    @keyframes nbWorkflowEnergyLine {
+      from { background-position: 100% 0; }
+      to { background-position: -120% 0; }
+    }
+    @keyframes nbWorkflowTrail {
+      0% { left: 0; opacity: .15; transform: scale(.7); }
+      48% { opacity: 1; transform: scale(1.2); }
+      100% { left: calc(100% - 4px); opacity: .18; transform: scale(.7); }
+    }
+
+    @media (max-width: 950px) {
+      .nexus-process-rail .process-node { animation-duration: 7.2s, 5.4s; }
+      .nexus-process-rail .process-connector { background-size: 180% 100%; }
+    }
+    @media (max-width: 620px) {
+      .nexus-process-rail .process-node { animation-duration: 8s, 6s; }
+      .nexus-process-rail .process-node::before { opacity: .55; }
+      .nexus-process-rail .process-connector {
+        background-image: linear-gradient(180deg, rgba(112,133,214,.18), rgba(75,211,255,.86), rgba(137,105,255,.62), rgba(112,133,214,.18));
+        background-size: 100% 220%;
+        animation-name: nbWorkflowEnergyLineVertical;
+      }
+      .nexus-process-rail .process-connector::after {
+        left: -1px;
+        top: 0;
+        animation-name: nbWorkflowTrailVertical;
+      }
+      .nexus-process-rail .process-connector span { left: -2px; }
+      @keyframes nbWorkflowEnergyLineVertical {
+        from { background-position: 0 100%; }
+        to { background-position: 0 -120%; }
+      }
+      @keyframes nbWorkflowTrailVertical {
+        0% { top: 0; opacity: .15; transform: scale(.7); }
+        48% { opacity: 1; transform: scale(1.2); }
+        100% { top: calc(100% - 4px); opacity: .18; transform: scale(.7); }
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .nexus-process-rail .process-node,
+      .nexus-process-rail .process-node::before,
+      .nexus-process-rail .process-node::after,
+      .nexus-process-rail .process-node-top i,
+      .nexus-process-rail .process-connector,
+      .nexus-process-rail .process-connector span,
+      .nexus-process-rail .process-connector::after {
+        animation: none !important;
+        transition: none !important;
+        will-change: auto !important;
+      }
+      .nexus-process-rail .process-node { translate: none !important; filter: none !important; }
+      .nexus-process-rail .process-node::before { display: none; }
+      .nexus-process-rail .process-connector { background-size: 100% 100% !important; }
+    }
+  `;
+  doc.head.appendChild(style);
+})();
+</script>
+""", height=0, scrolling=False)
+
     # ---------- HOME CORE ENERGY PORTAL (isolated Three.js enhancement) ----------
     components.html(r"""
 <script type="module">
