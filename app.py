@@ -6086,6 +6086,99 @@ hr {
     .nb-docs-static-scene { transition:none!important; }
 }
 
+
+/* Deadline Radar v3 — obvious depth even when WebGL is unavailable.
+   Fully scoped to card 03; all other cards and page layout stay untouched. */
+.bento-deadline .bento-calendar-preview {
+    border:1px solid rgba(103,231,255,.58) !important;
+    background:
+      radial-gradient(ellipse at 50% 0%,rgba(83,211,255,.19),transparent 52%),
+      linear-gradient(145deg,rgba(9,27,57,.97),rgba(7,15,38,.98)) !important;
+    box-shadow:
+      0 0 0 1px rgba(116,115,255,.12),
+      0 18px 36px rgba(0,0,0,.34),
+      0 0 30px rgba(55,199,255,.16),
+      inset 0 1px 0 rgba(255,255,255,.16) !important;
+    transform:perspective(1050px) rotateX(2.2deg) rotateY(-1.2deg);
+    transform-style:preserve-3d;
+}
+.bento-deadline .bento-calendar-preview::before {
+    content:"";
+    position:absolute;
+    z-index:0;
+    left:8%; right:8%; top:-15px;
+    height:24px;
+    border:1px solid rgba(109,230,255,.62);
+    border-bottom-color:rgba(150,116,255,.64);
+    border-radius:50%;
+    transform:perspective(700px) rotateX(66deg) translateZ(-18px);
+    box-shadow:0 0 15px rgba(58,208,255,.20),inset 0 0 13px rgba(136,100,255,.12);
+    pointer-events:none;
+    animation:nbRadarOrbitDepth 5.8s ease-in-out infinite;
+}
+.bento-deadline .bento-calendar-preview::after {
+    content:"";
+    position:absolute;
+    z-index:3;
+    left:6px; right:6px; top:6px; bottom:30px;
+    border:1px solid rgba(103,224,255,.16);
+    border-radius:12px;
+    background:linear-gradient(112deg,transparent 25%,rgba(72,224,255,.015) 38%,rgba(139,113,255,.13) 49%,rgba(100,228,255,.09) 54%,transparent 68%);
+    background-size:230% 100%;
+    background-position:140% 0;
+    box-shadow:inset 0 0 18px rgba(86,162,255,.055);
+    pointer-events:none;
+    animation:nbRadarFrontSweep 6.8s ease-in-out infinite;
+}
+.bento-deadline .calendar-holo-webgl { z-index:1 !important; opacity:1 !important; mix-blend-mode:screen; }
+.bento-deadline .calendar-holo-stack {
+    inset:4px 8px 5px 3px !important;
+    border-width:1.5px !important;
+    transform:translateZ(-24px) rotateX(5deg) rotateY(-5deg) !important;
+    box-shadow:0 0 0 7px rgba(80,122,255,.06),0 0 31px rgba(58,211,255,.19),inset 0 0 18px rgba(133,105,255,.10) !important;
+}
+.bento-deadline .calendar-holo-ui {
+    border-color:rgba(105,225,255,.54) !important;
+    background:linear-gradient(145deg,rgba(6,20,44,.76),rgba(8,17,40,.82)) !important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.15),inset 0 0 28px rgba(70,160,255,.10),0 19px 28px rgba(0,0,0,.22),0 0 22px rgba(68,209,255,.09) !important;
+    transform:translateZ(22px) !important;
+    backdrop-filter:blur(3px);
+}
+.bento-deadline .calendar-preview-numbers button.calendar-holo-date {
+    border-color:rgba(102,170,235,.23) !important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 4px 9px rgba(0,0,0,.18) !important;
+}
+.bento-deadline .calendar-preview-numbers button.calendar-holo-date.has-deadline:not(.is-selected) {
+    border-color:rgba(83,236,255,.72) !important;
+    box-shadow:inset 0 0 13px rgba(67,218,255,.18),0 0 13px rgba(61,203,255,.16) !important;
+}
+.bento-deadline .calendar-preview-numbers button.calendar-holo-date.is-selected {
+    transform:translateZ(12px) scale(1.045) !important;
+    box-shadow:0 0 0 2px rgba(109,238,255,.19),0 0 23px rgba(84,226,255,.52),inset 0 1px 0 rgba(255,255,255,.98) !important;
+}
+.bento-deadline .calendar-preview-head span {
+    color:#D6FCFF !important;
+    border-color:rgba(97,235,255,.7) !important;
+    box-shadow:0 0 17px rgba(58,218,255,.22),inset 0 0 10px rgba(58,218,255,.12) !important;
+}
+@keyframes nbRadarOrbitDepth {
+    0%,100% { opacity:.58; transform:perspective(700px) rotateX(66deg) rotateZ(-5deg) translateZ(-18px) scale(.98); }
+    50% { opacity:1; transform:perspective(700px) rotateX(66deg) rotateZ(4deg) translateZ(-18px) scale(1.035); }
+}
+@keyframes nbRadarFrontSweep {
+    0%,16% { background-position:140% 0; opacity:.42; }
+    58% { background-position:-120% 0; opacity:.95; }
+    72%,100% { background-position:-120% 0; opacity:.38; }
+}
+@media(max-width:650px) {
+    .bento-deadline .bento-calendar-preview { transform:none; }
+    .bento-deadline .bento-calendar-preview::before { left:12%; right:12%; }
+}
+@media(prefers-reduced-motion:reduce) {
+    .bento-deadline .bento-calendar-preview::before,
+    .bento-deadline .bento-calendar-preview::after { animation:none !important; }
+}
+
 </style>  
 
 """, unsafe_allow_html=True)
@@ -7285,7 +7378,7 @@ if page == "🏠 Home":
             <div class="calendar-holo-webgl" aria-hidden="true"><canvas class="calendar-holo-canvas"></canvas></div>
             <div class="calendar-holo-stack" aria-hidden="true"></div>
             <div class="calendar-holo-ui">
-              <div class="calendar-preview-head"><b>{html_escape(radar_month_name)} {radar_year}</b><span>LIVE RADAR</span></div>
+              <div class="calendar-preview-head"><b>{html_escape(radar_month_name)} {radar_year}</b><span>LIVE 3D RADAR</span></div>
               <div class="calendar-preview-days"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
               <div class="calendar-preview-numbers">{radar_grid_html}</div>
               <div class="calendar-holo-legend"><span><i></i> RECORDED DATE</span><span><i class="legend-overdue"></i> OVERDUE</span><span><i class="legend-today"></i> TODAY</span></div>
