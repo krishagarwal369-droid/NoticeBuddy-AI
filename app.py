@@ -7463,7 +7463,11 @@ if page == "🏠 Home":
         top: 0;
         animation-name: nbWorkflowTrailVertical;
       }
-      .nexus-process-rail .process-connector span { left: -2px; }
+      .nexus-process-rail .process-connector span {
+        top: 0;
+        left: -2px;
+        animation: connectorTravelVertical 2.4s ease-in-out infinite;
+      }
       @keyframes nbWorkflowEnergyLineVertical {
         from { background-position: 0 100%; }
         to { background-position: 0 -120%; }
