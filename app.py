@@ -7844,7 +7844,33 @@ if page == "🏠 Home":
 (async () => {
   let doc, view;
   try { view = window.parent; doc = view.document; } catch (_) { return; }
-  const stage = doc.querySelector(".bento-deadline .calendar-holo-stage");
+  // Streamlit can mount the Markdown card a moment after this component iframe.
+  // Wait briefly for the real card instead of silently abandoning the 3D setup.
+  let stage = doc.querySelector(".bento-deadline .calendar-holo-stage");
+  if (!stage) {
+    await new Promise(resolve => {
+      let attempts = 0, timer = 0, settled = false;
+      const observer = new view.MutationObserver(() => {
+        const found = doc.querySelector(".bento-deadline .calendar-holo-stage");
+        if (found) { stage = found; finish(); }
+      });
+      const finish = () => {
+        if (settled) return;
+        settled = true;
+        observer.disconnect();
+        if (timer) view.clearTimeout(timer);
+        resolve();
+      };
+      const poll = () => {
+        const found = doc.querySelector(".bento-deadline .calendar-holo-stage");
+        if (found) { stage = found; finish(); return; }
+        if (++attempts >= 40) { finish(); return; }
+        timer = view.setTimeout(poll, 100);
+      };
+      observer.observe(doc.documentElement, {childList:true, subtree:true});
+      timer = view.setTimeout(poll, 0);
+    });
+  }
   if (!stage || stage.dataset.holoBound === "1") return;
   stage.dataset.holoBound = "1";
   const preview = stage.closest(".bento-calendar-preview");
