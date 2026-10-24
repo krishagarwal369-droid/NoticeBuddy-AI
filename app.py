@@ -7284,6 +7284,249 @@ if page == "🏠 Home":
     radar_home_markup = radar_home_markup.replace("        __DEADLINE_RADAR_HOLO_CALENDAR__", radar_calendar_markup)
     st.markdown(radar_home_markup, unsafe_allow_html=True)
 
+    # ---------- HOME CORE ENERGY PORTAL (isolated Three.js enhancement) ----------
+    components.html(r"""
+<script type="module">
+(async () => {
+  let doc, view;
+  try { view = window.parent; doc = view.document; } catch (_) { return; }
+  const grid = doc.querySelector(".nexus-bento-grid");
+  if (!grid || grid.dataset.nbCorePortal === "ready") return;
+  grid.dataset.nbCorePortal = "ready";
+
+  const style = doc.createElement("style");
+  style.id = "nb-core-energy-portal-style";
+  style.textContent = [
+    ".nexus-bento-grid.nb-core-portal-host{position:relative!important;isolation:isolate}",
+    ".nexus-bento-grid.nb-core-portal-host>.nb-core-portal-layer{position:absolute;top:-5%;right:-4%;width:61%;height:111%;z-index:0;overflow:hidden;pointer-events:none;opacity:.62;mix-blend-mode:screen;perspective:1200px;contain:layout paint}",
+    ".nb-core-portal-layer canvas{display:block;width:100%;height:100%;opacity:.98}",
+    ".nexus-bento-grid.nb-core-portal-host>.nexus-bento-card{position:relative;z-index:1}",
+    ".nb-core-portal-fallback{position:absolute;left:50%;top:48%;width:min(82%,390px);aspect-ratio:.76;transform:translate(-50%,-50%) rotateX(9deg) rotateY(-12deg);transform-style:preserve-3d}",
+    ".nb-core-portal-fallback i{position:absolute;inset:5%;border:2px solid rgba(78,221,255,.76);border-radius:50%;transform:rotateY(32deg) rotateX(8deg);box-shadow:0 0 12px rgba(62,218,255,.43),inset 0 0 12px rgba(62,218,255,.12);animation:nbCoreFallbackA 15s linear infinite}",
+    ".nb-core-portal-fallback i:nth-child(2){inset:0 12%;border-color:rgba(156,110,255,.74);transform:rotateY(-42deg) rotateX(15deg);animation:nbCoreFallbackB 21s linear infinite}",
+    ".nb-core-portal-fallback i:nth-child(3){inset:14% 18%;border-width:7px;border-color:rgba(94,122,160,.74);box-shadow:0 0 0 2px rgba(208,230,255,.1),0 0 22px rgba(117,95,255,.2);transform:rotateY(14deg);animation:nbCoreFallbackA 27s linear infinite reverse}",
+    ".nb-core-portal-fallback i:nth-child(4){inset:23% 27%;border-width:2px;border-style:dashed;border-color:rgba(92,228,255,.84);animation:nbCoreFallbackB 11s linear infinite reverse}",
+    ".nb-core-portal-fallback:after{content:'';position:absolute;inset:23%;border-radius:50%;background:radial-gradient(ellipse,rgba(48,177,255,.16),rgba(115,63,255,.08) 45%,transparent 72%);filter:blur(14px)}",
+    "@keyframes nbCoreFallbackA{to{rotate:1 0 0 360deg}}@keyframes nbCoreFallbackB{to{rotate:0 1 0 360deg}}",
+    "@media(max-width:900px){.nexus-bento-grid.nb-core-portal-host>.nb-core-portal-layer{width:58%;opacity:.38;right:-2%}}",
+    "@media(max-width:650px){.nexus-bento-grid.nb-core-portal-host>.nb-core-portal-layer{width:68%;right:-8%;opacity:.22}.nb-core-portal-fallback{width:68%}}",
+    "@media(prefers-reduced-motion:reduce){.nb-core-portal-fallback i{animation:none!important}}"
+  ].join("\n");
+  if (!doc.getElementById(style.id)) doc.head.appendChild(style);
+  grid.classList.add("nb-core-portal-host");
+
+  const layer = doc.createElement("div");
+  layer.className = "nb-core-portal-layer";
+  layer.setAttribute("aria-hidden", "true");
+  const canvas = doc.createElement("canvas");
+  canvas.className = "nb-core-portal-canvas";
+  layer.appendChild(canvas);
+  grid.insertBefore(layer, grid.firstChild);
+
+  const reducedMotion = !!view.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const mobile = !!view.matchMedia("(max-width: 650px)").matches;
+  const tablet = !!view.matchMedia("(max-width: 900px)").matches;
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+  let renderer, raf = 0, visible = true, disposed = false, pulse = 0;
+  let targetX = 0, targetY = 0, pointerX = 0, pointerY = 0;
+  let scene, camera, root, outer, middle, inner, cyanTrail, violetTrail, particles;
+  const fallback = () => {
+    if (!layer.isConnected) return;
+    canvas.remove();
+    const graphic = doc.createElement("div");
+    graphic.className = "nb-core-portal-fallback";
+    for (let i=0;i<4;i++) graphic.appendChild(doc.createElement("i"));
+    layer.appendChild(graphic);
+  };
+  const schedule = () => {
+    if (!disposed && !raf && visible && !view.document.hidden && !reducedMotion) raf = view.requestAnimationFrame(frame);
+  };
+  function frame(now) {
+    raf = 0;
+    if (disposed || !renderer || !scene || !camera) return;
+    if (!visible || view.document.hidden) return;
+    const t = now * 0.001;
+    pointerX += (targetX-pointerX)*0.045;
+    pointerY += (targetY-pointerY)*0.045;
+    root.rotation.y = -0.16 + pointerX*0.11 + Math.sin(t*.16)*.045;
+    root.rotation.x = .16 + pointerY*.075 + Math.sin(t*.22)*.025;
+    root.position.y = Math.sin(t*.62)*.055;
+    outer.rotation.z = t*.105;
+    middle.rotation.z = -t*.19;
+    inner.rotation.z = t*.28;
+    cyanTrail.rotation.z = -t*.34;
+    violetTrail.rotation.z = t*.23;
+    particles.rotation.z = -t*.055;
+    const decay = Math.max(0, 1-pulse);
+    pulse = Math.max(0,pulse-.018);
+    const glow = 1 + Math.sin(t*1.8)*.12 + pulse*.85;
+    inner.children.forEach(o=>{ if(o.material && o.material.emissiveIntensity!==undefined) o.material.emissiveIntensity = 1.25*glow; });
+    if (renderer && renderer.domElement) renderer.render(scene,camera);
+    schedule();
+  }
+
+  try {
+    const THREE = await import("https://cdn.jsdelivr.net/npm/three@0.166.1/build/three.module.js");
+    if (!grid.isConnected || !layer.isConnected) return;
+    renderer = new THREE.WebGLRenderer({canvas,alpha:true,antialias:!mobile,powerPreference:"low-power"});
+    renderer.setPixelRatio(Math.min(view.devicePixelRatio||1, mobile?1:1.35));
+    renderer.setClearColor(0x000000,0);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.08;
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(37,1,.1,70);
+    camera.position.set(0,0,9.4);
+    scene.add(new THREE.AmbientLight(0xc6dcff,1.45));
+    const key = new THREE.DirectionalLight(0xcdeeff,2.3); key.position.set(-3,4,5); scene.add(key);
+    const cyanLight = new THREE.PointLight(0x24dfff,8,10); cyanLight.position.set(2,1,2.4); scene.add(cyanLight);
+    const violetLight = new THREE.PointLight(0x8854ff,7,10); violetLight.position.set(-2,-1,1); scene.add(violetLight);
+
+    root = new THREE.Group(); root.scale.set(1,1.24,.72); scene.add(root);
+    outer = new THREE.Group(); root.add(outer);
+    middle = new THREE.Group(); root.add(middle);
+    inner = new THREE.Group(); root.add(inner);
+    const darkMetal = new THREE.MeshStandardMaterial({color:0x27364d,metalness:.94,roughness:.24});
+    const steel = new THREE.MeshStandardMaterial({color:0x9bb0c8,metalness:.95,roughness:.22});
+    const shadowMetal = new THREE.MeshStandardMaterial({color:0x111a2c,metalness:.9,roughness:.3});
+    const cyanMat = new THREE.MeshStandardMaterial({color:0x5deaff,metalness:.62,roughness:.2,emissive:0x087d9b,emissiveIntensity:1.25});
+    const violetMat = new THREE.MeshStandardMaterial({color:0xa48aff,metalness:.48,roughness:.24,emissive:0x5721c0,emissiveIntensity:1.1});
+    const basicCyan = new THREE.MeshBasicMaterial({color:0x52e7ff,transparent:true,opacity:.88});
+    const basicViolet = new THREE.MeshBasicMaterial({color:0xa37cff,transparent:true,opacity:.82});
+    const addRing = (group,radius,tube,material,z=0,radial=14,segments=180) => {
+      const mesh = new THREE.Mesh(new THREE.TorusGeometry(radius,tube,radial,segments),material);
+      mesh.position.z=z; group.add(mesh); return mesh;
+    };
+    addRing(outer,2.34,.15,darkMetal);
+    addRing(outer,2.34,.035,steel,.12,8,180);
+    addRing(outer,2.34,.024,shadowMetal,-.12,8,180);
+    addRing(outer,2.58,.035,steel,.035,8,190);
+    addRing(middle,2.04,.055,shadowMetal,.11);
+    addRing(middle,1.98,.025,cyanMat,.19,8,180);
+    addRing(middle,2.13,.018,violetMat,-.13,8,180);
+    addRing(inner,1.57,.085,darkMetal,.10);
+    addRing(inner,1.57,.029,cyanMat,.19,8,180);
+    addRing(inner,1.42,.022,violetMat,-.14,8,180);
+
+    const segmentGroup = new THREE.Group(); outer.add(segmentGroup);
+    const segCount = tablet ? 22 : 34;
+    const segGeom = new THREE.TorusGeometry(2.48,.065,8,18,(Math.PI*2/segCount)*.66);
+    const segMesh = new THREE.InstancedMesh(segGeom,steel,segCount);
+    const dummy = new THREE.Object3D();
+    for(let i=0;i<segCount;i++){dummy.rotation.set(0,0,i*Math.PI*2/segCount);dummy.updateMatrix();segMesh.setMatrixAt(i,dummy.matrix);}
+    segMesh.instanceMatrix.needsUpdate = true; segmentGroup.add(segMesh);
+
+    cyanTrail = new THREE.Group(); root.add(cyanTrail);
+    const cyanArc = new THREE.Mesh(new THREE.TorusGeometry(2.67,.028,8,180,Math.PI*.88),basicCyan);
+    cyanArc.rotation.z = -.6; cyanTrail.add(cyanArc);
+    const cyanArc2 = new THREE.Mesh(new THREE.TorusGeometry(1.77,.035,8,160,Math.PI*.54),cyanMat);
+    cyanArc2.rotation.z = 1.1; cyanTrail.add(cyanArc2);
+    violetTrail = new THREE.Group(); root.add(violetTrail);
+    const violetArc = new THREE.Mesh(new THREE.TorusGeometry(2.48,.032,8,180,Math.PI*.78),basicViolet);
+    violetArc.rotation.z = 2.5; violetTrail.add(violetArc);
+    const violetArc2 = new THREE.Mesh(new THREE.TorusGeometry(1.82,.021,7,170,Math.PI*.60),violetMat);
+    violetArc2.rotation.z = -.7; violetTrail.add(violetArc2);
+
+    const coreGlowCanvas = view.document.createElement("canvas");
+    coreGlowCanvas.width = coreGlowCanvas.height = 128;
+    const ctx = coreGlowCanvas.getContext("2d");
+    const gradient = ctx.createRadialGradient(64,64,3,64,64,62);
+    gradient.addColorStop(0,"rgba(87,219,255,.38)");
+    gradient.addColorStop(.38,"rgba(91,105,255,.18)");
+    gradient.addColorStop(1,"rgba(92,80,255,0)");
+    ctx.fillStyle = gradient; ctx.fillRect(0,0,128,128);
+    const glowTexture = new THREE.CanvasTexture(coreGlowCanvas);
+    const glowSprite = new THREE.Sprite(new THREE.SpriteMaterial({map:glowTexture,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,opacity:.8}));
+    glowSprite.scale.set(4.9,5.9,1); glowSprite.position.z=-.25; root.add(glowSprite);
+
+    const count = mobile ? 62 : tablet ? 92 : 145;
+    const positions = new Float32Array(count*3), colors = new Float32Array(count*3);
+    const data = [];
+    for(let i=0;i<count;i++){
+      const radius = 2.55 + Math.random()*1.12;
+      const angle = Math.random()*Math.PI*2;
+      const z = (Math.random()-.5)*1.9;
+      data.push({radius,angle,z,speed:(.12+Math.random()*.34)*(Math.random()>.5?1:-1),yScale:.88+Math.random()*.45,seed:Math.random()*6.28});
+      positions[i*3]=Math.cos(angle)*radius;
+      positions[i*3+1]=Math.sin(angle)*radius;
+      positions[i*3+2]=z;
+      const c = new THREE.Color(Math.random()>.58?0x8b77ff:0x56e7ff);
+      colors[i*3]=c.r; colors[i*3+1]=c.g; colors[i*3+2]=c.b;
+    }
+    const particleGeometry = new THREE.BufferGeometry();
+    particleGeometry.setAttribute("position",new THREE.BufferAttribute(positions,3));
+    particleGeometry.setAttribute("color",new THREE.BufferAttribute(colors,3));
+    const particleMaterial = new THREE.PointsMaterial({size:mobile?.045:.035,vertexColors:true,transparent:true,opacity:.9,depthWrite:false,blending:THREE.AdditiveBlending,sizeAttenuation:true});
+    particles = new THREE.Points(particleGeometry,particleMaterial); root.add(particles);
+
+    const resize = () => {
+      if(!renderer || !layer.isConnected) return;
+      const rect = layer.getBoundingClientRect();
+      const w = Math.max(1,rect.width), h = Math.max(1,rect.height);
+      renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix();
+    };
+    resize();
+    const updateParticles = (time) => {
+      const p = particleGeometry.attributes.position.array;
+      for(let i=0;i<count;i++){
+        const d=data[i], a=d.angle + time*d.speed;
+        const drift = Math.sin(time*.6+d.seed)*.07;
+        p[i*3]=Math.cos(a)*(d.radius+drift);
+        p[i*3+1]=Math.sin(a)*(d.radius+drift)*d.yScale;
+        p[i*3+2]=d.z+Math.sin(a*2+d.seed)*.08;
+      }
+      particleGeometry.attributes.position.needsUpdate=true;
+    };
+    const originalFrame = frame;
+    frame = function(now) {
+      if (disposed || !renderer || !scene || !camera) return;
+      if (!visible || view.document.hidden) { raf=0; return; }
+      const t=now*.001;
+      updateParticles(t);
+      pointerX += (targetX-pointerX)*.045; pointerY += (targetY-pointerY)*.045;
+      root.rotation.y=-.16+pointerX*.11+Math.sin(t*.16)*.045;
+      root.rotation.x=.16+pointerY*.075+Math.sin(t*.22)*.025;
+      root.position.y=Math.sin(t*.62)*.055;
+      outer.rotation.z=t*.105; middle.rotation.z=-t*.19; inner.rotation.z=t*.28;
+      cyanTrail.rotation.z=-t*.34; violetTrail.rotation.z=t*.23; particles.rotation.z=-t*.055;
+      pulse=Math.max(0,pulse-.018);
+      const glow=1+Math.sin(t*1.8)*.12+pulse*.85;
+      cyanMat.emissiveIntensity=1.25*glow; violetMat.emissiveIntensity=1.1*glow;
+      renderer.render(scene,camera);
+      raf=view.requestAnimationFrame(frame);
+    };
+    const onPointer = e => {
+      const r=grid.getBoundingClientRect();
+      targetX=clamp(((e.clientX-r.left)/Math.max(1,r.width)-.5)*2,-1,1);
+      targetY=clamp(((e.clientY-r.top)/Math.max(1,r.height)-.5)*2,-1,1);
+    };
+    const onLeave = () => { targetX=0; targetY=0; };
+    const onClick = e => { if (!e.target.closest(".nexus-bento-card")) pulse=1; };
+    grid.addEventListener("pointermove",onPointer,{passive:true});
+    grid.addEventListener("pointerleave",onLeave,{passive:true});
+    grid.addEventListener("click",onClick);
+    const onResize = () => resize();
+    view.addEventListener("resize",onResize,{passive:true});
+    if ("ResizeObserver" in view) new view.ResizeObserver(resize).observe(grid);
+    if ("IntersectionObserver" in view) new view.IntersectionObserver(entries=>{
+      visible=!!entries[0]?.isIntersecting;
+      if(visible) schedule(); else if(raf){view.cancelAnimationFrame(raf);raf=0;}
+    },{threshold:0.01}).observe(grid);
+    view.document.addEventListener("visibilitychange",()=>{if(!view.document.hidden)schedule();else if(raf){view.cancelAnimationFrame(raf);raf=0;}});
+    renderer.render(scene,camera);
+    if (reducedMotion) {
+      updateParticles(0);
+      renderer.render(scene,camera);
+    } else schedule();
+  } catch (error) {
+    console.warn("NoticeBuddy core portal: WebGL unavailable; using CSS 3D fallback.", error);
+    try { if (renderer) renderer.dispose(); } catch (_) {}
+    fallback();
+  }
+})();
+</script>
+""", height=0, scrolling=False)
+
     # ---------- DEADLINE RADAR HOLOGRAPHIC 3D CALENDAR ----------
     components.html(r"""
 <script type="module">
