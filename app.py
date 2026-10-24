@@ -2513,6 +2513,101 @@ h1, h2, h3 { letter-spacing: -.045em; }
     .bento-deadline .calendar-holo-stage::after { animation:none!important; transform:none!important; }
 }
 
+
+/* Deadline Radar upgrade v2 — visibly stronger holographic depth.
+   This visual treatment is scoped to card 03 only. */
+.bento-deadline {
+    isolation:isolate;
+    overflow:hidden;
+    border-color:rgba(102,205,255,.30);
+    background:
+      radial-gradient(ellipse at 86% 17%,rgba(127,91,255,.25),transparent 37%),
+      radial-gradient(ellipse at 14% 92%,rgba(0,219,255,.14),transparent 43%),
+      linear-gradient(145deg,rgba(18,36,74,.98),rgba(7,16,36,.99)) !important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 15px 38px rgba(0,0,0,.22),0 0 0 1px rgba(71,170,255,.08),0 0 30px rgba(68,116,255,.10);
+}
+.bento-deadline::after {
+    content:""; position:absolute; z-index:0; pointer-events:none;
+    width:245px; height:245px; right:-106px; top:25%;
+    border-radius:50%; border:1px solid rgba(89,216,255,.20);
+    box-shadow:0 0 0 11px rgba(111,101,255,.035),0 0 0 27px rgba(76,196,255,.025),inset 0 0 35px rgba(102,119,255,.08);
+    transform:rotateX(64deg) rotateZ(-22deg);
+    animation:deadlineOrbitPulse 7s ease-in-out infinite;
+}
+.bento-deadline .bento-calendar-preview {
+    border-color:rgba(96,215,255,.43);
+    background:
+      linear-gradient(135deg,rgba(12,30,60,.88),rgba(12,19,48,.78)),
+      radial-gradient(ellipse at 50% 0%,rgba(88,201,255,.16),transparent 65%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.10),inset 0 0 28px rgba(73,101,255,.07),0 18px 32px rgba(0,0,0,.24),0 0 23px rgba(45,183,255,.10);
+    transform:perspective(1200px) rotateX(1.5deg) rotateY(-1deg);
+    transform-style:preserve-3d;
+}
+.bento-deadline .calendar-holo-stage { transform-style:preserve-3d; filter:drop-shadow(0 8px 13px rgba(2,8,24,.22)); }
+.bento-deadline .calendar-holo-stage::before {
+    content:""; position:absolute; z-index:1; inset:-4px 1px 3px;
+    border:1px solid rgba(97,221,255,.33); border-radius:14px;
+    box-shadow:inset 0 0 18px rgba(82,190,255,.055),0 0 17px rgba(87,110,255,.10);
+    transform:translateZ(13px); pointer-events:none;
+    animation:deadlineFrameGlow 4.2s ease-in-out infinite;
+}
+.bento-deadline .calendar-holo-webgl { opacity:.94; mix-blend-mode:screen; }
+.bento-deadline .calendar-holo-stack {
+    border-color:rgba(100,221,255,.45);
+    box-shadow:0 0 0 6px rgba(76,126,255,.045),0 0 28px rgba(63,198,255,.13),inset 0 0 17px rgba(100,112,255,.09);
+}
+.bento-deadline .calendar-holo-ui {
+    border-color:rgba(104,215,255,.42);
+    background:linear-gradient(145deg,rgba(8,24,51,.76),rgba(9,19,43,.84));
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.10),inset 0 0 25px rgba(59,142,255,.07),0 17px 30px rgba(0,0,0,.18),0 0 18px rgba(73,204,255,.06);
+    transform:translateZ(16px); backdrop-filter:blur(5px);
+}
+.bento-deadline .calendar-preview-head span {
+    padding:4px 7px; border:1px solid rgba(95,231,255,.39); border-radius:999px;
+    color:#B8FAFF; background:rgba(28,156,195,.13);
+    box-shadow:0 0 14px rgba(49,215,255,.10),inset 0 0 9px rgba(65,214,255,.06);
+    animation:deadlineLivePulse 2.8s ease-in-out infinite;
+}
+.bento-deadline .calendar-preview-numbers button.calendar-holo-date {
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 3px 8px rgba(0,0,0,.12);
+    background:linear-gradient(145deg,rgba(47,86,145,.34),rgba(25,44,84,.24));
+}
+.bento-deadline .calendar-preview-numbers button.calendar-holo-date.has-deadline:not(.is-selected) {
+    background:linear-gradient(145deg,rgba(33,157,191,.28),rgba(45,70,147,.19));
+    box-shadow:inset 0 0 13px rgba(59,212,255,.12),0 0 10px rgba(59,212,255,.08);
+}
+.bento-deadline .calendar-preview-numbers button.calendar-holo-date.is-selected {
+    box-shadow:0 0 0 2px rgba(109,238,255,.12),0 0 21px rgba(84,226,255,.43),inset 0 1px 0 rgba(255,255,255,.92);
+}
+.bento-deadline .calendar-holo-info {
+    border-color:rgba(92,208,255,.31);
+    background:linear-gradient(105deg,rgba(26,101,146,.23),rgba(89,63,163,.20));
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.055),0 0 18px rgba(65,129,255,.07);
+}
+.bento-deadline .calendar-preview-foot { color:#A4E9EF; }
+.bento-deadline .calendar-preview-foot i { box-shadow:0 0 10px #79FBD8,0 0 20px rgba(121,251,216,.35); }
+@keyframes deadlineOrbitPulse {
+    0%,100% { opacity:.58; transform:rotateX(64deg) rotateZ(-22deg) scale(.98); }
+    50% { opacity:1; transform:rotateX(64deg) rotateZ(-12deg) scale(1.035); }
+}
+@keyframes deadlineFrameGlow {
+    0%,100% { border-color:rgba(97,221,255,.24); box-shadow:inset 0 0 12px rgba(82,190,255,.035),0 0 10px rgba(87,110,255,.06); }
+    50% { border-color:rgba(137,143,255,.46); box-shadow:inset 0 0 22px rgba(82,190,255,.08),0 0 19px rgba(87,110,255,.15); }
+}
+@keyframes deadlineLivePulse {
+    0%,100% { box-shadow:0 0 10px rgba(49,215,255,.07),inset 0 0 6px rgba(65,214,255,.035); }
+    50% { box-shadow:0 0 17px rgba(49,215,255,.19),inset 0 0 10px rgba(65,214,255,.10); }
+}
+@media(hover:hover) and (pointer:fine) {
+    .bento-deadline:hover { border-color:rgba(114,226,255,.55); box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 20px 43px rgba(0,0,0,.26),0 0 34px rgba(68,116,255,.16); }
+    .bento-deadline .bento-calendar-preview:hover { transform:perspective(1200px) rotateX(0deg) rotateY(0deg) translateY(-2px); }
+}
+@media(prefers-reduced-motion:reduce) {
+    .bento-deadline::after,.bento-deadline .calendar-holo-stage::before,
+    .bento-deadline .calendar-preview-head span { animation:none!important; }
+    .bento-deadline .bento-calendar-preview { transform:none!important; }
+}
+
 .bento-stack { position:relative; width:100%; height:110px; margin-top:19px; perspective:600px; }
 .stack-sheet { position:absolute; width:190px; max-width:75%; height:88px; border-radius:12px; border:1px solid rgba(126,149,241,.26); }
 .sheet-back { left:12px; top:0; transform:rotate(-8deg); background:linear-gradient(135deg,rgba(102,87,255,.13),rgba(19,36,68,.5)); }
