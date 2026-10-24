@@ -6179,6 +6179,86 @@ hr {
     .bento-deadline .bento-calendar-preview::after { animation:none !important; }
 }
 
+
+/* Deadline Radar v3 — unmistakable card-only depth and motion */
+.bento-deadline {
+  position:relative !important;
+  border:1px solid rgba(105,229,255,.68) !important;
+  background:
+    radial-gradient(ellipse at 82% 12%,rgba(149,91,255,.32),transparent 42%),
+    radial-gradient(ellipse at 10% 85%,rgba(0,226,255,.19),transparent 48%),
+    linear-gradient(140deg,#10264a 0%,#0a1630 52%,#080f24 100%) !important;
+  box-shadow:0 0 0 1px rgba(119,106,255,.20),0 18px 42px rgba(0,0,0,.34),0 0 34px rgba(52,205,255,.17),inset 0 1px 0 rgba(255,255,255,.16) !important;
+}
+.bento-deadline .bento-calendar-preview {
+  margin-top:20px !important;
+  padding:16px !important;
+  border:1px solid rgba(110,239,255,.78) !important;
+  border-radius:18px !important;
+  background:linear-gradient(135deg,rgba(10,28,58,.96),rgba(14,19,50,.94)) !important;
+  box-shadow:0 0 0 4px rgba(76,117,255,.075),0 0 0 8px rgba(64,211,255,.035),0 20px 38px rgba(0,0,0,.35),0 0 30px rgba(53,211,255,.19),inset 0 0 26px rgba(103,122,255,.12) !important;
+  transform:perspective(1000px) rotateX(3deg) rotateY(-2deg) !important;
+  transform-style:preserve-3d !important;
+}
+.bento-deadline .calendar-holo-stage {
+  transform-style:preserve-3d !important;
+  filter:drop-shadow(0 13px 17px rgba(0,0,0,.28)) !important;
+}
+.bento-deadline .calendar-holo-stack {
+  inset:5px 10px 8px 2px !important;
+  border:2px solid rgba(101,235,255,.75) !important;
+  border-radius:14px !important;
+  transform:translateZ(-30px) rotateX(7deg) rotateY(-7deg) !important;
+  box-shadow:0 0 0 7px rgba(107,90,255,.09),0 0 34px rgba(48,215,255,.24),inset 0 0 22px rgba(112,108,255,.16) !important;
+}
+.bento-deadline .calendar-holo-ui {
+  border:1px solid rgba(122,237,255,.72) !important;
+  background:linear-gradient(145deg,rgba(5,19,43,.88),rgba(11,19,48,.91)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.19),inset 0 0 32px rgba(74,171,255,.13),0 20px 30px rgba(0,0,0,.27),0 0 24px rgba(49,215,255,.14) !important;
+  transform:translateZ(26px) !important;
+}
+.bento-deadline .calendar-preview-numbers button.calendar-holo-date {
+  min-height:28px !important;
+  border-color:rgba(110,192,255,.34) !important;
+  background:linear-gradient(145deg,rgba(51,99,165,.42),rgba(32,47,99,.34)) !important;
+}
+.bento-deadline .calendar-preview-numbers button.calendar-holo-date.has-deadline:not(.is-selected) {
+  border-color:#64f3ff !important;
+  box-shadow:0 0 14px rgba(60,230,255,.24),inset 0 0 13px rgba(60,230,255,.17) !important;
+}
+.bento-deadline .calendar-preview-numbers button.calendar-holo-date.is-selected {
+  transform:translateZ(16px) scale(1.08) !important;
+  box-shadow:0 0 0 2px rgba(124,245,255,.22),0 0 27px rgba(69,226,255,.64),inset 0 1px 0 white !important;
+}
+.bento-deadline .calendar-preview-head span {
+  padding:5px 9px !important;
+  color:#e0feff !important;
+  border:1px solid rgba(109,244,255,.82) !important;
+  background:rgba(16,163,196,.19) !important;
+  box-shadow:0 0 20px rgba(59,226,255,.27) !important;
+}
+.bento-deadline .calendar-holo-info {
+  border-color:rgba(108,228,255,.36) !important;
+  background:linear-gradient(100deg,rgba(27,113,151,.22),rgba(87,62,164,.19)) !important;
+}
+@keyframes nbRadarV3Float {
+  0%,100% { translate:0 0; }
+  50% { translate:0 -5px; }
+}
+@media (hover:hover) and (pointer:fine) {
+  .bento-deadline .bento-calendar-preview:hover {
+    transform:perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(-3px) !important;
+    box-shadow:0 0 0 4px rgba(76,117,255,.11),0 0 0 8px rgba(64,211,255,.05),0 24px 45px rgba(0,0,0,.38),0 0 38px rgba(53,211,255,.25) !important;
+  }
+}
+@media(max-width:650px) {
+  .bento-deadline .bento-calendar-preview { padding:10px !important; transform:none !important; }
+  .bento-deadline .calendar-preview-numbers button.calendar-holo-date { min-height:23px !important; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .bento-deadline .bento-calendar-preview { transform:none !important; }
+}
+
 </style>  
 
 """, unsafe_allow_html=True)
